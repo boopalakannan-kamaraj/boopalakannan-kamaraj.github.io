@@ -419,7 +419,8 @@
   }
   .intro-bar span {
     position: absolute; inset: 0 100% 0 0; background: var(--accent);
-    animation: introFill 1.5s cubic-bezier(.4,.1,.2,1) forwards;
+    /* keep in sync with the desktop dismiss timeout in JS (~10s) */
+    animation: introFill 10s cubic-bezier(.25,.1,.25,1) forwards;
   }
   @keyframes introFill { to { right: 0; } }
   .intro-foot {
@@ -858,10 +859,10 @@
     // Desktop: fade out automatically once the loader bar finishes.
     // Mobile: leave the under-construction note up until the visitor taps in.
     if (!isMobile) {
-      setTimeout(dismiss, reduce ? 350 : 1900);
+      setTimeout(dismiss, reduce ? 1500 : 10000);
     }
     // Safety net: never trap the visitor behind the overlay.
-    setTimeout(() => { if (!intro.classList.contains('is-hidden')) document.body.classList.remove('intro-lock'); }, 12000);
+    setTimeout(() => { if (!intro.classList.contains('is-hidden')) document.body.classList.remove('intro-lock'); }, 14000);
   })();
 
   // Scroll reveal (with manual kick + safety net so content never stays blank)
