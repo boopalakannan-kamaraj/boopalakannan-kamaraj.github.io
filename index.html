@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boopalakannan Kamaraj — Senior UX Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  :root {
+    --bg: #f3efe7;
+    --bg-warm: #ebe4d6;
+    --ink: #16140f;
+    --ink-soft: #2c2820;
+    --muted: #7a6f5f;
+    --muted-2: #a89e8c;
+    --line: #d9d2c2;
+    --line-soft: #e4ddcc;
+    --accent: oklch(0.62 0.13 38);   /* warm clay */
+    --accent-ink: oklch(0.42 0.10 38);
+    --paper: #faf7f0;
+    --surface: #fff;
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  html { color-scheme: light; }
+  html, body { transition: background-color 320ms ease, color 320ms ease; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  body { font-size: 16px; line-height: 1.55; font-weight: 400; }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity 1100ms cubic-bezier(.2,.7,.2,1), transform 1100ms cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal[data-delay="1"] { transition-delay: 80ms; }
+  .reveal[data-delay="2"] { transition-delay: 160ms; }
+  .reveal[data-delay="3"] { transition-delay: 240ms; }
+  .reveal[data-delay="4"] { transition-delay: 320ms; }
+  .reveal[data-delay="5"] { transition-delay: 400ms; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 40px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: color-mix(in oklab, var(--bg) 70%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 400ms ease, background 400ms ease, padding 400ms ease;
+  }
+  .nav.scrolled { border-bottom-color: var(--line-soft); padding: 14px 40px; }
+  .nav .brand {
+    font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .nav .brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; transform: translateY(-2px); }
+  .nav .links { display: flex; gap: 32px; align-items: center; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .nav .links a { position: relative; padding: 6px 0; transition: color 200ms; }
+  .nav .links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--ink); transition: right 280ms cubic-bezier(.2,.7,.2,1); }
+  .nav .links a:hover { color: var(--ink); }
+  .nav .links a:hover::after { right: 0; }
+  .nav .cta {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 9px 16px; border: 1px solid var(--ink); border-radius: 999px;
+    transition: background 200ms, color 200ms;
+  }
+  .nav .cta:hover { background: var(--ink); color: var(--bg); }
+  .nav .resume {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+    transition: color 200ms, border-color 200ms, background 200ms;
+  }
+  .nav .resume:hover { color: var(--ink); border-color: var(--muted-2); background: color-mix(in oklab, var(--ink) 5%, transparent); }
+  .nav .resume .ar { font-size: 13px; transition: transform 200ms; }
+  .nav .resume:hover .ar { transform: translateY(2px); }
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+  /* ============ LAYOUT ============ */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+  section { padding: 120px 0; border-top: 1px solid var(--line-soft); }
+  section:first-of-type { border-top: 0; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+  }
+  .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--muted-2); }
+
+  /* ============ HERO ============ */
+  .hero { padding: 180px 0 140px; border-top: 0; position: relative; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 280px; gap: 80px; align-items: end; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(64px, 9vw, 156px); line-height: 0.96; letter-spacing: -0.025em;
+    margin: 0; color: var(--ink);
+    text-wrap: balance;
+  }
+  .hero h1 .it { font-style: italic; color: var(--accent-ink); }
+  .hero h1 .amp { font-style: italic; color: var(--muted-2); font-weight: 400; }
+  .hero-meta { display: flex; flex-direction: column; gap: 28px; padding-bottom: 14px; }
+  .hero-meta .role {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-meta .role span { color: var(--ink); }
+  .hero-headshot {
+    width: 260px; height: 260px;
+    border-radius: 999999px;
+    filter: saturate(0.92) contrast(1.02);
+  }
+  .hero-foot {
+    margin-top: 90px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 40px;
+    padding-top: 28px; border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-foot strong { display: block; color: var(--ink); font-weight: 500; font-family: var(--sans); font-size: 14px; letter-spacing: 0; text-transform: none; margin-top: 6px; }
+  .ticker {
+    margin-top: 40px; padding: 16px 0; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 32px; color: var(--muted);
+    overflow: hidden; white-space: nowrap;
+  }
+  .ticker .live { color: var(--accent-ink); display: inline-flex; align-items: center; gap: 8px; }
+  .ticker .live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .ticker .sep { color: var(--muted-2); }
+
+  /* ============ ABOUT ============ */
+  .about-grid { display: grid; grid-template-columns: 280px 1fr; gap: 100px; align-items: start; }
+  .about p {
+    font-family: var(--serif); font-size: clamp(28px, 3.2vw, 44px); line-height: 1.2; letter-spacing: -0.015em;
+    margin: 0; color: var(--ink-soft); text-wrap: pretty;
+  }
+  .about p em { font-style: italic; color: var(--accent-ink); }
+  .about .signature {
+    font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--muted); margin-top: 40px;
+  }
+
+  /* ============ WORK ============ */
+  .work-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 80px; }
+  .work-intro h2 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(48px, 6vw, 84px);
+    line-height: 1; letter-spacing: -0.02em; margin: 0;
+  }
+  .work-intro h2 em { font-style: italic; color: var(--accent-ink); }
+  .work-intro .lede { color: var(--muted); max-width: 420px; font-size: 16px; line-height: 1.6; }
+
+  .case {
+    padding: 80px 0; border-top: 1px solid var(--line-soft);
+    display: grid; grid-template-columns: 1fr; gap: 56px;
+    position: relative;
+  }
+  .case-link { position: absolute; inset: 0; z-index: 5; }
+  .case-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -8px; }
+  .case:hover .case-title { color: var(--accent-ink); }
+  .case-title { transition: color 300ms; }
+  .case:hover .case-cta .arr { transform: translate(4px, -4px); }
+  .case-cta .open-link { color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+  .case-cta .arr { display: inline-block; transition: transform 300ms cubic-bezier(.2,.7,.2,1); font-family: var(--serif); font-style: italic; font-size: 14px; }
+  .case-body, .case-strip, .case-visual, .case-header { position: relative; z-index: 1; }
+  .case-header { display: grid; grid-template-columns: 80px 1fr 1fr 180px; gap: 40px; align-items: baseline; }
+  .case-num { font-family: var(--mono); font-size: 13px; color: var(--muted-2); letter-spacing: 0.04em; }
+  .case-title { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.02em; margin: 0; }
+  .case-title .it { font-style: italic; }
+  /* Differentiator for the two AI-built case studies */
+  .case-titlewrap { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .built-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-ink);
+    background: color-mix(in oklab, var(--accent) 12%, var(--paper));
+    border: 1px solid color-mix(in oklab, var(--accent) 32%, var(--line));
+    padding: 6px 13px 6px 11px; border-radius: 999px;
+  }
+  .built-badge .spark { font-size: 11px; line-height: 1; color: var(--accent); transform: translateY(0.5px); }
+  .case:hover .built-badge { border-color: color-mix(in oklab, var(--accent) 55%, var(--line)); background: color-mix(in oklab, var(--accent) 16%, var(--paper)); }
+  .case-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .case-meta div + div { margin-top: 8px; }
+  .case-meta span { color: var(--ink); }
+
+  .case-body { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .case-body .narrative { font-size: 17px; line-height: 1.65; color: var(--ink-soft); max-width: 540px; }
+  .case-body .narrative p { margin: 0 0 1em; }
+  .case-body .narrative p:last-child { margin-bottom: 0; }
+  .case-body .narrative .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 14px; display: block; }
+
+  .case-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-soft); border: 1px solid var(--line-soft); margin-top: 32px; }
+  .case-metrics div { background: var(--bg); padding: 22px 24px; }
+  .case-metrics .n { font-family: var(--serif); font-size: 44px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); display: block; }
+  .case-metrics .n em { font-style: italic; color: var(--accent-ink); }
+  .case-metrics .l { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 10px; display: block; }
+
+  .case-visual { width: 100%; background: var(--bg-warm); aspect-ratio: 4 / 3; position: relative; }
+  .case-visual.hero-shape { aspect-ratio: 16 / 10; }
+  .case-visual .corner {
+    position: absolute; bottom: 14px; left: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    z-index: 2;
+  }
+
+  .case-strip { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+  .case-strip image-slot { aspect-ratio: 4/3; }
+
+  /* ---- Single large project cover ---- */
+  .case-cover {
+    margin: 0; position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: clamp(28px, 4vw, 72px);
+    min-height: clamp(420px, 50vw, 720px);
+    border: 1px solid var(--line-soft); border-radius: 8px; overflow: hidden;
+    background:
+      radial-gradient(120% 140% at 50% -10%, color-mix(in oklab, var(--paper) 80%, transparent), transparent 60%),
+      linear-gradient(165deg, var(--bg-warm), color-mix(in oklab, var(--bg-warm) 55%, var(--paper)));
+  }
+  .case-cover::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--paper) 70%, transparent);
+    border-radius: 8px;
+  }
+  /* ---- Browser / desktop window mockup inside the cover ---- */
+  .case-cover .win {
+    display: flex; flex-direction: column; max-width: 100%;
+    background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 46px 92px -36px rgba(22,20,15,.5),
+      0 16px 34px -18px rgba(22,20,15,.3),
+      0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent);
+    transform: perspective(2600px) rotateX(2.5deg);
+    transform-origin: 50% 100%;
+    transition: transform 850ms cubic-bezier(.2,.7,.2,1);
+  }
+  .case:hover .case-cover .win { transform: perspective(2600px) rotateX(0deg) translateY(-5px); }
+  .case-cover .win-bar {
+    display: grid; grid-template-columns: 64px 1fr 64px; align-items: center;
+    padding: 11px 16px; min-width: 0;
+    background: linear-gradient(180deg, #f8f5ee 0%, #efeadd 100%);
+    border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  }
+  .case-cover .win-bar .dots { display: flex; gap: 7px; }
+  .case-cover .win-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; background: #d9d2c2; }
+  .case-cover .win-bar .dots i:nth-child(1) { background: #f06058; }
+  .case-cover .win-bar .dots i:nth-child(2) { background: #f9bd2e; }
+  .case-cover .win-bar .dots i:nth-child(3) { background: #28c941; }
+  .case-cover .win-bar .url {
+    justify-self: center; min-width: 0; max-width: 100%;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+    background: color-mix(in oklab, var(--ink) 4%, #fff);
+    border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
+    border-radius: 999px; padding: 6px 16px; white-space: nowrap; overflow: hidden;
+  }
+  .case-cover .win-bar .url .lock { color: var(--accent-ink); font-size: 10px; }
+  .case-cover .win-bar .url .path { color: var(--muted); }
+  .case-cover .win-bar .app-name {
+    justify-self: center; font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--ink-soft);
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  }
+  .case-cover .win-bar .app-name .badge {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #fff); color: var(--accent-ink);
+  }
+  .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #fff; }
+  .case-cover .win image-slot.shot { display: block; width: 780px; max-width: 100%; height: clamp(300px, 38vw, 480px); }
+  .case-cover .corner {
+    position: absolute; bottom: 16px; left: 18px; margin: 0;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    z-index: 2;
+  }
+
+  /* ---- Custom "view case study" cursor ---- */
+  .case, .case-link, .case-cover, .case-cover image-slot { cursor: none; }
+  .cursor-bubble {
+    position: fixed; top: 0; left: 0; z-index: 90; pointer-events: none;
+    display: flex; align-items: center; gap: 7px;
+    padding: 11px 18px; border-radius: 999px;
+    background: var(--accent); color: var(--paper);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;
+    box-shadow: 0 12px 28px -10px color-mix(in oklab, var(--accent) 60%, transparent);
+    opacity: 0; transform: translate(-50%, -50%) scale(0.6);
+    transition: opacity 220ms ease, transform 320ms cubic-bezier(.2,.8,.2,1);
+  }
+  .cursor-bubble.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .cursor-bubble .arr { font-family: var(--serif); font-style: italic; font-size: 13px; }
+  @media (hover: none), (pointer: coarse) {
+    .case, .case-link, .case-cover, .case-cover image-slot { cursor: pointer; }
+    .cursor-bubble { display: none; }
+  }
+
+  /* ============ EXPERIENCE ============ */
+  .exp-grid { display: grid; grid-template-columns: 280px 1fr; gap: 100px; align-items: start; }
+  .exp-title { font-family: var(--serif); font-size: clamp(40px, 5vw, 64px); line-height: 1; letter-spacing: -0.02em; margin: 0; font-weight: 400; }
+  .exp-title em { font-style: italic; }
+  .exp-list { display: flex; flex-direction: column; }
+  .exp-row {
+    display: grid; grid-template-columns: 140px 1fr 220px 140px;
+    gap: 32px; align-items: baseline;
+    padding: 28px 0; border-top: 1px solid var(--line-soft);
+    cursor: default; transition: padding 320ms cubic-bezier(.2,.7,.2,1), background 320ms;
+  }
+  .exp-row:hover { padding-left: 16px; padding-right: 16px; background: var(--paper); }
+  .exp-row:last-child { border-bottom: 1px solid var(--line-soft); }
+  .exp-year { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--muted); }
+  .exp-role { font-family: var(--serif); font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; }
+  .exp-role .it { font-style: italic; color: var(--muted); display: block; font-size: 16px; margin-top: 4px; }
+  .exp-company { font-family: var(--sans); font-size: 14px; color: var(--ink-soft); }
+  .exp-company .badge {
+    display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); margin-left: 6px;
+  }
+  .exp-tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-align: right; }
+
+  /* ============ TOOLBOX ============ */
+  .toolbox { display: grid; grid-template-columns: 280px 1fr; gap: 100px; align-items: start; }
+  .toolbox-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 80px; }
+  .tool-group .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); }
+  .tool-group ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .tool-group li { font-family: var(--serif); font-size: 24px; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); }
+  .tool-group li .it { font-style: italic; color: var(--muted); font-size: 16px; }
+
+  /* ============ CONTACT ============ */
+  .contact { padding: 160px 0; }
+  .contact-inner { text-align: left; }
+  .contact h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(80px, 12vw, 200px); line-height: 0.9; letter-spacing: -0.03em; margin: 0; }
+  .contact h2 em { font-style: italic; color: var(--accent-ink); }
+  .contact .arrow { display: inline-block; font-family: var(--serif); font-style: italic; }
+  .contact .channels {
+    margin-top: 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .contact .channels a {
+    padding: 28px 0; display: block; border-left: 1px solid var(--line-soft);
+    transition: background 240ms, padding 240ms;
+  }
+  .contact .channels a:first-child { border-left: 0; }
+  .contact .channels a:hover { background: var(--paper); padding-left: 16px; }
+  .contact .channels .l { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 12px; }
+  .contact .channels .v { font-family: var(--serif); font-size: 24px; letter-spacing: -0.01em; color: var(--ink); }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 40px 40px; display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+    border-top: 1px solid var(--line-soft);
+  }
+
+  /* image-slot polish */
+  image-slot {
+    background: repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklab, var(--bg-warm) 70%, #d3c8b0 30%) 12px 13px), var(--bg-warm);
+  }
+  image-slot::part(placeholder),
+  image-slot::part(label) {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+
+  @media (max-width: 960px) {
+    .nav, footer { padding-left: 24px; padding-right: 24px; }
+    .nav .links { display: none; }
+    .wrap { padding: 0 24px; }
+    .hero { padding: 140px 0 80px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-headshot { width: 180px; }
+    .hero-foot { grid-template-columns: 1fr 1fr; }
+    .about-grid, .exp-grid, .toolbox { grid-template-columns: 1fr; gap: 40px; }
+    .work-intro { grid-template-columns: 1fr; gap: 24px; }
+    .case-header { grid-template-columns: 1fr; gap: 16px; }
+    .case-body { grid-template-columns: 1fr; gap: 40px; }
+    .exp-row { grid-template-columns: 100px 1fr; gap: 16px; }
+    .exp-row .exp-company, .exp-row .exp-tag { grid-column: 2; text-align: left; }
+    .toolbox-groups { grid-template-columns: 1fr; gap: 40px; }
+    .contact .channels { grid-template-columns: 1fr 1fr; }
+    .contact .channels a:nth-child(3) { border-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav" data-screen-label="nav">
+  <a class="brand" href="#top">
+    <span class="dot"></span>
+    Boopalakannan&nbsp;K.
+  </a>
+  <div class="links">
+    <a href="#work">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#toolbox">Toolbox</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-actions">
+    <a class="resume" href="https://drive.google.com/drive/folders/1cPXt0Nh26QPbLAzWE-SPMQEx7-s7u_fI" target="_blank" rel="noopener">Résumé <span class="ar">↓</span></a>
+    <a class="cta" href="#contact">Let's talk</a>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow reveal">Portfolio — Senior UX Designer</div>
+        <h1 class="reveal" data-delay="1">
+          Designing <span class="it">clarity</span><br>
+          into complex<br>
+          B2B&nbsp;<span class="amp">&amp;</span>&nbsp;SaaS&nbsp;<span class="it">products.</span>
+        </h1>
+      </div>
+      <div class="hero-meta reveal" data-delay="2">
+        <image-slot id="headshot" class="hero-headshot" shape="circle" src="assets/headshot.png" placeholder="Drop your headshot"></image-slot>
+        <div class="role">
+          <div>Boopalakannan&nbsp;Kamaraj</div>
+          <div><span>Sr. UX Designer · 6+ yrs</span></div>
+          <div>Bengaluru,&nbsp;IN</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticker reveal" data-delay="3">
+      <span class="live">Open to senior &amp; lead roles</span>
+      <span class="sep">/</span>
+      <span>Currently @ Proshort AI</span>
+      <span class="sep">/</span>
+      <span>Sales enablement · AI tooling · Supply chain</span>
+      <span class="sep">/</span>
+      <span>Figma · Cursor · Framer</span>
+    </div>
+
+    <div class="hero-foot reveal" data-delay="4">
+      <div>Years <strong>6+</strong></div>
+      <div>Current focus <strong>AI · Enablement</strong></div>
+      <div>Based in <strong>Bengaluru, India</strong></div>
+      <div>Open to <strong>Senior · Lead roles</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" data-screen-label="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="eyebrow reveal">01 — About</div>
+      <div class="about reveal" data-delay="1">
+        <p>
+          I help B2B teams turn <em>tangled workflows</em> into products people actually want to open on a Monday morning. Six years across sales enablement, supply chain, healthcare analytics and AI tooling — translating <em>messy domain logic</em> into interfaces that feel inevitable.
+        </p>
+        <div class="signature">— Boopalakannan</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section id="work" data-screen-label="work">
+  <div class="wrap">
+    <div class="work-intro">
+      <h2 class="reveal">Recent <em>works.</em></h2>
+      <p class="lede reveal" data-delay="1">Three deep-dives across an AI sales enablement platform, an estimator built with Cursor, and a desktop notetaker. Hover any cover to open the full case study.</p>
+    </div>
+
+    <!-- CASE 01: PROSHORT AI -->
+    <article class="case" id="case-proshort">
+      <a class="case-link" href="work/proshort-ai.html" aria-label="Open Proshort AI case study"></a>
+      <header class="case-header reveal">
+        <div class="case-num">01 / 03</div>
+        <h3 class="case-title">Proshort&nbsp;<span class="it">AI</span></h3>
+        <div class="case-meta">
+          <div>Role · <span>Sr. UX Designer</span></div>
+          <div>Year · <span>2024 — Present</span></div>
+        </div>
+        <div class="case-meta case-cta" style="text-align:right">
+          <div>B2B SaaS · Sales enablement</div>
+          <div><span class="open-link">Read case study <span class="arr">↗</span></span></div>
+        </div>
+      </header>
+
+      <figure class="case-cover reveal" data-delay="1" data-cover>
+        <div class="win">
+          <div class="win-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">◉</span><span>app.proshort.ai<span class="path">/meetings/acme-product-demo</span></span></div>
+            <span></span>
+          </div>
+          <img class="shot" src="assets/proshort-overview.png" alt="Proshort AI — meeting intelligence dashboard with AI summary, action items and speaker analytics">
+        </div>
+        <figcaption class="corner">Fig. 01 · Meeting intelligence dashboard</figcaption>
+      </figure>
+
+      <div class="case-body">
+        <div class="narrative reveal" data-delay="1">
+          <span class="kicker">The brief</span>
+          <p>Reps were drowning in collateral. Marketing was shipping decks into a void. The product needed to make &ldquo;the right thing to send&rdquo; obvious — for the right buyer, at the right stage, without seven dropdowns to get there.</p>
+          <p>I led end-to-end UX for the enablement surface: a recommendations engine, an AI search layer, and a workspace where sellers can assemble personalised micro-sites in under three minutes. Worked tightly with PM, ML, and three eng pods.</p>
+          <p>Outcome: rep activation moved from a checklist exercise to a daily-open habit. Internal NPS climbed from 22&nbsp;→&nbsp;58 over two release cycles.</p>
+        </div>
+        <div class="reveal" data-delay="2">
+          <div class="case-metrics">
+            <div><span class="n"><em>3.4×</em></span><span class="l">Rep daily active</span></div>
+            <div><span class="n">+36<em>pt</em></span><span class="l">Internal NPS shift</span></div>
+            <div><span class="n">&lt;3<em>m</em></span><span class="l">To assemble a micro-site</span></div>
+            <div><span class="n">12</span><span class="l">Surfaces shipped</span></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- CASE 02: CLADDING ESTIMATOR -->
+    <article class="case" id="case-cemintel">
+      <a class="case-link" href="work/cemintel-estimator.html" aria-label="Open Cladding Estimator case study"></a>
+      <header class="case-header reveal">
+        <div class="case-num">02 / 03</div>
+        <div class="case-titlewrap">
+          <h3 class="case-title">Cladding Sheet&nbsp;<span class="it">Estimator</span></h3>
+          <span class="built-badge"><span class="spark">✦</span>Built with Cursor</span>
+        </div>
+        <div class="case-meta">
+          <div>Role · <span>UX Lead · Freelance</span></div>
+          <div>Year · <span>2025</span></div>
+        </div>
+        <div class="case-meta case-cta" style="text-align:right">
+          <div>Cemintel · Façade estimator</div>
+          <div><span class="open-link">Read case study <span class="arr">↗</span></span></div>
+        </div>
+      </header>
+
+      <figure class="case-cover reveal" data-delay="1" data-cover>
+        <div class="win">
+          <div class="win-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">◉</span><span>cemintel.app<span class="path">/estimator/setup</span></span></div>
+            <span></span>
+          </div>
+          <img class="shot" src="assets/cem-build-step1.png" alt="Cladding Sheet Estimator — project setup step with product carousel, panel configuration and environmental conditions">
+        </div>
+        <figcaption class="corner">Fig. 02 · Estimator project setup</figcaption>
+      </figure>
+
+      <div class="case-body" style="grid-template-columns: 1fr 1fr;">
+        <div class="narrative reveal">
+          <span class="kicker">The brief</span>
+          <p>Estimators were doing maths on paper, in Excel, on the back of brochures. Cemintel needed a tool that let a project manager spec a façade — panels, trims, fasteners, joins — in the time it takes to drink a coffee.</p>
+          <p>Designed the input model around how trades actually measure: by elevation, not by SKU. Paired with Cursor AI to ship a working estimator in weeks, not quarters — the design and the build kept pace with each other.</p>
+        </div>
+        <div class="narrative reveal" data-delay="1">
+          <p>The unlock was treating the estimate as a <em>living document</em>: change a panel size and watch fasteners, off-cuts, and lead-time slide in sympathy.</p>
+          <div class="case-metrics" style="margin-top:32px;">
+            <div><span class="n"><em>3</em></span><span class="l">Steps, end to end</span></div>
+            <div><span class="n">&lt;5<em>m</em></span><span class="l">To a full estimate</span></div>
+            <div><span class="n">100<em>%</em></span><span class="l">Built with Cursor AI</span></div>
+            <div><span class="n">1</span><span class="l">Living bill of quantities</span></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- CASE 03: NOTETAKER -->
+    <article class="case" id="case-notetaker">
+      <a class="case-link" href="work/notetaker.html" aria-label="Open Notetaker case study"></a>
+      <header class="case-header reveal">
+        <div class="case-num">03 / 03</div>
+        <div class="case-titlewrap">
+          <h3 class="case-title">Proshort&nbsp;<span class="it">Notetaker</span></h3>
+          <span class="built-badge"><span class="spark">✦</span>Built with Cursor</span>
+        </div>
+        <div class="case-meta">
+          <div>Role · <span>Sr. UX Designer</span></div>
+          <div>Year · <span>2025</span></div>
+        </div>
+        <div class="case-meta case-cta" style="text-align:right">
+          <div>Lightweight recorder · Desktop app</div>
+          <div><span class="open-link">Read case study <span class="arr">↗</span></span></div>
+        </div>
+      </header>
+
+      <figure class="case-cover reveal" data-delay="1" data-cover>
+        <div class="win">
+          <div class="win-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span><span class="badge">Recording</span></div>
+            <span></span>
+          </div>
+          <img class="shot" src="assets/note-replay.png" alt="Proshort Notetaker — recorded-meeting replay with AI summary, transcript and highlights">
+
+        </div>
+        <figcaption class="corner">Fig. 03 · Desktop companion</figcaption>
+      </figure>
+
+      <div class="case-body">
+        <div class="narrative reveal">
+          <span class="kicker">The exploration</span>
+          <p>A desktop recorder that quietly notices whatever call is running on your laptop — Zoom, Meet, Teams, a Slack huddle, even a WhatsApp call — and offers to capture it. No bot to admit, no platform lock, no CRM weight around it.</p>
+          <p>After the call it hands back a summary, owned action items, a searchable transcript and auto-highlights, with a meeting-details rail kept in plain sight. Ask anything across every call you've recorded.</p>
+          <p>The whole thing was prompted into a working, clickable state in Cursor — researched and built, not mocked. The prototype was the spec: the &ldquo;lightweight vs. heavy&rdquo; argument made by being lightweight.</p>
+        </div>
+        <div class="reveal" data-delay="2">
+          <div class="case-metrics">
+            <div><span class="n"><em>0</em></span><span class="l">Bots to admit</span></div>
+            <div><span class="n">5<em>+</em></span><span class="l">Call platforms detected</span></div>
+            <div><span class="n">11</span><span class="l">Screens, all clickable</span></div>
+            <div><span class="n">100<em>%</em></span><span class="l">Built in Cursor</span></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section id="experience" data-screen-label="experience">
+  <div class="wrap">
+    <div class="exp-grid">
+      <div>
+        <div class="eyebrow reveal">02 — Experience</div>
+        <h2 class="exp-title reveal" data-delay="1">Six years,<br><em>four</em> studios.</h2>
+      </div>
+      <div class="exp-list">
+        <div class="exp-row reveal">
+          <div class="exp-year">2024 — Now</div>
+          <div class="exp-role">Senior UX Designer<span class="it">Sales enablement · AI tooling</span></div>
+          <div class="exp-company">Proshort <span class="badge">Full-time</span></div>
+          <div class="exp-tag">Bengaluru</div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-year">2024 — Now</div>
+          <div class="exp-role">UX / UI Lead<span class="it">Product &amp; brand engagements</span></div>
+          <div class="exp-company">Nibble Edge <span class="badge">Freelance</span></div>
+          <div class="exp-tag">Remote</div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-year">2022 — 2024</div>
+          <div class="exp-role">Senior UI / UX Designer<span class="it">Incl. Blue Yonder — GenAI for supply chain, on contract via Red Baton</span></div>
+          <div class="exp-company">Red Baton</div>
+          <div class="exp-tag">Bengaluru · Remote</div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-year">2020 — 2022</div>
+          <div class="exp-role">UI Designer<span class="it">Healthcare · CRM · marketing platforms</span></div>
+          <div class="exp-company">Red Baton</div>
+          <div class="exp-tag">Bengaluru</div>
+        </div>
+        <div class="exp-row reveal">
+          <div class="exp-year">2019 — 2020</div>
+          <div class="exp-role">Junior Visualizer<span class="it">Brand &amp; creative</span></div>
+          <div class="exp-company">Dropout Creative Studio</div>
+          <div class="exp-tag">Chennai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOOLBOX ============ -->
+<section id="toolbox" data-screen-label="toolbox">
+  <div class="wrap">
+    <div class="toolbox">
+      <div>
+        <div class="eyebrow reveal">03 — Toolbox</div>
+        <h2 class="exp-title reveal" data-delay="1">The kit<br>I <em>work</em> in.</h2>
+      </div>
+      <div class="toolbox-groups">
+        <div class="tool-group reveal">
+          <div class="label">Design &amp; Prototyping</div>
+          <ul>
+            <li>Figma</li>
+            <li>FigJam</li>
+            <li>Balsamiq</li>
+            <li>Framer</li>
+          </ul>
+        </div>
+        <div class="tool-group reveal" data-delay="1">
+          <div class="label">AI &amp; Productivity</div>
+          <ul>
+            <li>Claude <span class="it">— thinking partner</span></li>
+            <li>Cursor AI <span class="it">— design-to-code</span></li>
+            <li>Manus AI</li>
+            <li>UX Pilot <span class="it">— UX acceleration</span></li>
+            <li>Motiff <span class="it">— multi-screen flows</span></li>
+          </ul>
+        </div>
+        <div class="tool-group reveal" data-delay="2">
+          <div class="label">Collaboration &amp; Research</div>
+          <ul>
+            <li>FigJam</li>
+            <li>Miro</li>
+            <li>Jira</li>
+            <li>Confluence</li>
+            <li>Notion</li>
+          </ul>
+        </div>
+        <div class="tool-group reveal" data-delay="3">
+          <div class="label">Communication &amp; Ops</div>
+          <ul>
+            <li>Gmail</li>
+            <li>Slack</li>
+            <li>Keka</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="contact" data-screen-label="contact">
+  <div class="wrap">
+    <div class="contact-inner">
+      <div class="eyebrow reveal">04 — Contact</div>
+      <h2 class="reveal" data-delay="1">Let's make<br>something <em>clear</em>. <span class="arrow">↗</span></h2>
+      <div class="channels reveal" data-delay="2">
+        <a href="mailto:boobalankanan6@gmail.com">
+          <span class="l">Email</span>
+          <span class="v">boobalankanan6@gmail.com</span>
+        </a>
+        <a href="https://www.linkedin.com/in/boopalakannan-kamaraj-aa3603144/" target="_blank" rel="noopener">
+          <span class="l">LinkedIn</span>
+          <span class="v">/in/boopalakannan-kamaraj</span>
+        </a>
+        <a href="https://dribbble.com/boopalakannan" target="_blank" rel="noopener">
+          <span class="l">Dribbble</span>
+          <span class="v">@boopalakannan</span>
+        </a>
+        <a href="tel:+919786238277">
+          <span class="l">Phone</span>
+          <span class="v">+91 97862 38277</span>
+        </a>
+        <a href="https://drive.google.com/drive/folders/1cPXt0Nh26QPbLAzWE-SPMQEx7-s7u_fI" target="_blank" rel="noopener">
+          <span class="l">Resume</span>
+          <span class="v">Download resume</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="cursor-bubble" id="cursorBubble" aria-hidden="true">View case study <span class="arr">↗</span></div>
+
+<footer>
+  <div>© 2026 Boopalakannan Kamaraj</div>
+  <div>Crafted in Bengaluru</div>
+</footer>
+
+<script>
+  // Scroll reveal (with manual kick + safety net so content never stays blank)
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+  // Manual pass: anything already in viewport on load should reveal immediately.
+  requestAnimationFrame(() => {
+    const vh = window.innerHeight;
+    reveals.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) { el.classList.add('in'); io.unobserve(el); }
+    });
+  });
+  // Belt-and-braces: if anything is still hidden after 1.2s, reveal it.
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in'));
+  }, 1200);
+
+  // Nav scrolled state
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    if (window.scrollY > 24) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Smooth in-page nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior: 'smooth' });
+    });
+  });
+  // Custom "view case study" cursor over project covers
+  (function () {
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!fine.matches) return;
+    const bubble = document.getElementById('cursorBubble');
+    const covers = document.querySelectorAll('.case');
+    let raf = null, tx = 0, ty = 0;
+    const render = () => { bubble.style.left = tx + 'px'; bubble.style.top = ty + 'px'; raf = null; };
+    const move = (e) => {
+      tx = e.clientX; ty = e.clientY;
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+    covers.forEach(c => {
+      c.addEventListener('mouseenter', (e) => { tx = e.clientX; ty = e.clientY; render(); bubble.classList.add('on'); });
+      c.addEventListener('mousemove', move);
+      c.addEventListener('mouseleave', () => { bubble.classList.remove('on'); });
+    });
+  })();
+</script>
+</html>

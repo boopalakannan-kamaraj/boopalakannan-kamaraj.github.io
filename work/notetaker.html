@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proshort Notetaker — Case study · Boopalakannan Kamaraj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-study.css">
+<link rel="stylesheet" href="hero-stage.css">
+<style>
+  /* ============================================================
+     Notetaker uses a cooler, indigo-tinted hero stage to nod to
+     the product UI. The screenshots ship with their own rounded
+     window chrome + soft shadow baked in (transparent corners),
+     so they sit straight on the page — no extra browser frame.
+     ============================================================ */
+  .stage.cool {
+    background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in oklab, oklch(0.55 0.18 280) 24%, transparent) 0%, transparent 55%),
+      linear-gradient(180deg, #ece6da 0%, #e3dcca 100%);
+  }
+  .stage.cool .stage-glow {
+    background: radial-gradient(circle, color-mix(in oklab, oklch(0.55 0.18 280) 32%, transparent) 0%, transparent 60%);
+  }
+
+  /* Hero screenshot — perspective tilt + soft shadow, straightens on hover */
+  .hero-app {
+    position: relative; z-index: 1;
+    display: block; width: min(880px, 100%); height: auto; margin: 0 auto;
+    border-radius: 14px;
+    filter:
+      drop-shadow(0 36px 80px rgba(18, 16, 30, 0.30))
+      drop-shadow(0 14px 30px rgba(18, 16, 30, 0.16));
+    transform: perspective(2600px) rotateX(2.5deg);
+    transform-origin: 50% 100%;
+    transition: transform 800ms cubic-bezier(.2,.7,.2,1);
+  }
+  .stage:hover .hero-app { transform: perspective(2600px) rotateX(0deg); }
+
+  /* Notetaker-specific floating chip placements */
+  .chip-detect { top: 50px; left: 22px; animation-delay: -0.5s; }
+  .chip-rec { top: 40%; right: 14px; animation-delay: -2s; }
+  .chip-nobots { bottom: 128px; left: 8px; animation-delay: -3.5s; }
+  .note-recap { bottom: 44px; right: 44px; animation-delay: -1.2s; }
+  .chip-rec .chip-dot { background: oklch(0.6 0.2 20); }
+  @media (max-width: 1100px) {
+    .chip-detect { top: 24px; left: 12px; }
+    .chip-rec { top: auto; bottom: 200px; right: 10px; }
+    .chip-nobots { display: none; }
+    .note-recap { right: 14px; bottom: 20px; max-width: 220px; }
+  }
+
+  /* ============================================================
+     Friction teardown — text-only evidence grid (no screenshots
+     of the incumbent; the wedge is described, not shown)
+     ============================================================ */
+  .comp-wall {
+    position: relative; margin-top: 40px; padding: 28px;
+    background: linear-gradient(180deg, var(--paper) 0%, color-mix(in oklab, var(--paper) 80%, var(--bg-warm)) 100%);
+    border: 1px solid var(--line); border-radius: 10px;
+  }
+  .comp-wall-cap {
+    position: relative; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .comp-wall-cap .l span { color: var(--ink); }
+  .comp-wall-cap .meta { color: var(--muted-2); }
+  .comp-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .comp-tile {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 20px 22px;
+    display: flex; flex-direction: column;
+    transition: transform 280ms cubic-bezier(.2,.7,.2,1), box-shadow 280ms;
+  }
+  .comp-tile:hover { transform: translateY(-3px); box-shadow: 0 22px 40px -22px rgba(20, 16, 8, 0.22); }
+  .comp-tile-head {
+    display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .comp-tile-head .step { color: var(--accent-ink); }
+  .comp-tile h4 {
+    font-family: var(--serif); font-weight: 400; font-size: 20px; line-height: 1.2; letter-spacing: -0.01em;
+    margin: 0 0 12px; color: var(--ink);
+  }
+  .comp-tile-issues { display: flex; flex-direction: column; gap: 10px; }
+  .comp-tile-issues .issue {
+    display: grid; grid-template-columns: 16px 1fr; gap: 10px;
+    font-size: 13px; line-height: 1.55; color: var(--ink-soft);
+  }
+  .comp-tile-issues .issue::before { content: '×'; color: oklch(0.55 0.18 28); font-weight: 600; font-size: 16px; line-height: 1.4; }
+  .comp-tile-issues .issue strong { color: var(--ink); font-weight: 500; }
+  .comp-takeaway {
+    margin-top: 28px; padding: 20px 24px;
+    background: color-mix(in oklab, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--line)); border-radius: 8px;
+    display: grid; grid-template-columns: 100px 1fr; gap: 24px; align-items: center;
+  }
+  .comp-takeaway .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); }
+  .comp-takeaway .body { font-family: var(--serif); font-size: 22px; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); margin: 0; }
+  .comp-takeaway .body em { font-style: italic; color: var(--accent-ink); }
+  @media (max-width: 1080px) {
+    .comp-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .comp-grid { grid-template-columns: 1fr; }
+    .comp-takeaway { grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  /* ============================================================
+     "Our bet" — three-pillar shift summary
+     ============================================================ */
+  .bet-pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 32px 0 8px; }
+  .bet-pillar { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px 22px; }
+  .bet-pillar .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); display: block; margin-bottom: 10px; }
+  .bet-pillar h4 { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--ink); }
+  .bet-pillar h4 em { font-style: italic; color: var(--accent-ink); }
+  .bet-pillar p { font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin: 0; }
+  .bet-pillar .from-to {
+    display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .bet-pillar .from-to .k { color: var(--muted); }
+  .bet-pillar .from-to .v { color: var(--ink); }
+  .bet-pillar .from-to .v.was { color: var(--muted); text-decoration: line-through; }
+  @media (max-width: 860px) { .bet-pillars { grid-template-columns: 1fr; } }
+
+  /* ============================================================
+     Status callout — "in flight" exploration framing
+     ============================================================ */
+  .status-card {
+    margin-top: 32px; padding: 28px 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; position: relative;
+  }
+  .status-card::before {
+    content: 'Exploration'; position: absolute; top: -10px; left: 20px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink);
+    background: var(--bg); padding: 3px 10px; border-radius: 4px; border: 1px solid color-mix(in oklab, var(--accent) 25%, var(--line));
+  }
+  .status-card .item .l { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 8px; }
+  .status-card .item .v { font-family: var(--serif); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); display: block; }
+  .status-card .item .v em { font-style: italic; color: var(--accent-ink); }
+  .status-card .item p { margin: 8px 0 0; font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+  @media (max-width: 860px) { .status-card { grid-template-columns: 1fr; gap: 18px; padding: 24px 20px; } }
+
+  /* ============================================================
+     Walkthrough — vertical stack of showcase blocks
+     ============================================================ */
+  .walk { display: flex; flex-direction: column; gap: 96px; margin-top: 12px; }
+  @media (max-width: 900px) { .walk { gap: 64px; } }
+
+  /* ============================================================
+     Framing duo — centered intro, then the chat home in a browser
+     mock with the weekly-summary widget floating over its right side
+     ============================================================ */
+  .duo { padding: 4px 0; }
+  .duo-desc { max-width: 760px; margin: 0 0 36px; text-align: left; }
+  .duo-desc .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); }
+  .duo-desc h4 { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.12; letter-spacing: -0.015em; margin: 12px 0 10px; color: var(--ink); }
+  .duo-desc h4 em { font-style: italic; color: var(--accent-ink); }
+  .duo-desc p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink-soft); max-width: 60ch; }
+
+  /* Section sub-intro — left-aligned to the content edge, sharing the
+     same left margin as the full-width screenshots and detail grids */
+  .arc-intro { margin: 4px 0 8px; max-width: 760px; text-align: left; }
+  .arc-intro .eyebrow-line { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink); display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 18px; }
+  .arc-intro .eyebrow-line::before { content: ''; width: 26px; height: 1px; background: var(--accent); }
+  .arc-intro h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3vw, 40px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 14px; color: var(--ink); }
+  .arc-intro h3 em { font-style: italic; color: var(--accent-ink); }
+  .arc-intro p { font-size: 16px; line-height: 1.65; color: var(--ink-soft); margin: 0; max-width: 640px; }
+
+  /* ============================================================
+     Showcase — big screenshot inside a browser-window mock, with
+     the numbered write-up placed BELOW the screen (no markers over
+     the screenshot). The screen is never shrunk by a side column.
+     ============================================================ */
+  .showcase { width: 100%; position: relative; margin: 12px auto; }
+  .sc-head { max-width: 760px; margin: 0 0 36px; text-align: left; }
+  .sc-head .eyebrow { justify-content: flex-start; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); display: flex; gap: 10px; align-items: baseline; }
+  .sc-head .eyebrow .step { color: var(--muted-2); }
+  .sc-head h3.wt { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.07; letter-spacing: -0.02em; margin: 12px 0 10px; color: var(--ink); }
+  .sc-head h3.wt em { font-style: italic; color: var(--accent-ink); }
+  .sc-head .lead { font-size: 15px; line-height: 1.6; color: var(--ink-soft); margin: 0; max-width: 60ch; }
+
+  /* Browser-window mock (matches the Proshort AI detail page) */
+  .scwin { position: relative; width: 100%; margin: 0; background: #fff; border-radius: 14px;
+    box-shadow: 0 44px 96px -42px rgba(18,16,30,.52), 0 18px 42px -22px rgba(18,16,30,.32), 0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent); }
+  .scwin-bar { display: grid; grid-template-columns: 64px 1fr 64px; align-items: center; padding: 11px 16px;
+    background: linear-gradient(180deg, #f8f5ee 0%, #efeadd 100%); border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent); border-radius: 14px 14px 0 0; }
+  .scwin-bar .dots { display: flex; gap: 7px; }
+  .scwin-bar .dots i { width: 11px; height: 11px; border-radius: 50%; background: #d9d2c2; }
+  .scwin-bar .dots i:nth-child(1) { background: #f06058; }
+  .scwin-bar .dots i:nth-child(2) { background: #f9bd2e; }
+  .scwin-bar .dots i:nth-child(3) { background: #28c941; }
+  .scwin-bar .url { justify-self: center; max-width: 100%; display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft); background: color-mix(in oklab, var(--ink) 4%, #fff);
+    border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent); border-radius: 999px; padding: 6px 16px; white-space: nowrap; overflow: hidden; }
+  .scwin-bar .url .lock { color: var(--accent-ink); font-size: 10px; }
+  .scwin-bar .url .path { color: var(--muted); }
+  .scwin-bar .app-name { justify-self: center; font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--ink-soft); display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .scwin-bar .app-name .badge { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px 2px 6px; border-radius: 4px; background: color-mix(in oklab, oklch(0.6 0.2 20) 14%, #fff); color: oklch(0.5 0.21 20); }
+  .scwin-bar .app-name .badge .rdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: oklch(0.6 0.21 20); margin-right: 5px; vertical-align: 1px; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .scwin > img { display: block; width: 100%; height: auto; border-radius: 0 0 14px 14px; }
+
+  /* Detailed write-up below the screen */
+  .sc-detail { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 30px 36px; max-width: none; margin: 50px 0 0; }
+  .scd { position: relative; padding-top: 16px; border-top: 1px solid var(--line); }
+  .scd .num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+  .scd .num b { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 1px solid var(--accent); color: #fff; font-weight: 500; }
+  .scd h5 { margin: 0 0 6px; font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -0.006em; color: var(--ink); }
+  .scd p { margin: 0; font-size: 13px; line-height: 1.58; color: var(--ink-soft); }
+  .scd em { font-style: italic; color: var(--accent-ink); }
+
+  @media (max-width: 1040px) {
+    .showcase { width: 100%; }
+    .scwin { width: 100%; }
+    .sc-detail { grid-template-columns: 1fr 1fr; gap: 22px 24px; margin-top: 30px; }
+  }
+  @media (max-width: 600px) { .sc-detail { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" data-screen-label="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>Boopalakannan&nbsp;K.</a>
+  <a class="back" href="../index.html"><span class="ar">←</span> Back to index</a>
+  <div class="nav-actions">
+    <a class="cta" href="../index.html#contact">Hire · 2026</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HEADER ============ -->
+<section class="cs-header" data-screen-label="01 header">
+  <div class="wrap">
+    <div class="cs-meta-row reveal">
+      <span class="num">Case 03 / 03</span>
+      <span class="dash">·</span>
+      <span>Proshort</span>
+      <span class="dash">·</span>
+      <span>Lightweight meeting recorder · concept</span>
+      <span class="dash">·</span>
+      <span>2025</span>
+    </div>
+    <h1 class="cs-title reveal" data-delay="1">
+      A recorder that<br>
+      just <em>shows up.</em>
+    </h1>
+    <p class="cs-lede reveal" data-delay="2">
+      A desktop companion that quietly notices whatever call is happening on your laptop — <em>Zoom, Meet, Teams, a Slack huddle, even a WhatsApp call</em> — and offers to record it. After the call it hands back a summary, action items, and a searchable transcript. The whole thing was prompted into existence in <em>Cursor</em> — a real, clickable prototype built from research, not a Figma mockup.
+    </p>
+
+    <div class="cs-facts reveal" data-delay="3">
+      <div class="item"><span class="l">Company</span><span class="v serif">Proshort</span></div>
+      <div class="item"><span class="l">Role</span><span class="v">UX · prototype lead</span></div>
+      <div class="item"><span class="l">Built with</span><span class="v">Cursor AI · Claude</span></div>
+      <div class="item"><span class="l">Method</span><span class="v">Prompt → research → click</span></div>
+      <div class="item"><span class="l">Status</span><span class="v">Internal exploration</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO IMAGE ============ -->
+<section class="cs-hero-image" data-screen-label="02 hero image">
+  <div class="wrap">
+    <div class="stage cool reveal">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <img class="hero-app" src="../assets/note-replay.png" alt="Proshort Notetaker replay view — an AI-ready video player for a recorded Product Sync Review, with Overview / Notes / Transcript / Highlights tabs, an AI summary, and a meeting-details panel listing participants, folder and tags.">
+
+      <div class="chip chip-detect">
+        <span class="chip-dot"></span>
+        <div>
+          <div class="chip-l">Meeting detected</div>
+          <div class="chip-v">Zoom · one-tap join</div>
+        </div>
+      </div>
+
+      <div class="chip chip-rec">
+        <span class="chip-dot"></span>
+        <div>
+          <div class="chip-l">Recording</div>
+          <div class="chip-v">Multiple calls at once</div>
+        </div>
+      </div>
+
+      <div class="chip chip-nobots">
+        <span class="chip-num"><em>0</em></span>
+        <div>
+          <div class="chip-l">Bots to admit</div>
+          <div class="chip-v">It is just on your laptop</div>
+        </div>
+      </div>
+
+      <div class="note note-recap">
+        <div class="note-l">Post-call recap</div>
+        <div class="note-t">Summary, ready<span class="sub">Action items · Transcript · Highlights</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 CONTEXT ============ -->
+<section class="cs-block" data-screen-label="03 context">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">01</span>Context</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>The post-meeting<br><em>tax</em>.</h3>
+        <p>Everyone loves the call. Nobody loves the thirty minutes after it — the recap, the action items you half-remember, the &ldquo;wait, who owned that?&rdquo; The notes that do exist are scattered across whatever tool happened to be in the room.</p>
+        <p>Proshort already had a capable meeting-intelligence product. But it leaned on a meeting <em>bot</em> you had to admit to every single call, and it was wrapped in a CRM-heavy workspace. For a quick internal sync, a customer WhatsApp call, or three back-to-back demos, that is a lot of ceremony to capture a conversation.</p>
+        <p>So we asked a smaller question, and built the answer instead of speccing it: <em>what if capture were just a quiet thing your laptop already did?</em></p>
+        <div class="pull">&ldquo;You should never have to think about the recorder. It should think about you.&rdquo;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 THE WEDGE ============ -->
+<section class="cs-block" data-screen-label="04 the friction">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">02</span>The friction</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Capture shouldn't be<br>a <em>guest</em> you keep re-inviting.</h3>
+        <p>Before drawing anything, we wrote down where the heavy, bot-based notetaker workflow loses people. Four moments kept coming up — and each one became a thing the lightweight recorder had to make disappear.</p>
+      </div>
+    </div>
+
+    <div class="comp-wall reveal" data-delay="2">
+          <div class="comp-wall-cap">
+            <span class="l">Fig. 01 · <span>Where the heavy workflow leaks</span></span>
+            <span class="meta">Internal audit · 2025</span>
+          </div>
+          <div class="comp-grid">
+            <div class="comp-tile">
+              <div class="comp-tile-head"><span class="step">Friction 01</span><span>Every call</span></div>
+              <h4>You babysit a bot.</h4>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>A bot has to be admitted to the call.</strong> Someone clicks &ldquo;admit&rdquo; on a guest named <em>Notetaker</em> every single time — and on internal calls it feels intrusive to the people on the other side.</span></div>
+                <div class="issue"><span><strong>Forget once and it is gone.</strong> No bot in the room means no recording, no transcript, no recovery.</span></div>
+              </div>
+            </div>
+            <div class="comp-tile">
+              <div class="comp-tile-head"><span class="step">Friction 02</span><span>The workspace</span></div>
+              <h4>Recording is buried under CRM.</h4>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>The note is two screens deep.</strong> To get to &ldquo;what was said&rdquo; you pass through pipeline, deal stage and account views built for a different job.</span></div>
+                <div class="issue"><span><strong>Heavy for a light task.</strong> Capturing a 15-minute standup shouldn't require a sales platform.</span></div>
+              </div>
+            </div>
+            <div class="comp-tile">
+              <div class="comp-tile-head"><span class="step">Friction 03</span><span>Throughput</span></div>
+              <h4>One call at a time.</h4>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>Back-to-back calls collide.</strong> A bot tied to a single meeting can't quietly hold two or three overlapping conversations the way a busy day actually runs.</span></div>
+                <div class="issue"><span><strong>No ambient memory.</strong> The huddle that started without warning never gets captured.</span></div>
+              </div>
+            </div>
+            <div class="comp-tile">
+              <div class="comp-tile-head"><span class="step">Friction 04</span><span>Coverage</span></div>
+              <h4>Platform-locked.</h4>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>Only &ldquo;supported&rdquo; apps work.</strong> A Slack call or a WhatsApp call — the kind real conversations happen on — fall outside the bot's reach entirely.</span></div>
+                <div class="issue"><span><strong>The user adapts to the tool.</strong> People move the meeting to a platform the recorder likes, instead of the recorder meeting them where they are.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="comp-takeaway">
+            <span class="lbl">Wedge</span>
+            <p class="body">If capture lives <em>on the laptop</em> instead of inside the meeting, the bot, the platform lock and the CRM weight all fall away. The recorder simply hears the room — and asks first.</p>
+          </div>
+        </div>
+  </div>
+</section>
+
+<!-- ============ 03 OUR BET ============ -->
+<section class="cs-block" data-screen-label="05 our bet">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">03</span>Our bet</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Three shifts that<br>made it <em>lightweight</em>.</h3>
+        <p>We didn't redesign the bot. We changed where capture lives. A meeting isn't a thing you join a recorder to — it's audio already happening on a device you own.</p>
+
+        <div class="bet-pillars">
+          <div class="bet-pillar reveal">
+            <span class="num">01</span>
+            <h4>Local,<br>not a <em>guest</em>.</h4>
+            <p>The recorder sits on the laptop and listens to whatever call is in the room. Nothing to admit, nothing intrusive on the other side — and it can hold several calls in a day without dropping any.</p>
+            <div class="from-to"><span class="k">From</span><span class="v was">Admit a bot, every call</span><span class="k">To</span><span class="v">Ambient, on-device capture</span></div>
+          </div>
+          <div class="bet-pillar reveal" data-delay="1">
+            <span class="num">02</span>
+            <h4>Any call,<br><em>detected</em>.</h4>
+            <p>Zoom, Meet, Teams, a Slack huddle, a WhatsApp call — when one starts, a small toast offers to record. You stay in control; the recorder just notices.</p>
+            <div class="from-to"><span class="k">From</span><span class="v was">Supported platforms only</span><span class="k">To</span><span class="v">Detect &amp; ask, anywhere</span></div>
+          </div>
+          <div class="bet-pillar reveal" data-delay="2">
+            <span class="num">03</span>
+            <h4>The work,<br><em>after</em>.</h4>
+            <p>When the call ends you get a summary, owned action items, a searchable transcript, and auto-highlights — plus a recorded video when the platform allows it. Then ask anything across all of it.</p>
+            <div class="from-to"><span class="k">From</span><span class="v was">A note buried in CRM</span><span class="k">To</span><span class="v">Recap + transcript + ask</span></div>
+          </div>
+        </div>
+
+        <p>And the build itself was the point. This whole product was prompted into a working state in <em>Cursor</em> — researched, described, and clicked through in days. The prototype <em>was</em> the spec: every flow decision was something we could open on real data shapes the same afternoon.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 WALKTHROUGH ============ -->
+<section class="cs-block" data-screen-label="06 walkthrough">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">04</span>The flow</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Before, during,<br>and <em>after</em> the call.</h3>
+        <p>The whole product reads as one calm timeline: a home that knows what's next, an unobtrusive recorder while you talk, and a replay surface that turns the conversation into things you can act on. <em>Hover a feature</em> on the zoomable screens and the screenshot focuses on the part it describes.</p>
+      </div>
+    </div>
+
+    <div class="walk">
+
+      <!-- ─── ARC A: BEFORE ─── -->
+      <div class="arc-intro reveal">
+        <div class="eyebrow-line">Arc A · Before the call</div>
+        <h3>It knows what's <em>next</em> — and notices when it starts.</h3>
+        <p>You open the app to a quiet schedule, not an inbox. The home pairs an upcoming-meetings timeline with everything you've already recorded, and the moment a call begins anywhere on the laptop, a toast offers to capture it.</p>
+      </div>
+
+      <!-- Home: upcoming + detection (SHOWCASE) -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 01</span><span class="step">· Home &amp; detection</span></div>
+          <h3 class="wt">A calm timeline,<br>and a gentle <em>nudge</em>.</h3>
+          <p class="lead">Home is a schedule, not a dashboard. The only loud thing on the page is the one moment that needs you — a call that just started.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-home-upcoming.png" alt="Proshort home — Today's meetings with a Coming up timeline grouped by date, and a floating Meeting detected toast for a Zoom call with a Join button.">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Any platform</div>
+            <h5>Meeting detected → Join</h5>
+            <p>When a call begins on the laptop — Zoom, Meet, Teams, a Slack huddle, a WhatsApp call — a small toast surfaces with the platform and a one-tap <em>Join</em> to start capturing. No bot to admit, no link to paste.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Timeline</div>
+            <h5>&ldquo;Coming up&rdquo; timeline</h5>
+            <p>Events group by day with time, length and participant count — a quiet read of what needs attention next, not a wall of cards.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Prepare</div>
+            <h5>Prepare before you talk</h5>
+            <p>Hover any upcoming meeting to <em>Add to folder</em> or jot a pre-call note, so the context is already attached when the recording lands.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home: recent meetings (SHOWCASE) -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 02</span><span class="step">· Recent &amp; recordings</span></div>
+          <h3 class="wt">Everything captured,<br>grouped by <em>day</em>.</h3>
+          <p class="lead">Below the schedule, every completed call is one scannable list — notes, summaries, recordings and follow-ups, ready to reopen.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-home-recent.png" alt="Proshort home — Recent meetings grouped by day, each with a colored play thumbnail, platform icon, time, duration, participant count and a folder tag, plus a persistent Ask bar.">
+        </div>
+        <div class="sc-detail">
+          <div class="scd">
+            <div class="num"><b>1</b>Recordings</div>
+            <h5>Recordings by platform</h5>
+            <p>Calls on Google Meet, Teams or Zoom carry a recorded video; each row shows its platform icon and a colored play thumbnail so the medium is obvious at a glance.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Folders</div>
+            <h5>Folders &amp; spaces</h5>
+            <p>A row's folder tag (Team Notes, Sales Calls, Product Feedback…) mirrors the Spaces in the sidebar — move calls into folders to keep the pile sorted by who cares about it.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Ask bar</div>
+            <h5>Ask is always one field away</h5>
+            <p>A persistent <em>Ask anything about your meetings</em> bar sits at the bottom of every screen — the chat is never more than a glance away.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ARC B: DURING ─── -->
+      <div class="arc-intro reveal">
+        <div class="eyebrow-line">Arc B · During the call</div>
+        <h3>Recording, without <em>stealing focus</em>.</h3>
+        <p>Once you're capturing, the recorder goes dark and calm — a simple participant view with a small recording marker. A companion panel is there if you want it, and invisible if you don't.</p>
+      </div>
+
+      <!-- Live recording (SHOWCASE — one screen covers grid + companion) -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 03</span><span class="step">· Live recording</span></div>
+          <h3 class="wt">A companion, only when<br>you <em>reach for it</em>.</h3>
+          <p class="lead">The recorder stays out of the way — a participant grid and one honest marker. Open the companion and the call streams in as a live transcript you can read, tag, or question, all on one screen.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span><span class="badge"><span class="rdot"></span>Recording</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-live-transcript.png" alt="Proshort live recording — a dark participant grid for Product Sync with the Meeting companion panel open on the Transcript tab: a running, speaker-labelled transcript with timestamps and auto highlight tags like Pricing Discussed and Customer Feedback.">
+        </div>
+        <div class="sc-detail">
+          <div class="scd">
+            <div class="num"><b>1</b>Honest marker</div>
+            <h5>It never hides that it's on</h5>
+            <p>A red <em>Recording</em> dot with the meeting name and elapsed time stays in the corner — dismiss the window and capture keeps running, across several calls at once.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Active speaker</div>
+            <h5>A glance tells you the room</h5>
+            <p>A soft ring marks whoever is talking, so the recorder never competes with the actual video call for your attention.</p>
+          </div>
+          <div class="scd key">
+            <div class="num"><b>3</b>Live transcript</div>
+            <h5>Structured while people talk</h5>
+            <p>The conversation streams in attributed by speaker and timestamp, with key moments tagged in place — <em>Pricing Discussed</em>, <em>Customer Feedback</em> — so the shape of the call forms in real time.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>4</b>Read, jump, or ask</div>
+            <h5>One companion, three tabs</h5>
+            <p>Transcript, Highlights and Ask live in one panel — read the stream, jump between moments, or ask <em>&ldquo;who owns the pricing deck?&rdquo;</em> mid-call and get an answer grounded in what was said, with a Reasoning toggle.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>5</b>Highlights</div>
+            <h5>Auto highlight tags</h5>
+            <p>Moments that matter get tagged in place as the call happens — <em>Pricing Discussed</em>, <em>Customer Feedback</em> — so the structure of the call is forming in real time, not after it.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>6</b>Ask mid-call</div>
+            <h5>Interrogate the call live</h5>
+            <p>Ask <em>&ldquo;who owns the pricing deck?&rdquo;</em> while it's still happening and get an answer grounded in what was actually said — with a <em>Reasoning</em> toggle that shows how the answer was assembled.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ARC C: AFTER ─── -->
+      <div class="arc-intro reveal">
+        <div class="eyebrow-line">Arc C · After the call</div>
+        <h3>The conversation, turned into <em>things to do</em>.</h3>
+        <p>When the call ends, the recording becomes a workspace: an AI replay, a summary, owned action items, a searchable transcript and auto-highlights — with a meeting-details rail that never makes you hunt for who, where or what.</p>
+      </div>
+
+      <!-- Replay overview (SHOWCASE — browser mock + floating number markers, detail grid below) -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 04</span><span class="step">· Recorded replay</span></div>
+          <h3 class="wt">A recording you<br>can actually <em>read</em>.</h3>
+          <p class="lead">For Meet, Teams and Zoom calls the replay opens with video; the right rail carries the facts, and four tabs split the call into how you want to consume it.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-replay.png" alt="Proshort recorded-meeting replay — a video player marked AI replay ready, Overview / Notes / Transcript / Highlights tabs, an AI summary, and a meeting-details panel with participants, folder, created-by, shared-with and tags.">
+        </div>
+        <div class="sc-detail">
+          <div class="scd">
+            <div class="num"><b>1</b>Player</div>
+            <h5>AI replay player</h5>
+            <p>The recorded video sits up top with a scrubber and speed control. When the platform doesn't allow video, it gracefully becomes audio-only.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Tabs</div>
+            <h5>Four ways to consume it</h5>
+            <p><em>Overview · Notes · Transcript · Highlights</em> — start with the AI summary, then drop into notes, the full transcript, or the key moments.</p>
+          </div>
+          <div class="scd key">
+            <div class="num"><b>3</b>Details</div>
+            <h5>Meeting details, in plain sight</h5>
+            <p>Participants by team, folder, who created it, who it's shared with, and tags — the metadata a CRM buries, kept visible.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>4</b>Controls</div>
+            <h5>Lightweight controls</h5>
+            <p>Share the replay, download it, or change playback speed. Nothing that belongs to a sales pipeline.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary & action items (SHOWCASE) -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 05</span><span class="step">· Summary &amp; action items</span></div>
+          <h3 class="wt">Every claim has<br>a <em>receipt</em>.</h3>
+          <p class="lead">The summary is a paragraph; the action items are owned and checkable. And nothing is taken on faith — tap any item to see the exact words behind it.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-overview-action.png" alt="Proshort overview tab with the player minimized to an audio bar — an AI summary, an Action Items list with owners and checkboxes, and a transcript evidence popover quoting Ravi at 00:42 with a Jump to moment button.">
+        </div>
+        <div class="sc-detail">
+          <div class="scd">
+            <div class="num"><b>1</b>Audio mode</div>
+            <h5>Minimize to an audio bar</h5>
+            <p>Shrink the video into a slim <em>Audio mode</em> player pinned to the top, so the recording keeps playing while you read the summary and work the page.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Action items</div>
+            <h5>Owned action items</h5>
+            <p>Each task gets an owner and a checkbox — <em>Ravi · update pricing deck with beta customer feedback</em> — so the &ldquo;who owns that?&rdquo; question is answered before anyone asks it.</p>
+          </div>
+          <div class="scd key">
+            <div class="num"><b>3</b>Evidence</div>
+            <h5>Jump to the moment</h5>
+            <p>Tap the info on a summary line and a popover shows the verbatim quote, the speaker and the timestamp — with <em>Jump to moment</em> to play that exact second, or open it in the full transcript.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>4</b>Notes</div>
+            <h5>Notes alongside</h5>
+            <p>Free-form notes live on the same screen and roll up into the recap, so a pre-call thought and a post-call takeaway sit together.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transcript + linked note (SHOWCASE) -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 06</span><span class="step">· Transcript</span></div>
+          <h3 class="wt">Read it, search it,<br><em>clip</em> it.</h3>
+          <p class="lead">The full transcript is laid out by speaker and timestamp — and any passage can become a note that stays linked to its moment in the call.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-transcript-note.png" alt="Proshort Transcript tab — a searchable, speaker-labelled transcript with timestamps; a text selection has opened a Create linked note popover with a title, the quoted excerpt, a folder dropdown and a tag field.">
+        </div>
+        <div class="sc-detail">
+          <div class="scd">
+            <div class="num"><b>1</b>Search</div>
+            <h5>Searchable &amp; attributed</h5>
+            <p>Find a phrase across the whole conversation; every turn carries the speaker and a timestamp you can jump from.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Linked note</div>
+            <h5>Select → create linked note</h5>
+            <p>Highlight any text and a <em>Create linked note</em> card opens pre-filled with the quote — the note remembers exactly where in the call it came from.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Organize</div>
+            <h5>File it as you go</h5>
+            <p>Drop the note into a folder (Team Notes, Sales Calls…) and add a tag like <em>Follow-up</em> right from the card, then <em>Copy transcript</em> when you need the raw text.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── ARC D: ASK ─── -->
+      <div class="arc-intro reveal">
+        <div class="eyebrow-line">Arc D · Across everything</div>
+        <h3>Ask the whole <em>week</em>, not one call.</h3>
+        <p>The same Ask that lives inside a call also spans every meeting you've captured — a chat grounded in your own conversations, with the receipts attached.</p>
+      </div>
+
+      <!-- Chat home + summary -->
+      <div class="duo reveal" data-delay="1">
+        <div class="duo-desc">
+          <div class="eyebrow">Workspace chat</div>
+          <h4>One question,<br>every <em>meeting</em>.</h4>
+          <p>Start from a calm prompt with recent chats and suggested queries, then get back a structured answer that cites which calls it drew from — and turn it straight into a note. It's the lightweight recorder's payoff: the memory of every call, on tap.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="app-name"><span>Proshort Notetaker</span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/note-chat-2x.png" alt="Proshort AI Chat home — a 'Hi Bala, ask anything' prompt with recent chats (Pricing and customer objections, Launch readiness summary, Meetings shared by Ravi) and suggested queries like Summarize this week and List open action items.">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 HOW IT WAS BUILT ============ -->
+<section class="cs-block" data-screen-label="07 how it was built">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">05</span>How it was built</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Prompts in,<br>a <em>clickable</em> product out.</h3>
+        <p>This case study is really about method. There was no Figma file driving it — the screens you've just scrolled through are a working prototype, prompted into shape in Cursor from research and a clear point of view. That changes what a &ldquo;design exploration&rdquo; even is: instead of arguing over a static mock, we could open the real thing on real data the same day and feel whether the lightweight bet held up.</p>
+
+        <div class="status-card reveal" data-delay="2">
+          <div class="item">
+            <span class="l">Research</span>
+            <span class="v">The <em>wedge</em>, written first</span>
+            <p>Before a pixel: an audit of where the heavy, bot-based workflow leaks, distilled into the four frictions and three shifts on this page.</p>
+          </div>
+          <div class="item">
+            <span class="l">Build</span>
+            <span class="v">Prompted in <em>Cursor</em></span>
+            <p>Each screen — home, live recorder, replay, transcript, chat — described in prompts and assembled as a real, clickable interface, not a slideshow of frames.</p>
+          </div>
+          <div class="item">
+            <span class="l">Outcome</span>
+            <span class="v">A prototype you can <em>feel</em></span>
+            <p>A shareable concept that makes the &ldquo;lightweight vs. heavy&rdquo; argument by being lightweight — the fastest way we've found to align a team on a direction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 REFLECTIONS ============ -->
+<section class="cs-block" data-screen-label="08 reflections">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">06</span>Reflections</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Trust is the<br>real <em>interface</em>.</h3>
+        <p>The hard part was never the layout. It was the rhythm of disclosure — when the recorder should ask, when it should just listen, and how visibly it should show its work before you let it summarize your call. The <em>Reasoning</em> toggle and the <em>Jump to moment</em> evidence popover both come from the same instinct: an AI earns trust by making its receipts easy to check, not by sounding confident.</p>
+        <p>Building in Cursor changed how I designed. I stopped drawing screens and started describing behaviour, then reacting to the real thing. The exploration got sharper because it was clickable — and the things that felt wrong only revealed themselves once they were running. What I'd revisit next: the moment of first capture, where &ldquo;a recorder that just shows up&rdquo; has to feel helpful rather than surprising.</p>
+        <div class="tag-list">
+          <span class="tag">Desktop app</span>
+          <span class="tag">Ambient capture</span>
+          <span class="tag">Real-time AI</span>
+          <span class="tag">Trust UX</span>
+          <span class="tag">Transcript &amp; highlights</span>
+          <span class="tag">Cursor AI</span>
+          <span class="tag">Prototype-as-spec</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEXT ============ -->
+<section class="cs-next" data-screen-label="09 next">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="label">Back to · index</div>
+        <a class="next-link" href="../index.html">
+          <div class="ttl">All&nbsp;<em>work</em> <span class="arr">↗</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 2026 Boopalakannan Kamaraj</div>
+  <div><a href="../index.html">← Index</a></div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+  requestAnimationFrame(() => {
+    const vh = window.innerHeight;
+    reveals.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) { el.classList.add('in'); io.unobserve(el); }
+    });
+  });
+  setTimeout(() => { document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')); }, 1200);
+  const nav = document.getElementById('nav');
+  const onScroll = () => { if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+</script>
+</body>
+</html>

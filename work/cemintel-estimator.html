@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cladding Sheet Estimator — Case study · Boopalakannan Kamaraj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="../image-slot.js"></script>
+<link rel="stylesheet" href="case-study.css">
+<link rel="stylesheet" href="hero-stage.css">
+<script src="natural-slot.js" defer></script>
+<style>
+  /* Cemintel-specific chip placements */
+  .chip-projects { top: 56px; left: 30px; animation-delay: -0.5s; }
+  .chip-steps { top: 38%; right: 18px; animation-delay: -2s; }
+  .chip-postcode { bottom: 130px; left: 12px; animation-delay: -3.5s; }
+  .note-bom { bottom: 50px; right: 60px; animation-delay: -1.2s; }
+  @media (max-width: 1100px) {
+    .chip-projects { top: 30px; left: 16px; }
+    .chip-steps { top: auto; bottom: 200px; right: 12px; }
+    .chip-postcode { display: none; }
+    .note-bom { right: 16px; bottom: 24px; max-width: 220px; }
+  }
+
+  /* ============================================================
+     Competitor teardown — 4-screen evidence grid
+     ============================================================ */
+  .comp-wall {
+    position: relative;
+    margin-top: 40px;
+    padding: 28px;
+    background:
+      linear-gradient(180deg, var(--paper) 0%, color-mix(in oklab, var(--paper) 80%, var(--bg-warm)) 100%);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .comp-wall::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--ink) 10%, transparent) 1px, transparent 0);
+    background-size: 18px 18px;
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 25%, transparent 85%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 25%, transparent 85%);
+    pointer-events: none;
+    opacity: 0.4;
+    border-radius: 10px;
+  }
+  .comp-wall-cap {
+    position: relative;
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .comp-wall-cap .l span { color: var(--ink); }
+  .comp-wall-cap .meta { color: var(--muted-2); }
+  .comp-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .comp-tile {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform 280ms cubic-bezier(.2,.7,.2,1), box-shadow 280ms;
+  }
+  .comp-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 40px -22px rgba(20, 16, 8, 0.22);
+    z-index: 2;
+  }
+  .comp-tile-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .comp-tile-head .step { color: var(--accent-ink); }
+  .comp-tile-head .step span { color: var(--ink); margin-left: 6px; }
+  .comp-tile-img {
+    background: var(--paper);
+    padding: 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .comp-tile-img img {
+    display: block; width: 100%; height: auto;
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+  }
+  .comp-tile-issues {
+    padding: 16px 18px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    flex: 1;
+  }
+  .comp-tile-issues .issue {
+    display: grid; grid-template-columns: 16px 1fr; gap: 10px;
+    font-size: 13px; line-height: 1.55; color: var(--ink-soft);
+  }
+  .comp-tile-issues .issue::before {
+    content: '×';
+    color: oklch(0.55 0.18 28);
+    font-weight: 600;
+    font-size: 16px; line-height: 1.4;
+  }
+  .comp-tile-issues .issue strong { color: var(--ink); font-weight: 500; }
+
+  .comp-takeaway {
+    margin-top: 28px;
+    padding: 20px 24px;
+    background: color-mix(in oklab, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--line));
+    border-radius: 8px;
+    display: grid; grid-template-columns: 100px 1fr; gap: 24px; align-items: center;
+  }
+  .comp-takeaway .lbl {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+  .comp-takeaway .body {
+    font-family: var(--serif); font-size: 22px; line-height: 1.3; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0;
+  }
+  .comp-takeaway .body em { font-style: italic; color: var(--accent-ink); }
+
+  @media (max-width: 860px) {
+    .comp-grid { grid-template-columns: 1fr; }
+    .comp-takeaway { grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  /* ============================================================
+     "Our bet" — three-pillar shift summary
+     ============================================================ */
+  .bet-pillars {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    margin: 32px 0 8px;
+  }
+  .bet-pillar {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 22px 22px;
+  }
+  .bet-pillar .num {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted-2); display: block; margin-bottom: 10px;
+  }
+  .bet-pillar h4 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: 22px; line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 10px; color: var(--ink);
+  }
+  .bet-pillar h4 em { font-style: italic; color: var(--accent-ink); }
+  .bet-pillar p {
+    font-size: 13px; line-height: 1.55; color: var(--ink-soft);
+    margin: 0;
+  }
+  .bet-pillar .from-to {
+    display: grid; grid-template-columns: auto 1fr; gap: 6px 10px;
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .bet-pillar .from-to .k { color: var(--muted); }
+  .bet-pillar .from-to .v { color: var(--ink); }
+  .bet-pillar .from-to .v.was { color: var(--muted); text-decoration: line-through; }
+
+  @media (max-width: 860px) {
+    .bet-pillars { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     Status callout (replaces Outcomes since not yet shipped)
+     ============================================================ */
+  .status-card {
+    margin-top: 32px;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px;
+    position: relative;
+  }
+  .status-card::before {
+    content: 'In flight';
+    position: absolute; top: -10px; left: 20px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent-ink);
+    background: var(--bg);
+    padding: 3px 10px; border-radius: 4px;
+    border: 1px solid color-mix(in oklab, var(--accent) 25%, var(--line));
+  }
+  .status-card .item .l {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); display: block; margin-bottom: 8px;
+  }
+  .status-card .item .v {
+    font-family: var(--serif); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em;
+    color: var(--ink); display: block;
+  }
+  .status-card .item .v em { font-style: italic; color: var(--accent-ink); }
+  .status-card .item p {
+    margin: 8px 0 0;
+    font-size: 13px; line-height: 1.55; color: var(--ink-soft);
+  }
+
+  @media (max-width: 860px) {
+    .status-card { grid-template-columns: 1fr; gap: 18px; padding: 24px 20px; }
+  }
+
+  /* ============================================================
+     Built-screen showcase (real Cursor build screenshots)
+     The PNGs ship with transparent rounded corners + soft shadow
+     baked in, so they sit straight on the page — no extra chrome.
+     ============================================================ */
+  .hero-app {
+    position: relative; z-index: 1;
+    display: block; width: 100%; height: auto;
+    filter:
+      drop-shadow(0 36px 80px rgba(20, 16, 8, 0.30))
+      drop-shadow(0 14px 30px rgba(20, 16, 8, 0.16));
+    transform: perspective(2600px) rotateX(2.5deg);
+    transform-origin: 50% 100%;
+    transition: transform 800ms cubic-bezier(.2,.7,.2,1);
+  }
+  .stage:hover .hero-app { transform: perspective(2600px) rotateX(0deg); }
+
+  /* Hero screenshot wrapped in a browser window (matches Proshort) */
+  .cs-hero-stage .window { width: min(620px, 100%); margin: 0 auto; }
+  .cs-hero-stage .window .hero-app {
+    width: 100%; height: auto; transform: none; filter: none; border-radius: 0;
+  }
+  .cs-hero-stage:hover .window .hero-app { transform: none; }
+
+  .shot-figure { margin: 52px 0; }
+  .shot-figure.center {
+    max-width: 760px; margin-left: auto; margin-right: auto;
+  }
+  .shot-figure img,
+  .shot-card img {
+    display: block; width: 100%; height: auto;
+    filter: drop-shadow(0 20px 46px rgba(20, 16, 8, 0.16));
+  }
+  .shot-cap {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 16px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .shot-cap span { color: var(--ink); }
+
+  .shot-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+    margin: 52px 0; align-items: start;
+  }
+  .shot-row.lean { grid-template-columns: 1.15fr 0.85fr; }
+
+  /* Tall review/export page — capped, scrolls inside its own frame */
+  .shot-scroll {
+    position: relative;
+    max-height: 560px; overflow: auto;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    box-shadow: 0 20px 46px -16px rgba(20, 16, 8, 0.20);
+    -webkit-overflow-scrolling: touch;
+  }
+  .shot-scroll img {
+    display: block; width: 100%; height: auto; filter: none;
+  }
+  .shot-scroll::after {
+    content: '';
+    position: sticky; bottom: 0; left: 0; right: 0;
+    display: block; height: 44px; margin-top: -44px;
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, #fff 88%, transparent));
+    pointer-events: none;
+  }
+  .scroll-hint {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted-2);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .scroll-hint::before { content: '↕'; color: var(--accent-ink); font-size: 12px; }
+
+  @media (max-width: 860px) {
+    .shot-row, .shot-row.lean { grid-template-columns: 1fr; gap: 36px; }
+    .shot-figure.center { max-width: 100%; }
+  }
+
+  /* ============================================================
+     Annotated feature walkthrough — screen on one side,
+     "what we built" on the other, key features pinned on-shot
+     ============================================================ */
+  .walk { display: flex; flex-direction: column; gap: 96px; margin-top: 12px; }
+  .walk-row {
+    display: grid; grid-template-columns: 1.04fr 0.96fr; gap: 56px;
+    align-items: start;
+  }
+
+  .walk-shot { position: sticky; top: 88px; align-self: start; }
+  .frameimg { position: relative; display: block; line-height: 0; border-radius: 12px; }
+  .frameimg img {
+    display: block; width: 100%; height: auto;
+    filter: drop-shadow(0 22px 50px rgba(20, 16, 8, 0.16));
+  }
+  .walk-shot .stack { display: flex; flex-direction: column; gap: 22px; }
+  .walk-shot.scroll .port {
+    max-height: 520px; overflow: auto;
+    border-radius: 12px; border: 1px solid var(--line); background: #fff;
+    box-shadow: 0 22px 50px -16px rgba(20, 16, 8, 0.20);
+    -webkit-overflow-scrolling: touch;
+  }
+  .walk-shot.scroll .frameimg { border-radius: 0; }
+  .walk-shot.scroll .frameimg img { filter: none; }
+  .walk-shot.scroll .port::after {
+    content: ''; position: sticky; bottom: 0; left: 0; right: 0;
+    display: block; height: 40px; margin-top: -40px;
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, #fff 90%, transparent));
+    pointer-events: none;
+  }
+
+  /* On-screenshot hotspot markers */
+  .hot {
+    position: absolute; transform: translate(-50%, -50%); z-index: 3;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-family: var(--mono); font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent), 0 4px 12px rgba(20, 16, 8, 0.32);
+  }
+  .hot::after {
+    content: ''; position: absolute; inset: -5px; border-radius: 50%;
+    border: 1.5px solid color-mix(in oklab, var(--accent) 55%, transparent);
+    animation: hotpulse 2.6s ease-out infinite;
+  }
+  @keyframes hotpulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    70%, 100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  .walk-cap {
+    margin-top: 14px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .walk-cap span { color: var(--ink); }
+
+  /* Content side */
+  .walk-info .eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .walk-info .eyebrow .step { color: var(--muted-2); }
+  .walk-info h3.wt {
+    font-family: var(--serif); font-weight: 400;
+    font-size: 32px; line-height: 1.1; letter-spacing: -0.015em;
+    margin: 12px 0 8px; color: var(--ink);
+  }
+  .walk-info h3.wt em { font-style: italic; color: var(--accent-ink); }
+  .walk-info .lead {
+    font-size: 14px; line-height: 1.6; color: var(--ink-soft);
+    margin: 0 0 26px; max-width: 48ch;
+  }
+  .feats { display: flex; flex-direction: column; gap: 20px; }
+  .feat { display: grid; grid-template-columns: 28px 1fr; gap: 16px; align-items: start; }
+  .feat .n {
+    width: 26px; height: 26px; border-radius: 50%; margin-top: 1px;
+    border: 1px solid color-mix(in oklab, var(--accent) 38%, var(--line));
+    background: color-mix(in oklab, var(--accent) 8%, var(--surface)); color: var(--accent-ink);
+    font-family: var(--mono); font-size: 12px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .feat.key .n { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .feat h5 {
+    margin: 0 0 4px; font-family: var(--sans); font-size: 15px; font-weight: 600;
+    color: var(--ink); letter-spacing: -0.006em;
+  }
+  .feat h5 .tag-key {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent-ink); background: color-mix(in oklab, var(--accent) 12%, var(--surface));
+    border-radius: 4px; padding: 2px 6px; margin-left: 8px; vertical-align: 2px;
+  }
+  .feat p { margin: 0; font-size: 13px; line-height: 1.58; color: var(--ink-soft); }
+  .feat p code {
+    font-family: var(--mono); font-size: 12px;
+    background: color-mix(in oklab, var(--ink) 5%, var(--surface)); border: 1px solid var(--line-soft);
+    border-radius: 4px; padding: 1px 5px; color: var(--ink);
+  }
+
+  @media (max-width: 900px) {
+    .walk { gap: 64px; }
+    .walk-row { grid-template-columns: 1fr; gap: 28px; }
+    .walk-shot { position: static; }
+  }
+
+  /* ============================================================
+     Compact framing duo (login + saved projects) — small, together
+     ============================================================ */
+  .duo {
+    display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 52px;
+    align-items: center; padding: 4px 0 4px;
+  }
+  .duo-desc .eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink);
+  }
+  .duo-desc h4 {
+    font-family: var(--serif); font-weight: 400; font-size: 27px; line-height: 1.14; letter-spacing: -0.015em;
+    margin: 10px 0 10px; color: var(--ink);
+  }
+  .duo-desc h4 em { font-style: italic; color: var(--accent-ink); }
+  .duo-desc p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); max-width: 42ch; }
+  .duo-shots { display: flex; gap: 18px; align-items: flex-start; }
+  .duo-shots figure { margin: 0; flex: 1; }
+  .duo-shots figure.wide { flex: 1.32; }
+  .duo-shots img {
+    display: block; width: 100%; height: auto; border-radius: 9px;
+    filter: drop-shadow(0 14px 30px rgba(20, 16, 8, 0.15));
+  }
+  .duo-shots figcaption {
+    margin-top: 9px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .duo { grid-template-columns: 1fr; gap: 26px; }
+  }
+
+  /* ============================================================
+     Zoom-on-hover step rows
+     ============================================================ */
+  .zrow {
+    display: grid; grid-template-columns: 1.04fr 0.96fr; gap: 56px; align-items: start;
+  }
+  .zoom-stage {
+    position: sticky; top: 88px;
+    overflow: hidden; height: 560px;
+    border-radius: 12px; border: 1px solid var(--line); background: #fff;
+    box-shadow: 0 22px 50px -16px rgba(20, 16, 8, 0.20);
+  }
+  .zoom-canvas {
+    position: absolute; left: 0; top: 0; width: 100%;
+    transform-origin: 0 0;
+    transition: transform 680ms cubic-bezier(.2,.7,.2,1);
+    will-change: transform;
+  }
+  .zoom-canvas img { display: block; width: 100%; height: auto; }
+  .zoom-stage::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 48px; z-index: 2;
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, #fff 88%, transparent));
+    pointer-events: none; transition: opacity 0.4s;
+  }
+  .zoom-stage.zoomed::after { opacity: 0; }
+  .zoom-hint {
+    position: absolute; top: 12px; right: 12px; z-index: 3;
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);
+    background: color-mix(in oklab, #fff 84%, transparent); border: 1px solid var(--line);
+    border-radius: 999px; padding: 5px 11px; transition: opacity 0.35s; backdrop-filter: blur(5px);
+  }
+  .zoom-stage.zoomed .zoom-hint { opacity: 0; }
+
+  .hot { transition: transform 0.3s cubic-bezier(.2,.7,.2,1), opacity 0.3s, box-shadow 0.3s; }
+  .hot.dim { opacity: 0.18; }
+  .hot.on {
+    transform: translate(-50%, -50%) scale(1.22);
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--accent) 24%, transparent), 0 6px 16px rgba(20, 16, 8, 0.4);
+  }
+  /* In zoom mode the canvas is scaled 2×, so the marker would balloon and
+     cover the element it points to. Counter-scale the active one into a small
+     hollow target ring (element shows through the centre) and hide the rest. */
+  .zoom-stage.zoomed .hot.dim { opacity: 0; }
+  .zoom-stage.zoomed .hot.on {
+    background: transparent;
+    color: transparent;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--accent), 0 2px 10px rgba(20, 16, 8, 0.45);
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  .zoom-stage.zoomed .hot.on::after {
+    inset: -3px;
+    border-color: color-mix(in oklab, var(--accent) 70%, transparent);
+  }
+
+  .zrow .feat {
+    padding: 12px 14px; margin: -2px -14px; border-radius: 9px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .zrow .feat:hover, .zrow .feat.active {
+    background: color-mix(in oklab, var(--accent) 6%, transparent);
+  }
+
+  @media (max-width: 900px) {
+    .zrow { grid-template-columns: 1fr; gap: 26px; }
+    .zoom-stage { position: static; height: auto; }
+    .zoom-canvas { position: relative; transform: none !important; }
+    .zoom-stage::after, .zoom-hint { display: none; }
+    .zrow .feat { cursor: default; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" data-screen-label="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>Boopalakannan&nbsp;K.</a>
+  <a class="back" href="../index.html"><span class="ar">←</span> Back to index</a>
+  <div class="nav-actions">
+    <a class="cta" href="../index.html#contact">Hire · 2026</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HEADER ============ -->
+<section class="cs-header" data-screen-label="01 header">
+  <div class="wrap">
+    <div class="cs-meta-row reveal">
+      <span class="num">Case 02 / 03</span>
+      <span class="dash">·</span>
+      <span>Cemintel (CSR Limited) &middot; Australia</span>
+      <span class="dash">·</span>
+      <span>Cladding estimator · Streetstyle range</span>
+      <span class="dash">·</span>
+      <span>2025</span>
+    </div>
+    <h1 class="cs-title reveal" data-delay="1">
+      From a calculator<br>
+      to a <em>workspace.</em>
+    </h1>
+    <p class="cs-lede reveal" data-delay="2">
+      Cemintel asked Nibble Edge for a cladding estimator that would compete with <em>James Hardie's</em>. The brief was a page long. We took it apart, audited the competitor flow, and shipped something different — a contractor workspace where saving, duplicating, and finishing an estimate takes minutes, not a workday. Designed and built in <em>Cursor</em> so the prototype was the spec.
+    </p>
+
+    <div class="cs-facts reveal" data-delay="3">
+      <div class="item"><span class="l">Studio</span><span class="v serif">Nibble Edge &middot; Freelance lead</span></div>
+      <div class="item"><span class="l">Client</span><span class="v">Cemintel · CSR Limited (AU)</span></div>
+      <div class="item"><span class="l">Role</span><span class="v">UX lead · sole designer</span></div>
+      <div class="item"><span class="l">Build partner</span><span class="v">Cursor AI · design + code in lockstep</span></div>
+      <div class="item"><span class="l">Status</span><span class="v">Prototype delivered · production build in progress</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO IMAGE ============ -->
+<section class="cs-hero-image cs-hero-stage" data-screen-label="02 hero image">
+  <div class="wrap">
+    <div class="stage reveal">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <div class="url">
+            <span class="lock">◉</span>
+            <span>cemintel.app<span class="path">/estimator/setup</span></span>
+          </div>
+          <span class="window-spacer"></span>
+        </div>
+        <img class="hero-app" src="../assets/cem-build-step1.png" alt="Cemintel Calculator — Project setup step: a single-page workspace with product carousel, panel configuration, and environmental conditions, plus a live system-configuration summary panel.">
+      </div>
+      <div class="chip chip-projects">
+        <div class="chip-icn cool">▦</div>
+        <div>
+          <div class="chip-l">Project dashboard</div>
+          <div class="chip-v">List · search · duplicate</div>
+        </div>
+      </div>
+
+      <div class="chip chip-steps">
+        <span class="chip-num"><em>3</em></span>
+        <div>
+          <div class="chip-l">Steps to an estimate</div>
+          <div class="chip-v">Was 6 in the competitor</div>
+        </div>
+      </div>
+
+      <div class="chip chip-postcode">
+        <div class="chip-icn green">⌖</div>
+        <div>
+          <div class="chip-l">GTC dealer match</div>
+          <div class="chip-v">By postcode at sign-in</div>
+        </div>
+      </div>
+
+      <div class="note note-bom">
+        <div class="note-l">Bill of quantities</div>
+        <div class="note-t">Itemised &amp; ready to send<span class="sub">Panels, fixings, trims &amp; accessories · CSV export</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 BRIEF ============ -->
+<section class="cs-block" data-screen-label="03 brief">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">01</span>Brief</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>A short brief<br>with a <em>long</em> implication.</h3>
+        <p>The ask landed in a single page. Cemintel (a brand of CSR Limited) wanted an estimator for their Streetstyle cladding range that felt more guided, more branded, and more useful than James Hardie's — the de-facto reference everyone in the Australian market opens first. The required ingredients were straightforward: a step-by-step material estimator, a downloadable shopping list, project save / duplicate, and postcode-based supplier search to feed leads back to Cemintel.</p>
+        <p>Two audiences. <em>Contractors</em> who quote three jobs before lunch and need accuracy, speed, and a believable BOM. <em>Prospective home owners</em> who are scoping a renovation, want to understand &ldquo;how much cladding does my house need&rdquo; without learning the trade, and might hand the output to their builder.</p>
+        <div class="pull">&ldquo;Feel professional enough for contractors. Stay clear enough for the home-owner who's never quoted a façade before.&rdquo;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 COMPETITIVE REALITY ============ -->
+<section class="cs-block" data-screen-label="04 what we found">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">02</span>What we found</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>The reference<br>is the <em>problem</em>.</h3>
+        <p>The easy move would have been to ship a prettier version of the James Hardie flow. So I started by actually using it &mdash; from product selection through to the final estimation page &mdash; on real elevations, on a slow connection, the way a site contractor would. The estimator <em>works</em>; the form builder underneath it is what hurts. Every page mixes inputs with their own outputs, controls double up, and the rules of the page change as you scroll.</p>
+        <p>I documented four moments where the existing flow loses its user. These four screens became the wedge for everything we changed.</p>
+
+        <div class="comp-wall reveal" data-delay="2">
+          <div class="comp-wall-cap">
+            <span class="l">Fig. 01 · <span>James Hardie estimator &mdash; teardown</span></span>
+            <span class="meta">Reference flow · audited Mar 2025</span>
+          </div>
+          <div class="comp-grid">
+            <div class="comp-tile">
+              <div class="comp-tile-head">
+                <span class="step">Step 1 <span>· Select product</span></span>
+                <span>Plank &amp; Weatherboard</span>
+              </div>
+              <div class="comp-tile-img">
+                <img src="../assets/cem-ref-step1.png" alt="James Hardie Step 1: Product Selection screen with a Load existing project bar inserted into the form and two competing next-step CTAs.">
+              </div>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>Project loader buried inside the form.</strong> &ldquo;Load existing project&rdquo; sits between the page title and the product picker &mdash; users hunt for it on page 2 because it doesn't read as navigation.</span></div>
+                <div class="issue"><span><strong>Two next-step CTAs.</strong> &ldquo;Next Step&rdquo; and &ldquo;Go direct to estimation page&rdquo; fight on the same screen, with no explanation of who each one is for.</span></div>
+              </div>
+            </div>
+            <div class="comp-tile">
+              <div class="comp-tile-head">
+                <span class="step">Step 2 <span>· Input walls</span></span>
+                <span>Form &times; Table</span>
+              </div>
+              <div class="comp-tile-img">
+                <img src="../assets/cem-ref-step2.png" alt="James Hardie Step 2: Input Wall Information showing a left-side wall input form duplicated by a right-side wall table for the same data.">
+              </div>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>The same data, twice.</strong> Wall input form on the left, wall table on the right, both editing the same record. Two paths to the same wall &mdash; users edit one and the other quietly disagrees.</span></div>
+                <div class="issue"><span><strong>&ldquo;OR&rdquo; mode is a foot-gun.</strong> Height + length <em>or</em> total area, with no preview of which mode applies once the wall is added.</span></div>
+              </div>
+            </div>
+            <div class="comp-tile">
+              <div class="comp-tile-head">
+                <span class="step">Step 3 <span>· Wall openings</span></span>
+                <span>Same pattern, twice</span>
+              </div>
+              <div class="comp-tile-img">
+                <img src="../assets/cem-ref-step3.png" alt="James Hardie Step 3: Calculate Wall Openings repeating the dual-form pattern for openings, with a small print note about flashings hidden below.">
+              </div>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>Dual-form pattern repeats.</strong> The Step 2 confusion gets re-applied to openings &mdash; same dual entry, no visual of the wall the opening belongs to.</span></div>
+                <div class="issue"><span><strong>Critical info hidden in a footnote.</strong> &ldquo;Corrosion-resistant flashings have not been calculated&rdquo; is the most important line on the page &mdash; rendered as 11px grey body text.</span></div>
+              </div>
+            </div>
+            <div class="comp-tile">
+              <div class="comp-tile-head">
+                <span class="step">Step 6 <span>· Product estimation</span></span>
+                <span>The destination</span>
+              </div>
+              <div class="comp-tile-img">
+                <img src="../assets/cem-ref-estimation.png" alt="James Hardie Product Estimation result page: dense green table, no hierarchy, large green Important Note block dominating the layout.">
+              </div>
+              <div class="comp-tile-issues">
+                <div class="issue"><span><strong>No hierarchy on the destination screen.</strong> Summary, BOM, cost library, and a legal note all share the same weight &mdash; the actual answer (the materials list) is the least-formatted thing on the page.</span></div>
+                <div class="issue"><span><strong>The biggest block is a disclaimer.</strong> The brightest, most prominent element is a green &ldquo;Important Note&rdquo; about data sharing. The contractor's eye lands there first.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="comp-takeaway">
+            <span class="lbl">Wedge</span>
+            <p class="body">The competitor isn't slow because it lacks features. It's slow because <em>every screen asks you to be the form-builder.</em> The opportunity is to take the form-building away from the user entirely.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 OUR BET ============ -->
+<section class="cs-block" data-screen-label="05 our bet">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">03</span>Our bet</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Three shifts<br>that reframed the product.</h3>
+        <p>Rather than redesigning each step of the existing wizard, we changed the unit of work. A cladding job isn't a six-step form, it's a <em>project</em> that lives across days, gets duplicated when the next house on the same street comes up, and ends with a shopping list that the contractor can actually send.</p>
+
+        <div class="bet-pillars">
+          <div class="bet-pillar reveal">
+            <span class="num">01</span>
+            <h4>Workspace,<br>not a <em>wizard</em>.</h4>
+            <p>The home of the product is a project dashboard &mdash; list, search, duplicate, archive. The estimator is something you <em>open</em>, not something you start over.</p>
+            <div class="from-to">
+              <span class="k">From</span><span class="v was">A 6-step form, blank every time</span>
+              <span class="k">To</span><span class="v">A project list with one-click duplicate</span>
+            </div>
+          </div>
+          <div class="bet-pillar reveal" data-delay="1">
+            <span class="num">02</span>
+            <h4>Three steps,<br><em>not</em> six.</h4>
+            <p>Product + dimensions + openings collapse into one canvas. Corner / abutment / gable maths happens silently from the geometry. The contractor describes the building once.</p>
+            <div class="from-to">
+              <span class="k">From</span><span class="v was">6 disconnected wizard steps</span>
+              <span class="k">To</span><span class="v">3 steps on one workspace</span>
+            </div>
+          </div>
+          <div class="bet-pillar reveal" data-delay="2">
+            <span class="num">03</span>
+            <h4>A bill of quantities,<br>with a <em>postcode</em>.</h4>
+            <p>The output is a clean, itemised BOQ &mdash; panels, fixings, trims, accessories &mdash; not a dense table to decode. Export it as CSV, or route it straight to the nearest Cemintel-stocking dealer matched on the sign-in postcode.</p>
+            <div class="from-to">
+              <span class="k">From</span><span class="v was">Word / Excel dumps</span>
+              <span class="k">To</span><span class="v">Itemised BOQ + dealer match</span>
+            </div>
+          </div>
+        </div>
+
+        <p>We also made an unusual call upfront: the design and the build would <em>move together</em>. I paired with Cursor AI from week one, treating the working prototype as the source of truth rather than the Figma. Every flow decision was a flow we could click within a day, on real data shapes, on a phone, on a slow connection. That cadence is the only reason a brief that thin produced a product this opinionated.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 THE WORKSPACE ============ -->
+<section class="cs-block" data-screen-label="06 the workspace">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">04</span>The workspace</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Open, walk through,<br><em>finish</em>.</h3>
+        <p>You sign in, land on a list of projects rather than a blank form, then move through three steps — project setup, wall geometry, review &amp; export. Below, the two framing screens stay small; the three estimator steps get the detail. <em>Hover a feature</em> and the screenshot zooms to the pointer it describes.</p>
+      </div>
+    </div>
+
+    <div class="walk">
+
+      <!-- ─── Compact framing duo: sign in + saved projects ─── -->
+      <div class="duo reveal" data-delay="1">
+        <div class="duo-desc">
+          <div class="eyebrow">Before &amp; around the steps</div>
+          <h4>Sign in, then<br>a <em>workspace</em>.</h4>
+          <p>No account walls — an email makes projects findable, and the postcode becomes a GTC-dealer lead. You land on a list of saved estimates (with an empty state that points to the next action), not a blank form. Duplicate the last one for the next house on the same street.</p>
+        </div>
+        <div class="duo-shots">
+          <figure>
+            <img src="../assets/cem-build-entry.png" alt="Cemintel Calculator entry screen — name, email, phone and postcode fields with a Start Project Estimate button.">
+            <figcaption>Entry · email + postcode</figcaption>
+          </figure>
+          <figure class="wide">
+            <img src="../assets/cem-build-dashboard.png" alt="Cemintel Calculator Your Saved Projects — a completed project card with product, cladding area and units, plus duplicate, search and sort.">
+            <figcaption>Saved projects · list, search, duplicate</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- ─── Step 1 · Project setup (hover-to-zoom) ─── -->
+      <div class="zrow reveal" data-delay="1">
+        <div class="zoom-stage" data-zoom="2">
+          <span class="zoom-hint">Hover a feature →</span>
+          <div class="zoom-canvas">
+            <img src="../assets/cem-build-step1.png" alt="Cemintel Calculator Project setup step — project details, number of identical units, StreetStyle product, panel configuration, environmental &amp; structural conditions, and a live system-configuration summary panel.">
+            <span class="hot" data-i="1" style="left:25%;top:39.5%">1</span>
+            <span class="hot" data-i="2" style="left:27%;top:72%">2</span>
+            <span class="hot" data-i="3" style="left:76%;top:41%">3</span>
+            <span class="hot" data-i="4" style="left:22.5%;top:35%">4</span>
+          </div>
+        </div>
+        <div class="walk-info">
+          <div class="eyebrow"><span>Step 1</span><span class="step">· Project setup</span></div>
+          <h3 class="wt">Describe the job once.<br>The maths <em>follows</em>.</h3>
+          <p class="lead">Product, panel spec and the conditions that drive material rules all live on one screen — with a running summary so the spec is never out of sight.</p>
+          <div class="feats">
+            <div class="feat key" data-i="1" data-fx="25" data-fy="39.5">
+              <div class="n">1</div>
+              <div>
+                <h5>Unit multiplier<span class="tag-key">Auto-calc</span></h5>
+                <p>Building eight identical townhouses? Enter <code>8</code> in <em>Number of identical units</em> and the entire estimate scales — every panel, fixing and trim multiplies, and the review page gains a <em>total-project vs. per-unit</em> toggle. Quote a street from one form.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="2" data-fx="27" data-fy="72">
+              <div class="n">2</div>
+              <div>
+                <h5>Plain-language tooltips</h5>
+                <p>Every technical field — thickness, wind classification, stud spacing, corrosivity zone, BAL category — carries an <em>ⓘ</em> that explains the term. The contractor skips them; the home-owner finally understands what &ldquo;C2&rdquo; means.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="3" data-fx="76" data-fy="41">
+              <div class="n">3</div>
+              <div>
+                <h5>Live system configuration</h5>
+                <p>The right rail recomputes as you type — panel size, wind class, frame type, stud spacing — so the spec stays visible without scrolling back up to check what you set.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="4" data-fx="22.5" data-fy="35">
+              <div class="n">4</div>
+              <div>
+                <h5>Dealer hook, from the start</h5>
+                <p><em>Find nearest GTC dealer</em> ties the project to a stockist immediately, so the lead is warm long before the BOQ exists.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Step 2 · Wall geometry (hover-to-zoom) ─── -->
+      <div class="zrow reveal" data-delay="1">
+        <div class="zoom-stage" data-zoom="2">
+          <span class="zoom-hint">Hover a feature →</span>
+          <div class="zoom-canvas">
+            <img src="../assets/cem-build-step2.png" alt="Cemintel Calculator Wall geometry step — wall width/height inputs, a gable toggle, edge configuration, openings, and a live auto-generated wall diagram with dimensions.">
+            <span class="hot" data-i="1" style="left:75%;top:21.5%">1</span>
+            <span class="hot" data-i="2" style="left:18%;top:43%">2</span>
+            <span class="hot" data-i="3" style="left:52%;top:57.5%">3</span>
+            <span class="hot" data-i="4" style="left:37%;top:72%">4</span>
+          </div>
+        </div>
+        <div class="walk-info">
+          <div class="eyebrow"><span>Step 2</span><span class="step">· Wall geometry</span></div>
+          <h3 class="wt">Plain dimensions in,<br>a <em>drawing</em> back.</h3>
+          <p class="lead">The contractor types width × height; the tool draws the wall and silently runs the corner, join and opening maths that the competitor made you do by hand.</p>
+          <div class="feats">
+            <div class="feat" data-i="1" data-fx="75" data-fy="21.5">
+              <div class="n">1</div>
+              <div>
+                <h5>Live wall diagram</h5>
+                <p>Every dimension you enter redraws a to-scale-ish wall — gable, openings and all — so the model is confirmed visually before a single quantity is trusted. No CAD, no second-guessing.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="2" data-fx="18" data-fy="43">
+              <div class="n">2</div>
+              <div>
+                <h5>Gable, handled</h5>
+                <p>Tick <em>Has gable?</em> and the area formula is shown inline (<code>width × gable height ÷ 2</code>) and folded straight into the façade total — bounded so it can't exceed the wall.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="3" data-fx="52" data-fy="57.5">
+              <div class="n">3</div>
+              <div>
+                <h5>Corners &amp; joins, auto-derived</h5>
+                <p>Internal / external corners and vertical joins are pre-filled from geometry with the assumption stated — <code>~1 join per 4.2 m</code> — and editable when the site says otherwise.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="4" data-fx="37" data-fy="72">
+              <div class="n">4</div>
+              <div>
+                <h5>Openings drive flashings</h5>
+                <p>A window subtracts its area <em>and</em> adds opening-flashing on four sides; a door, three. The trim schedule updates itself instead of waiting for a footnote.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Step 3 · Review & export (hover-to-zoom) ─── -->
+      <div class="zrow reveal" data-delay="1">
+        <div class="zoom-stage" data-zoom="2">
+          <span class="zoom-hint">Hover a feature →</span>
+          <div class="zoom-canvas">
+            <img src="../assets/cem-build-step3.png" alt="Cemintel Calculator Review &amp; export step — project details, geometry breakdown, product and environmental recap, an itemised bill of quantities split by category, and assumptions &amp; notes.">
+            <span class="hot" data-i="1" style="left:75%;top:26%">1</span>
+            <span class="hot" data-i="2" style="left:60%;top:44%">2</span>
+            <span class="hot" data-i="3" style="left:56%;top:66%">3</span>
+            <span class="hot" data-i="4" style="left:25%;top:85%">4</span>
+          </div>
+        </div>
+        <div class="walk-info">
+          <div class="eyebrow"><span>Step 3</span><span class="step">· Review &amp; export</span></div>
+          <h3 class="wt">The answer, with<br><em>nothing</em> buried.</h3>
+          <p class="lead">One screen covers the whole estimate: project recap, geometry breakdown, and an itemised bill of quantities split into the categories a merchant actually orders by.</p>
+          <div class="feats">
+            <div class="feat" data-i="1" data-fx="75" data-fy="26">
+              <div class="n">1</div>
+              <div>
+                <h5>Export &amp; send, two ways</h5>
+                <p>Download the BOQ as CSV for a merchant order, or send it straight to the nearest GTC dealer — the postcode from sign-in closing the loop.</p>
+              </div>
+            </div>
+            <div class="feat key" data-i="2" data-fx="60" data-fy="44">
+              <div class="n">2</div>
+              <div>
+                <h5>Total project ↔ per unit<span class="tag-key">Multiplier</span></h5>
+                <p>The unit count from Step 1 powers a one-click toggle: see quantities for the whole job, or for a single unit, without re-entering anything.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="3" data-fx="56" data-fy="66">
+              <div class="n">3</div>
+              <div>
+                <h5>Itemised, by category</h5>
+                <p>Panels, fixings, jointing, sealant, flashings &amp; trims, accessories — each with code, description and quantity. Trim figures are geometry-derived but editable for site-specific detailing.</p>
+              </div>
+            </div>
+            <div class="feat" data-i="4" data-fx="25" data-fy="85">
+              <div class="n">4</div>
+              <div>
+                <h5>Assumptions, in plain sight</h5>
+                <p>The disclaimers the competitor turned into its loudest element become a calm, honest footer: waste %, what's indicative, what to verify before ordering.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 STATUS ============ -->
+<section class="cs-block" data-screen-label="07 status">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">05</span>Status</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Where it<br><em>actually is</em>.</h3>
+        <p>This case study is honest about timing. The prototype was delivered to Cemintel as a clickable, real-data Cursor build &mdash; not a Figma mock. The production version is being built on top of that codebase as I write this, which is why the metrics row reads &ldquo;in flight&rdquo; rather than the usual portfolio numbers.</p>
+
+        <div class="status-card reveal" data-delay="2">
+          <div class="item">
+            <span class="l">Delivered</span>
+            <span class="v">Clickable prototype <em>+ codebase</em></span>
+            <p>Three surfaces (dashboard, canvas, shopping list) running on the agreed data model. Handed to Cemintel's internal team in May 2025.</p>
+          </div>
+          <div class="item">
+            <span class="l">In progress</span>
+            <span class="v">Production build <em>on the same code</em></span>
+            <p>The Cursor prototype became the spec &mdash; Cemintel's engineering team is extending it for full SKU coverage, supplier database, and authenticated multi-project save.</p>
+          </div>
+          <div class="item">
+            <span class="l">Next milestone</span>
+            <span class="v">Beta with a contractor cohort</span>
+            <p>Targeting a closed beta with 12 contractors across VIC and NSW. Once live numbers are in, this section becomes a proper Outcomes block.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 REFLECTIONS ============ -->
+<section class="cs-block" data-screen-label="08 reflections">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">06</span>Reflections</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>What a thin brief<br><em>actually</em> asks for.</h3>
+        <p>A one-page brief isn't a small ask. It's a request for opinion &mdash; the client has decided <em>what</em> they want and is asking the designer to decide <em>how</em>. I learned to treat that gap as a feature: spend the first week doing the audit no one asked for, come back with a point of view, then negotiate scope from there. The competitor teardown did more for this project than any Figma file I could have shown.</p>
+        <p>Pairing with Cursor changed how I designed. I stopped drawing screens and started writing behaviour. The Figma file got smaller. The prototype got the budget. Where it got hard was data ambiguity &mdash; the supplier database is messy and inconsistent across postcodes, and a live recompute is great until the rule is fuzzy. We had to design a separate visual treatment for &ldquo;the estimator has a hunch&rdquo; vs. &ldquo;the estimator is certain.&rdquo; That distinction now drives the entire UI affordance set on the canvas.</p>
+        <div class="tag-list">
+          <span class="tag">BuildTech</span>
+          <span class="tag">Estimator UX</span>
+          <span class="tag">Competitor teardown</span>
+          <span class="tag">Cursor AI</span>
+          <span class="tag">Design + build pairing</span>
+          <span class="tag">PDF / supplier lead-gen</span>
+          <span class="tag">Australian market</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEXT ============ -->
+<section class="cs-next" data-screen-label="09 next">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="label">Next case · 03 / 03</div>
+        <a class="next-link" href="notetaker.html">
+          <div class="ttl">Proshort&nbsp;<em>Notetaker</em> <span class="arr">↗</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 2026 Boopalakannan Kamaraj</div>
+  <div><a href="../index.html">← Index</a></div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+  requestAnimationFrame(() => {
+    const vh = window.innerHeight;
+    reveals.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) { el.classList.add('in'); io.unobserve(el); }
+    });
+  });
+  setTimeout(() => { document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')); }, 1200);
+  const nav = document.getElementById('nav');
+  const onScroll = () => { if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ===== Hover-to-zoom on the three estimator-step screenshots ===== */
+  (function () {
+    const mq = window.matchMedia('(max-width: 900px)');
+    document.querySelectorAll('.zrow').forEach((row) => {
+      const stage = row.querySelector('.zoom-stage');
+      const canvas = row.querySelector('.zoom-canvas');
+      const img = canvas && canvas.querySelector('img');
+      if (!stage || !canvas || !img) return;
+      const hots = canvas.querySelectorAll('.hot');
+      const feats = row.querySelectorAll('.feat[data-fx]');
+      const Z = parseFloat(stage.getAttribute('data-zoom')) || 2;
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+      function focus(fx, fy, i) {
+        if (mq.matches) return;
+        const sw = stage.clientWidth, sh = stage.clientHeight;
+        if (!img.naturalWidth) return;
+        const ih = sw * (img.naturalHeight / img.naturalWidth);
+        let tx = sw / 2 - (fx / 100) * sw * Z;
+        let ty = sh / 2 - (fy / 100) * ih * Z;
+        tx = clamp(tx, sw - sw * Z, 0);
+        ty = clamp(ty, sh - ih * Z, 0);
+        canvas.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + Z + ')';
+        stage.classList.add('zoomed');
+        hots.forEach((h) => {
+          const on = h.getAttribute('data-i') === String(i);
+          h.classList.toggle('on', on);
+          h.classList.toggle('dim', !on);
+        });
+        feats.forEach((f) => f.classList.toggle('active', f.getAttribute('data-i') === String(i)));
+      }
+      function reset() {
+        canvas.style.transform = 'translate(0,0) scale(1)';
+        stage.classList.remove('zoomed');
+        hots.forEach((h) => { h.classList.remove('on'); h.classList.remove('dim'); });
+        feats.forEach((f) => f.classList.remove('active'));
+      }
+      feats.forEach((f) => {
+        const fx = parseFloat(f.getAttribute('data-fx'));
+        const fy = parseFloat(f.getAttribute('data-fy'));
+        const i = f.getAttribute('data-i');
+        f.addEventListener('mouseenter', () => focus(fx, fy, i));
+        f.addEventListener('click', () => focus(fx, fy, i));
+      });
+      hots.forEach((h) => {
+        h.addEventListener('mouseenter', () => {
+          const f = [...feats].find((x) => x.getAttribute('data-i') === h.getAttribute('data-i'));
+          if (f) focus(parseFloat(f.getAttribute('data-fx')), parseFloat(f.getAttribute('data-fy')), h.getAttribute('data-i'));
+        });
+      });
+      row.addEventListener('mouseleave', reset);
+      window.addEventListener('resize', reset);
+    });
+  })();
+</script>
+</body>
+</html>

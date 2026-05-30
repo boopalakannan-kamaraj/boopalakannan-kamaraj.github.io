@@ -1,0 +1,194 @@
+/* ============================================================
+   Hero stage — interactive composition around the screenshot
+   Used by all case-study detail pages
+   ============================================================ */
+
+.cs-hero-stage { padding: 40px 0 80px; }
+
+.stage {
+  position: relative;
+  padding: 80px 60px 120px;
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in oklab, var(--accent) 14%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, #ebe4d6 0%, #e2dac6 100%);
+  overflow: hidden;
+  isolation: isolate;
+}
+.stage-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--ink) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--ink) 7%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 75%);
+  z-index: 0;
+}
+.stage-glow {
+  position: absolute; left: 50%; top: -180px; transform: translateX(-50%);
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--accent) 28%, transparent) 0%, transparent 60%);
+  filter: blur(40px);
+  z-index: 0; pointer-events: none;
+}
+
+/* ===== Window frames ===== */
+.window {
+  position: relative; z-index: 1;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 30px 80px -20px rgba(20, 16, 8, 0.35),
+    0 12px 30px -10px rgba(20, 16, 8, 0.25),
+    0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent);
+  transform: perspective(2400px) rotateX(2deg);
+  transform-origin: 50% 100%;
+  transition: transform 700ms cubic-bezier(.2,.7,.2,1);
+}
+.stage:hover .window { transform: perspective(2400px) rotateX(0deg); }
+
+.window-bar {
+  display: grid; grid-template-columns: 90px 1fr 90px; align-items: center;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, #f8f5ee 0%, #efeadd 100%);
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+}
+.window-bar .dots { display: flex; gap: 7px; }
+.window-bar .dots i {
+  width: 11px; height: 11px; border-radius: 50%; display: inline-block;
+  background: #d9d2c2;
+}
+.window-bar .dots i:nth-child(1) { background: #f06058; }
+.window-bar .dots i:nth-child(2) { background: #f9bd2e; }
+.window-bar .dots i:nth-child(3) { background: #28c941; }
+.window-bar .url {
+  justify-self: center;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+  background: color-mix(in oklab, var(--ink) 4%, #fff);
+  border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
+  border-radius: 999px;
+  padding: 6px 14px;
+  min-width: 360px; max-width: 60%;
+  justify-content: center;
+}
+.window-bar .url .lock { color: var(--accent-ink); font-size: 10px; }
+.window-bar .url .path { color: var(--muted); }
+.window-bar .app-name {
+  justify-self: center;
+  font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--ink-soft); letter-spacing: -0.005em;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.window-bar .app-name .badge {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #fff);
+  color: var(--accent-ink);
+}
+.window image-slot { display: block; width: 100%; aspect-ratio: 16/10; }
+
+/* ===== Floating annotation chips & notes ===== */
+.chip, .note {
+  position: absolute;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.8) inset,
+    0 12px 28px -10px rgba(20, 16, 8, 0.22),
+    0 4px 10px -4px rgba(20, 16, 8, 0.14);
+  border: 1px solid color-mix(in oklab, var(--ink) 6%, transparent);
+  display: inline-flex; align-items: center; gap: 12px;
+  z-index: 2;
+  animation: stage-float 6s ease-in-out infinite;
+}
+@keyframes stage-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.chip-l, .note-l {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted);
+}
+.chip-v, .note-t {
+  font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink);
+  margin-top: 2px;
+}
+
+/* Chip positions/variants — page-specific overrides come after import */
+.chip-tl { top: 56px; left: 30px; animation-delay: -0.5s; }
+.chip-tr { top: 56px; right: 30px; animation-delay: -2s; }
+.chip-mr { top: 38%; right: 18px; animation-delay: -2s; }
+.chip-ml { top: 38%; left: 18px; animation-delay: -3s; }
+.chip-bl { bottom: 130px; left: 12px; animation-delay: -3.5s; }
+.chip-br { bottom: 130px; right: 12px; animation-delay: -4s; }
+
+.note {
+  display: block;
+  padding: 14px 18px;
+  max-width: 280px;
+}
+.note::before {
+  content: '';
+  position: absolute; left: 18px; top: -1px; width: 28px; height: 3px;
+  background: var(--accent); border-radius: 0 0 3px 3px;
+}
+.note .note-t .sub {
+  display: block; font-weight: 400; font-size: 12px; color: var(--muted); margin-top: 4px;
+}
+
+/* Pulse dot (live state) */
+.chip-dot {
+  width: 9px; height: 9px; border-radius: 50%; background: oklch(0.66 0.18 145);
+  box-shadow: 0 0 0 4px color-mix(in oklab, oklch(0.66 0.18 145) 25%, transparent);
+  animation: stage-pulse 1.6s infinite;
+}
+@keyframes stage-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px color-mix(in oklab, oklch(0.66 0.18 145) 25%, transparent); }
+  50% { box-shadow: 0 0 0 8px color-mix(in oklab, oklch(0.66 0.18 145) 0%, transparent); }
+}
+
+/* AI icon swatch */
+.chip-icn {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 70%, #fff) 0%, var(--accent) 100%);
+  color: #fff; font-size: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.chip-icn.cool {
+  background: linear-gradient(135deg, oklch(0.7 0.12 220) 0%, oklch(0.55 0.16 240) 100%);
+}
+.chip-icn.green {
+  background: linear-gradient(135deg, oklch(0.78 0.14 150) 0%, oklch(0.55 0.16 150) 100%);
+}
+
+/* Arrow accent */
+.chip-arrow {
+  font-family: var(--serif); font-style: italic; color: var(--accent-ink); font-size: 18px;
+  transition: transform 300ms;
+}
+.chip:hover .chip-arrow { transform: translate(3px, -3px); }
+
+/* Numeric badge for metrics chips */
+.chip-num {
+  font-family: var(--serif); font-size: 28px; line-height: 1; letter-spacing: -0.02em; color: var(--ink);
+  padding-right: 4px;
+}
+.chip-num em { font-style: italic; color: var(--accent-ink); }
+
+@media (max-width: 1100px) {
+  .chip-tl { top: 30px; left: 16px; }
+  .chip-tr { top: 30px; right: 16px; }
+  .chip-mr { top: auto; bottom: 200px; right: 12px; }
+  .chip-ml { top: auto; bottom: 200px; left: 12px; }
+  .chip-bl, .chip-br { display: none; }
+  .note { right: 16px; bottom: 24px; max-width: 220px; }
+}
+@media (max-width: 760px) {
+  .stage { padding: 40px 20px 80px; }
+  .chip, .note { display: none; }
+  .window-bar .url { min-width: 0; max-width: 70%; }
+  .window-bar .url .path { display: none; }
+}

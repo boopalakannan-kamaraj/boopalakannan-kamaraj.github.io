@@ -1,0 +1,1599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proshort AI — Case study · Boopalakannan Kamaraj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="../image-slot.js"></script>
+<link rel="stylesheet" href="case-study.css">
+<link rel="stylesheet" href="hero-stage.css">
+<script src="natural-slot.js" defer></script>
+<style>
+  /* ===== Proshort-specific chip placements (main hero) ===== */
+  .chip-live { top: 56px; left: 30px; animation-delay: -0.5s; }
+  .chip-ai { top: 38%; right: 18px; animation-delay: -2s; }
+  .chip-crm { bottom: 130px; left: 12px; animation-delay: -3.5s; }
+  .note-action { bottom: 50px; right: 60px; animation-delay: -1.2s; }
+  /* Notes positioning utility for sub-flow stages */
+  .note-br { bottom: 50px; right: 60px; animation-delay: -1.2s; }
+  .note-bl { bottom: 50px; left: 60px; animation-delay: -1.8s; }
+
+  /* ===== Flow section ===== */
+  .flow {
+    padding: 140px 0 100px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .flow-head {
+    display: grid; grid-template-columns: 320px 1fr;
+    gap: 80px; margin-bottom: 56px; align-items: start;
+  }
+  .flow-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    position: sticky; top: 90px;
+  }
+  .flow-label .num {
+    display: inline-block; padding: 4px 10px; border-radius: 4px;
+    background: color-mix(in oklab, var(--accent) 14%, var(--surface));
+    color: var(--accent-ink); margin-right: 10px;
+    font-feature-settings: 'tnum';
+  }
+  /* ties each flow deep-dive back to its IA surface */
+  .flow-label .surface {
+    display: block; margin-top: 10px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .flow-label .surface b { color: var(--ink-soft); font-weight: 600; }
+  .flow-headline {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 5vw, 64px);
+    line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 24px; max-width: 720px;
+  }
+  .flow-headline em { font-style: italic; color: var(--accent-ink); }
+  .flow-lede {
+    font-size: 17px; line-height: 1.7; color: var(--ink-soft); max-width: 640px; margin: 0;
+  }
+  .flow-lede p { margin: 0 0 14px; }
+  .flow-lede p:last-child { margin: 0; }
+
+  /* ===== Ask Anything: three sub-cases ===== */
+  .ask-cases {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;
+    margin-top: 64px;
+  }
+  .ask-card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px 28px 32px;
+    display: flex; flex-direction: column;
+    transition: transform 320ms cubic-bezier(.2,.7,.2,1), box-shadow 320ms;
+  }
+  .ask-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -16px rgba(20, 16, 8, 0.18);
+  }
+  .ask-card .badge {
+    align-self: flex-start;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent-ink);
+    padding: 4px 9px; border-radius: 4px;
+    background: color-mix(in oklab, var(--accent) 14%, var(--surface));
+    margin-bottom: 20px;
+  }
+  .ask-card .query {
+    font-family: var(--serif); font-size: 24px; line-height: 1.25; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 20px;
+  }
+  .ask-card .query::before {
+    content: '\201C'; color: var(--muted-2); margin-right: 2px;
+  }
+  .ask-card .query::after {
+    content: '\201D'; color: var(--muted-2); margin-left: 2px;
+  }
+  .ask-card .answer {
+    flex: 1;
+    font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--ink-soft);
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    position: relative;
+  }
+  .ask-card .answer::before {
+    content: '✨';
+    position: absolute; top: -10px; left: 14px;
+    background: var(--surface);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    border: 1px solid var(--line);
+  }
+  .ask-card .answer strong { color: var(--ink); font-weight: 500; }
+  .ask-card .footer-row {
+    display: flex; align-items: center; gap: 8px; margin-top: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .ask-card .footer-row .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--muted-2); }
+
+  @media (max-width: 960px) {
+    .flow-head { grid-template-columns: 1fr; gap: 24px; }
+    .flow-label { position: static; }
+    .ask-cases { grid-template-columns: 1fr; gap: 16px; }
+  }
+
+  /* Reduce vertical breathing space inside stages used for sub-flows */
+  .stage.compact { padding: 60px 50px 90px; }
+  .stage.compact .window image-slot { aspect-ratio: 16/9; }
+
+  /* Chip variants for sub-flows */
+  .chip-note { /* generic small chip */ background: #fff; }
+  .chip-icn.violet { background: linear-gradient(135deg, oklch(0.75 0.14 300) 0%, oklch(0.5 0.18 300) 100%); }
+  .chip-icn.amber  { background: linear-gradient(135deg, oklch(0.85 0.14 80)  0%, oklch(0.65 0.18 70)  100%); }
+
+  /* ===== Hover-pause for all stage floaters ===== */
+  .stage:hover .chip, .stage:hover .note, .stage:hover .widget { animation-play-state: paused; }
+
+  /* ===== Sequential reveal for stage floaters (chips & notes) ===== */
+  .stage .chip,
+  .stage .note {
+    opacity: 0;
+    animation-play-state: paused;
+    transition: opacity 700ms cubic-bezier(.2,.7,.2,1);
+  }
+  .stage .chip.in,
+  .stage .note.in {
+    opacity: 1;
+    animation-play-state: running;
+  }
+  .stage:hover .chip.in, .stage:hover .note.in, .stage:hover .widget.in { animation-play-state: paused; }
+
+  /* ============================================================
+     AVA coded UI — interactive demo INSIDE the browser window
+     ============================================================ */
+
+  /* Controls strip above the window, inside the stage */
+  .ava-controls {
+    position: relative; z-index: 4;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 22px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .ava-controls-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-soft);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ava-controls-label::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: oklch(0.66 0.18 145);
+    box-shadow: 0 0 0 4px color-mix(in oklab, oklch(0.66 0.18 145) 22%, transparent);
+    animation: ava-pulse-dot 1.6s infinite;
+  }
+  @keyframes ava-pulse-dot {
+    0%,100% { box-shadow: 0 0 0 4px color-mix(in oklab, oklch(0.66 0.18 145) 22%, transparent); }
+    50% { box-shadow: 0 0 0 8px color-mix(in oklab, oklch(0.66 0.18 145) 0%, transparent); }
+  }
+  .ava-tabs {
+    display: flex; gap: 4px;
+    background: rgba(255,255,255,0.85);
+    padding: 4px; border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--ink) 7%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  .ava-tab {
+    font-family: var(--sans); font-size: 12px; font-weight: 500;
+    background: transparent; border: 0;
+    padding: 7px 14px; border-radius: 999px;
+    cursor: pointer; color: var(--ink-soft);
+    transition: background 200ms, color 200ms;
+  }
+  .ava-tab:hover { color: var(--ink); }
+  .ava-tab.active { background: var(--ink); color: var(--bg); }
+  .ava-replay {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); background: transparent; border: 0;
+    padding: 8px 10px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .ava-replay:hover { color: var(--ink); }
+  .ava-replay .ic { font-family: var(--serif); font-style: italic; font-size: 14px; }
+
+  /* ===== The coded AVA app inside the window ===== */
+  .ava-app {
+    --pv: #6366f1; --pv-50: #eef2ff; --pv-100: #e0e7ff; --pv-600: #4f46e5;
+    --pt: #111827; --pm: #6b7280; --pl: #e5e7eb;
+    --pbg: #ffffff; --pbg2: #f9fafb;
+    display: grid; grid-template-columns: 240px 1fr;
+    grid-template-rows: auto 1fr;
+    background: var(--pbg);
+    font-family: var(--sans);
+    color: var(--pt);
+    font-size: 13px;
+    height: 680px;
+  }
+  .ava-topbar {
+    grid-column: 1 / -1;
+    display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--pl);
+    background: #fff;
+  }
+  .ava-topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .ava-back { width: 24px; height: 24px; border-radius: 6px; background: var(--pbg2); display: inline-flex; align-items: center; justify-content: center; color: var(--pm); font-size: 14px; }
+  .ava-circ { width: 30px; height: 30px; border-radius: 50%; background: var(--pv-100); color: var(--pv-600); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+  .ava-mt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .ava-mt-name { font-size: 14px; font-weight: 600; color: var(--pt); }
+  .ava-mt-meta { font-size: 11px; color: var(--pm); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ava-tag { padding: 2px 8px; border-radius: 4px; background: var(--pbg2); color: var(--pm); font-size: 10px; }
+  .ava-tag.warn { background: #fef3c7; color: #92400e; }
+  .ava-tag.success { background: #d1fae5; color: #065f46; }
+  .ava-topbar-right { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .ava-cta { padding: 8px 12px; border-radius: 8px; background: var(--pv); color: #fff; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; border: 0; cursor: pointer; font-family: inherit; }
+  .ava-cta-ghost { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--pl); background: #fff; color: var(--pt); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: inherit; }
+
+  /* Sidebar */
+  .ava-sidebar {
+    border-right: 1px solid var(--pl);
+    display: flex; flex-direction: column;
+    padding: 16px 12px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .ava-search { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--pbg2); border-radius: 8px; margin-bottom: 12px; font-size: 12px; color: var(--pm); }
+  .ava-newchat { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: transparent; border: 0; color: var(--pv); font-size: 13px; font-weight: 500; cursor: pointer; margin-bottom: 6px; font-family: inherit; }
+  .ava-threads { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+  .ava-thread { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-radius: 6px; font-size: 12px; color: var(--pt); cursor: pointer; }
+  .ava-thread:hover { background: var(--pbg2); }
+  .ava-thread.active { background: var(--pbg2); }
+  .ava-thread .when { color: var(--pm); font-size: 11px; flex-shrink: 0; margin-left: 8px; }
+  .ava-thread .ttl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Chat area */
+  .ava-chat { display: flex; flex-direction: column; background: #fff; overflow: hidden; min-width: 0; }
+  .ava-chat-body { flex: 1; overflow-y: auto; padding: 28px 32px 16px; display: flex; flex-direction: column; gap: 14px; min-height: 0; scroll-behavior: smooth; }
+  .ava-chat-body::-webkit-scrollbar { width: 6px; }
+  .ava-chat-body::-webkit-scrollbar-thumb { background: var(--pl); border-radius: 3px; }
+
+  /* Empty state */
+  .ava-empty { margin: auto; text-align: center; max-width: 460px; padding: 20px 0; }
+  .ava-empty .ic { width: 36px; height: 36px; background: linear-gradient(135deg, var(--pv) 0%, var(--pv-600) 100%); border-radius: 8px; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 16px; }
+  .ava-empty .ttl { font-size: 18px; font-weight: 600; color: var(--pt); margin-bottom: 6px; }
+  .ava-empty .sub { font-size: 12px; color: var(--pm); line-height: 1.5; }
+  .ava-empty-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; justify-content: center; }
+  .ava-empty-suggestions button { background: var(--pbg2); border: 1px solid var(--pl); padding: 8px 12px; border-radius: 8px; font-size: 12px; color: var(--pt); cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Input area */
+  .ava-input { border-top: 1px solid var(--pl); padding: 14px 20px 16px; background: #fff; }
+  .ava-input-box { border: 1px solid var(--pl); border-radius: 12px; padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 8px; background: #fff; transition: border-color 200ms, box-shadow 200ms; }
+  .ava-input-box.active { border-color: var(--pv); box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+  .ava-input-text { font-size: 13px; color: var(--pt); min-height: 18px; line-height: 1.4; }
+  .ava-input-text .placeholder { color: var(--pm); }
+  .ava-input-text .cursor { display: inline-block; width: 2px; height: 14px; background: var(--pt); vertical-align: text-bottom; margin-left: 1px; animation: ava-blink 1s steps(2) infinite; }
+  .ava-input-text .cursor.hide { display: none; }
+  .ava-input-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .ava-input-add { width: 24px; height: 24px; background: var(--pbg2); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: var(--pm); font-size: 14px; }
+  .ava-input-send { width: 32px; height: 32px; border-radius: 8px; background: var(--pv); color: #fff; display: inline-flex; align-items: center; justify-content: center; transition: transform 180ms; }
+  .ava-input-send.pulse { animation: ava-send-pulse 360ms ease-out; }
+  @keyframes ava-send-pulse { 0% { transform: scale(1); } 50% { transform: scale(0.9); } 100% { transform: scale(1); } }
+  @keyframes ava-blink { 50% { opacity: 0; } }
+
+  /* User message bubble in chat */
+  .ava-user { align-self: flex-end; max-width: 70%; padding: 10px 16px; background: var(--pbg2); border-radius: 14px 14px 4px 14px; font-size: 13px; color: var(--pt); opacity: 0; transform: translateY(4px); transition: opacity 350ms, transform 350ms; }
+  .ava-user.in { opacity: 1; transform: none; }
+
+  /* Reasoning */
+  .ava-reasoning { background: var(--pbg2); border: 1px solid var(--pl); padding: 12px 16px; border-radius: 8px; opacity: 0; transform: translateY(6px); transition: opacity 400ms, transform 400ms; }
+  .ava-reasoning.in { opacity: 1; transform: none; }
+  .ava-reasoning-head { display: flex; align-items: center; gap: 8px; color: var(--pm); font-size: 12px; }
+  .ava-reasoning-head .caret { color: var(--pm); font-size: 10px; }
+  .ava-reasoning-head .ic { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--pv); border-top-color: transparent; animation: ava-spin 0.9s linear infinite; flex-shrink: 0; }
+  .ava-reasoning.done .ava-reasoning-head .ic { animation: none; border-color: #10b981; background: #10b981; position: relative; }
+  .ava-reasoning.done .ava-reasoning-head .ic::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 9px; line-height: 1; }
+  @keyframes ava-spin { to { transform: rotate(360deg); } }
+  .ava-steps { margin-top: 6px; padding-left: 20px; }
+  .ava-step { font-size: 12px; color: var(--pm); line-height: 1.5; padding: 4px 0; opacity: 0; transform: translateX(-4px); transition: opacity 380ms, transform 380ms; }
+  .ava-step.in { opacity: 1; transform: none; }
+
+  /* Response card */
+  .ava-resp { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+  .ava-resp > * { opacity: 0; transform: translateY(6px); transition: opacity 500ms cubic-bezier(.2,.7,.2,1), transform 500ms cubic-bezier(.2,.7,.2,1); }
+  .ava-resp > .in { opacity: 1; transform: none; }
+  .ava-resp-head { font-size: 13px; font-weight: 600; color: var(--pt); display: flex; align-items: center; gap: 8px; }
+  .ava-resp-head .ic-sparkle { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, var(--pv) 0%, var(--pv-600) 100%); color: #fff; font-size: 10px; display: inline-flex; align-items: center; justify-content: center; }
+  .ava-resp-text { font-size: 13px; line-height: 1.6; color: var(--pt); }
+  .ava-resp-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ava-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid; }
+  .ava-pill.red { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
+  .ava-pill.amber { color: #b45309; border-color: #fde68a; background: #fffbeb; }
+  .ava-pill.green { color: #047857; border-color: #a7f3d0; background: #ecfdf5; }
+  .ava-pill.violet { color: var(--pv-600); border-color: #c7d2fe; background: var(--pv-50); }
+  .ava-section-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--pt); margin: 0 0 10px; }
+  .ava-section-title .ic { font-size: 14px; }
+
+  /* Risk items */
+  .ava-risk { display: grid; grid-template-columns: 4px 1fr auto; gap: 12px; padding: 12px; background: var(--pbg2); border-radius: 8px; margin-bottom: 6px; align-items: center; }
+  .ava-risk-bar { width: 3px; align-self: stretch; border-radius: 2px; min-height: 32px; }
+  .ava-risk.red .ava-risk-bar { background: #ef4444; }
+  .ava-risk.amber .ava-risk-bar { background: #f59e0b; }
+  .ava-risk-ttl { font-weight: 600; font-size: 13px; color: var(--pt); }
+  .ava-risk-sub { font-size: 12px; color: var(--pm); margin-top: 2px; }
+  .ava-sev { font-size: 11px; padding: 3px 10px; border-radius: 4px; font-weight: 500; line-height: 1.4; }
+  .ava-sev.red { background: #fef2f2; color: #b91c1c; }
+  .ava-sev.amber { background: #fffbeb; color: #b45309; }
+
+  /* People sentiment */
+  .ava-people { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ava-person { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--pl); border-radius: 8px; }
+  .ava-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--pv-100); color: var(--pv-600); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+  .ava-person .ava-name { font-size: 13px; font-weight: 600; color: var(--pt); }
+  .ava-person .ava-role { font-size: 11px; color: var(--pm); }
+  .ava-sent { font-size: 11px; padding: 3px 10px; border-radius: 4px; font-weight: 500; }
+  .ava-sent.green { background: #ecfdf5; color: #047857; }
+  .ava-sent.gray { background: #f3f4f6; color: #4b5563; }
+
+  /* Action items */
+  .ava-action { display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; padding: 10px 12px; background: var(--pbg2); border-radius: 8px; margin-bottom: 6px; align-items: center; }
+  .ava-action-ic { width: 20px; text-align: center; font-size: 14px; }
+  .ava-action.red .ava-action-ic { color: #ef4444; }
+  .ava-action.amber .ava-action-ic { color: #f59e0b; }
+  .ava-action.violet .ava-action-ic { color: var(--pv); }
+  .ava-action.green .ava-action-ic { color: #10b981; }
+  .ava-action-text { font-size: 13px; color: var(--pt); font-weight: 500; }
+  .ava-due { font-size: 11px; padding: 3px 10px; border-radius: 4px; font-weight: 500; }
+  .ava-due.red { background: #fef2f2; color: #b91c1c; }
+  .ava-due.amber { background: #fffbeb; color: #b45309; }
+  .ava-due.violet { background: var(--pv-50); color: var(--pv-600); }
+
+  .ava-whatnext-label { font-size: 13px; font-weight: 600; color: var(--pt); margin-bottom: 10px; }
+  .ava-whatnext-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ava-whatnext-chips button { background: var(--pbg2); border: 1px solid var(--pl); padding: 8px 12px; border-radius: 6px; font-size: 12px; color: var(--pt); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+
+  /* Follow-up tone tabs */
+  .ava-tabrow { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--pl); background: #fff; }
+  .ava-tabrow-btn { padding: 10px; background: transparent; border: 0; border-bottom: 2px solid transparent; font-size: 12px; color: var(--pm); cursor: pointer; font-family: inherit; font-weight: 500; }
+  .ava-tabrow-btn.active { color: var(--pv-600); border-bottom-color: var(--pv); background: var(--pv-50); }
+
+  .ava-email { border: 1px solid var(--pv); border-radius: 8px; background: #fff; overflow: hidden; }
+  .ava-email-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 12px; border-bottom: 1px solid var(--pl); font-size: 12px; }
+  .ava-email-row .label { color: var(--pm); width: 28px; flex-shrink: 0; }
+  .ava-email-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 4px; background: var(--pv-50); border-radius: 999px; color: var(--pt); font-size: 11px; }
+  .ava-email-chip .av { width: 18px; height: 18px; border-radius: 50%; background: var(--pv-100); color: var(--pv-600); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+  .ava-email-subject { font-weight: 600; color: var(--pt); }
+  .ava-email-body { padding: 14px 16px; font-size: 12px; line-height: 1.6; color: var(--pt); }
+  .ava-email-body p { margin: 0 0 10px; }
+  .ava-email-info { background: var(--pv-50); margin: 0 16px 14px; border-radius: 6px; padding: 10px 12px; font-size: 12px; font-weight: 600; color: var(--pv-600); display: flex; gap: 8px; align-items: flex-start; }
+
+  /* Coaching clips */
+  .ava-clips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ava-clip { border: 1.5px solid; border-radius: 10px; padding: 14px; background: #fff; }
+  .ava-clip.red { border-color: #fecaca; }
+  .ava-clip.green { border-color: #a7f3d0; }
+  .ava-clip-head { display: grid; grid-template-columns: 24px 1fr auto; gap: 8px; align-items: center; margin-bottom: 4px; }
+  .ava-clip-name { font-size: 13px; font-weight: 600; color: var(--pt); }
+  .ava-clip-meta { font-size: 10px; color: var(--pm); margin-top: 1px; }
+  .ava-clip-tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+  .ava-clip.red .ava-clip-tag { background: #fef2f2; color: #b91c1c; }
+  .ava-clip.green .ava-clip-tag { background: #ecfdf5; color: #047857; }
+  .ava-clip-wave { display: flex; align-items: flex-end; gap: 2px; height: 24px; margin: 8px 0 6px; }
+  .ava-clip-wave i { flex: 1; max-width: 4px; border-radius: 2px; min-height: 20%; }
+  .ava-clip.red .ava-clip-wave i { background: #ef4444; opacity: 0.85; }
+  .ava-clip.green .ava-clip-wave i { background: #10b981; opacity: 0.85; }
+  .ava-clip-player { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--pm); }
+  .ava-clip-player .play { width: 18px; height: 18px; border-radius: 50%; background: var(--pbg2); display: inline-flex; align-items: center; justify-content: center; color: var(--pm); font-size: 8px; }
+  .ava-clip-track { flex: 1; height: 3px; background: var(--pl); border-radius: 2px; position: relative; }
+  .ava-clip-track::after { content: ''; position: absolute; left: 0; top: 0; width: 18%; height: 100%; background: var(--pv); border-radius: 2px; }
+  .ava-clip-quote { font-size: 11px; line-height: 1.5; color: var(--pt); border-top: 1px solid var(--pl); padding-top: 8px; margin-top: 8px; }
+  .ava-clip-quote em { font-style: italic; font-weight: 600; }
+  .ava-clip.red .ava-clip-quote em { color: #b91c1c; }
+  .ava-clip.green .ava-clip-quote em { color: #047857; }
+
+  .ava-callout { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; font-size: 13px; color: #047857; font-weight: 600; }
+  .ava-bullets { list-style: disc; padding-left: 22px; margin: 8px 0 0; font-size: 13px; line-height: 1.6; color: var(--pt); }
+  .ava-bullets li { padding: 2px 0; }
+
+  @media (max-width: 960px) {
+    .ava-app { grid-template-columns: 1fr; height: auto; }
+    .ava-sidebar { display: none; }
+    .ava-topbar { padding: 12px 16px; }
+    .ava-topbar-right .ava-cta-ghost { display: none; }
+    .ava-people, .ava-clips, .ava-tabrow { grid-template-columns: 1fr; }
+    .ava-chat-body { padding: 20px 18px 12px; }
+  }
+
+  /* ===== Floating widget cards (real UI snippets, not abstract chips) ===== */
+  .widget {
+    position: absolute;
+    z-index: 3;
+    border-radius: 12px;
+    /* no overflow:hidden so the tag at top:-10px stays visible */
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 22px 50px -16px rgba(20, 16, 8, 0.30),
+      0 8px 20px -8px rgba(20, 16, 8, 0.18);
+    border: 1px solid color-mix(in oklab, var(--ink) 6%, transparent);
+    background: #fff;
+    animation: stage-float 6s ease-in-out infinite;
+    /* Sequential reveal: hidden until parent stage triggers it */
+    opacity: 0;
+    animation-play-state: paused;
+    transition: opacity 700ms cubic-bezier(.2,.7,.2,1);
+  }
+  .widget.in {
+    opacity: 1;
+    animation-play-state: running;
+  }
+  .widget.in .widget-tag {
+    animation: widget-tag-pop 520ms cubic-bezier(.2,.9,.3,1.2) both;
+  }
+  @keyframes widget-tag-pop {
+    0%   { opacity: 0; transform: translateY(-4px) scale(0.9); }
+    60%  { opacity: 1; transform: translateY(0) scale(1.04); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .widget img {
+    display: block; width: 100%; height: auto;
+    border-radius: 11px; /* clip image to inside the 1px border */
+  }
+  .widget-tag {
+    position: absolute; top: -10px; left: 14px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-ink);
+    background: #fff;
+    padding: 3px 8px; border-radius: 4px;
+    border: 1px solid color-mix(in oklab, var(--ink) 6%, transparent);
+    z-index: 4;
+    white-space: nowrap;
+  }
+
+  /* Flow 01 widget placements */
+  .widget-highlight {
+    top: 56px; left: 30px;
+    width: 460px;
+    transform: rotate(-1deg);
+    animation-delay: -1s;
+  }
+  .widget-cats {
+    top: 56px; right: 30px;
+    width: 124px;
+    animation-delay: -2s;
+  }
+  .widget-comment {
+    top: 38%; right: 50px;
+    width: 300px;
+    animation-delay: -3s;
+  }
+  .widget-meddicc {
+    bottom: 60px; left: 60px;
+    width: 360px;
+    transform: rotate(1deg);
+    animation-delay: -4s;
+  }
+
+  /* Flow 02 — Ask Anything widget placements */
+  .widget-ask-reason {
+    top: 40px; left: 20px;
+    width: 340px;
+    transform: rotate(-1.4deg);
+    animation-delay: -1.4s;
+  }
+  .widget-ask-answer {
+    top: 22%; right: 24px;
+    width: 420px;
+    transform: rotate(1.2deg);
+    animation-delay: -3s;
+  }
+  .widget-ask-email {
+    bottom: 50px; left: 50px;
+    width: 440px;
+    transform: rotate(-1deg);
+    animation-delay: -4.4s;
+  }
+
+  /* Flow 03 — AI Roleplay widget placements */
+  .widget-rp-briefing {
+    top: 36px; left: 24px;
+    width: 360px;
+    transform: rotate(-1.4deg);
+    animation-delay: -1s;
+  }
+  .widget-rp-building {
+    top: 50px; right: 28px;
+    width: 240px;
+    transform: rotate(1deg);
+    animation-delay: -2.2s;
+  }
+  .widget-rp-assessment {
+    top: 32%; right: 28px;
+    width: 280px;
+    transform: rotate(1.2deg);
+    animation-delay: -3.4s;
+  }
+  .widget-rp-coaching {
+    bottom: 50px; left: 60px;
+    width: 460px;
+    transform: rotate(-1deg);
+    animation-delay: -4.6s;
+  }
+
+  /* ============================================================
+     IA diagram — hand-drawn tree of the product surfaces
+     ============================================================ */
+  .ia {
+    position: relative;
+    margin-top: 40px;
+    padding: 64px 40px 56px;
+    background:
+      linear-gradient(180deg, var(--paper) 0%, color-mix(in oklab, var(--paper) 80%, var(--bg-warm)) 100%);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .ia::before {
+    /* subtle blueprint grid */
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--ink) 5%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(100% 100% at 50% 0%, #000 30%, transparent 85%);
+    -webkit-mask-image: radial-gradient(100% 100% at 50% 0%, #000 30%, transparent 85%);
+    pointer-events: none;
+  }
+  .ia-cap {
+    position: relative;
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 32px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .ia-cap .lbl span { color: var(--ink); }
+
+  /* image-based IA — full-width tabbed slider with auto-advance */
+  .ia-slider { position: relative; margin-top: 36px; }
+
+  .ia-tabs { display: flex; gap: 8px; }
+  .ia-tab {
+    flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; gap: 9px;
+    padding: 10px 12px 0;
+    background: transparent; border: 0; cursor: pointer; text-align: left;
+    color: var(--muted-2);
+    transition: color .15s ease;
+  }
+  .ia-tab:hover { color: var(--ink-soft); }
+  .ia-tab.is-active { color: var(--ink); }
+  .ia-tab .t-row { display: flex; align-items: baseline; gap: 8px; }
+  .ia-tab .t-num {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted-2);
+  }
+  .ia-tab.is-active .t-num { color: var(--accent-ink); }
+  .ia-tab .t-name {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 500; line-height: 1.3;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ia-tab .t-sub {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ia-tab .t-track {
+    position: relative; height: 3px; border-radius: 999px;
+    background: var(--line); overflow: hidden;
+  }
+  .ia-tab-fill {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+    background: var(--accent-ink); border-radius: 999px;
+  }
+
+  .ia-stage {
+    margin-top: 14px;
+    border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    background: var(--surface);
+  }
+  .ia-slide { margin: 0; }
+  .ia-slide[hidden] { display: none; }
+  .ia-slide.is-active { animation: iaFade 0.4s ease; }
+  @keyframes iaFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .ia-slide-frame {
+    padding: 28px;
+    background:
+      linear-gradient(180deg, var(--paper) 0%, color-mix(in oklab, var(--paper) 88%, var(--bg-warm)) 100%);
+  }
+  .ia-slide-frame img {
+    display: block; width: 100%; max-width: 880px; height: auto; margin: 0 auto; border-radius: 4px;
+  }
+  .ia-slide-cap {
+    display: flex; justify-content: space-between; align-items: center; gap: 20px;
+    padding: 13px 18px; border-top: 1px solid var(--line);
+  }
+  .ia-slide-cap .d { font-family: var(--sans); font-size: 13px; line-height: 1.5; color: var(--muted); }
+  .ia-slide-cap .zoom {
+    flex: none; text-decoration: none; color: var(--muted);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .ia-slide-cap .zoom:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .ia-bridge {
+    position: relative;
+    margin: 20px 0 0;
+    padding-top: 20px;
+    border-top: 1px dashed color-mix(in oklab, var(--muted-2) 60%, transparent);
+    font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--muted);
+  }
+  .ia-bridge em { font-style: normal; font-weight: 600; color: var(--ink); }
+
+  @media (max-width: 720px) {
+    .ia { padding: 40px 16px 32px; }
+    .ia-tabs { flex-wrap: wrap; }
+    .ia-tab { flex: 1 1 calc(50% - 4px); }
+    .ia-slide-frame { padding: 16px; }
+    .ia-slide-cap { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ia-slide.is-active { animation: none; }
+  }
+
+  /* ============================================================
+     Research artifact — comp landscape + scenarios
+     ============================================================ */
+  .research-findings {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin: 32px 0;
+  }
+  .finding {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 24px 24px;
+    position: relative;
+  }
+  .finding.gap { border-color: color-mix(in oklab, var(--accent) 35%, var(--line)); background: color-mix(in oklab, var(--accent) 6%, var(--surface)); }
+  .finding .tag {
+    display: inline-block;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .finding.gap .tag { color: var(--accent-ink); }
+  .finding h4 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: 26px; line-height: 1.2; letter-spacing: -0.01em;
+    margin: 0 0 12px; color: var(--ink);
+  }
+  .finding p {
+    font-size: 14px; line-height: 1.55; color: var(--ink-soft);
+    margin: 0;
+  }
+  .finding .priority {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+  }
+  .finding .priority .pill {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 4px;
+    background: var(--surface); border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .finding .priority .pill.now { background: color-mix(in oklab, oklch(0.7 0.14 145) 16%, #fff); border-color: color-mix(in oklab, oklch(0.7 0.14 145) 40%, var(--line)); color: oklch(0.42 0.12 145); }
+  .finding .priority .pill.next { background: color-mix(in oklab, var(--accent) 14%, var(--surface)); border-color: color-mix(in oklab, var(--accent) 40%, var(--line)); color: var(--accent-ink); }
+  .finding .priority .pill.later { background: var(--paper); }
+
+  .research-artifact {
+    position: relative;
+    margin-top: 40px;
+    padding: 28px 28px 24px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 23px, color-mix(in oklab, var(--ink) 3%, transparent) 23px 24px),
+      var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .research-artifact::before {
+    /* paper tape */
+    content: '';
+    position: absolute;
+    top: -8px; left: 50%;
+    width: 100px; height: 22px;
+    background: color-mix(in oklab, var(--accent) 22%, #fff);
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--line));
+    border-radius: 2px;
+    transform: translateX(-50%) rotate(-1.5deg);
+    box-shadow: 0 4px 10px -4px rgba(0,0,0,0.08);
+  }
+  .research-artifact .artifact-cap {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin: 4px 4px 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .research-artifact .artifact-cap span.l span { color: var(--ink); }
+  .research-artifact .artifact-frame {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 22px 50px -22px rgba(20, 16, 8, 0.18);
+  }
+  .research-artifact .artifact-frame img {
+    display: block; width: 100%; height: auto;
+  }
+  .research-artifact .artifact-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 14px 4px 0;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .research-artifact .artifact-foot .zoom {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 12px; color: var(--ink-soft); cursor: pointer; font-family: inherit;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    transition: background 200ms, color 200ms;
+  }
+  .research-artifact .artifact-foot .zoom:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  @media (max-width: 860px) {
+    .research-findings { grid-template-columns: 1fr; }
+    .research-artifact { padding: 18px 12px 16px; }
+  }
+
+  /* ============================================================
+     Design System — single-viewport specimen wall
+     ============================================================ */
+  .ds-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+    margin: 32px 0 32px;
+  }
+  .ds-stats .item {
+    background: var(--bg);
+    padding: 22px 24px;
+  }
+  .ds-stats .n {
+    font-family: var(--serif); font-size: 44px; line-height: 1; letter-spacing: -0.02em;
+    color: var(--ink); display: block;
+  }
+  .ds-stats .n em { font-style: italic; color: var(--accent-ink); }
+  .ds-stats .l {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-top: 10px; display: block;
+  }
+
+  /* Wall: one tall container, bento grid, fits roughly in viewport */
+  .ds-wall {
+    position: relative;
+    margin-top: 40px;
+    background:
+      linear-gradient(180deg, var(--paper) 0%, color-mix(in oklab, var(--paper) 80%, var(--bg-warm)) 100%);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 28px;
+    overflow: hidden;
+  }
+  .ds-wall::before {
+    /* faint blueprint dots */
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--ink) 10%, transparent) 1px, transparent 0);
+    background-size: 18px 18px;
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 25%, transparent 85%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 25%, transparent 85%);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .ds-wall-cap {
+    position: relative;
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .ds-wall-cap .l span { color: var(--ink); }
+  .ds-wall-cap .meta { color: var(--muted-2); }
+
+  /* full-width specimen — single composite image */
+  .ds-specimen {
+    position: relative; display: block;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 22px 44px -26px rgba(20, 16, 8, 0.22);
+  }
+  .ds-specimen img { display: block; width: 100%; height: auto; }
+  .ds-wall-foot {
+    position: relative;
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    margin-top: 16px;
+  }
+  .ds-wall-foot > span {
+    font-family: var(--sans); font-size: 13px; line-height: 1.5; color: var(--muted);
+  }
+  .ds-wall-foot .zoom {
+    flex: none; text-decoration: none; color: var(--muted);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .ds-wall-foot .zoom:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  @media (max-width: 960px) {
+    .ds-stats { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 620px) {
+    .ds-wall { padding: 20px 16px; }
+    .ds-wall-foot { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+
+  /* ============================================================
+     Recognition card (Outcomes section)
+     ============================================================ */
+  .recognition {
+    margin-top: 40px;
+    padding: 28px 32px 30px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    position: relative;
+  }
+  .recognition::before {
+    content: 'Recognition';
+    position: absolute; top: -10px; left: 20px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent-ink);
+    background: var(--bg);
+    padding: 3px 10px; border-radius: 4px;
+    border: 1px solid color-mix(in oklab, var(--accent) 25%, var(--line));
+  }
+  .recognition .proofs {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 28px;
+    align-items: center;
+  }
+  .recognition .badge-shot {
+    display: flex; align-items: center; justify-content: center;
+  }
+  .recognition .badge-shot img {
+    max-width: 100%; height: auto;
+    filter: drop-shadow(0 12px 24px rgba(20, 16, 8, 0.12));
+  }
+  .recognition .post-shot {
+    background: var(--paper);
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .recognition .post-shot img {
+    display: block;
+    width: 100%; height: auto; max-height: 220px;
+    object-fit: cover; object-position: top left;
+  }
+  .recognition .quote {
+    margin: 22px 0 0;
+    font-family: var(--sans);
+    font-size: 13px; line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 720px;
+    text-wrap: pretty;
+  }
+  .recognition .quote em { font-style: normal; color: var(--ink); font-weight: 500; }
+  .recognition .attr {
+    margin-top: 10px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .recognition .attr span { color: var(--ink); }
+
+  @media (max-width: 860px) {
+    .recognition { padding: 24px 20px; }
+    .recognition .proofs { grid-template-columns: 1fr; gap: 18px; }
+    .recognition .badge-shot img { max-width: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav" data-screen-label="nav">
+  <a class="brand" href="../index.html">
+    <span class="dot"></span>
+    Boopalakannan&nbsp;K.
+  </a>
+  <a class="back" href="../index.html"><span class="ar">←</span> Back to index</a>
+  <div class="nav-actions">
+    <a class="cta" href="../index.html#contact">Hire · 2026</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HEADER ============ -->
+<section class="cs-header" data-screen-label="01 header">
+  <div class="wrap">
+    <div class="cs-meta-row reveal">
+      <span class="num">Case 01 / 03</span>
+      <span class="dash">·</span>
+      <span>Proshort</span>
+      <span class="dash">·</span>
+      <span>B2B SaaS · Meeting intelligence</span>
+      <span class="dash">·</span>
+      <span>2024 → present</span>
+    </div>
+    <h1 class="cs-title reveal" data-delay="1">
+      Turning every<br>
+      sales call into<br>
+      <em>closing</em> work.
+    </h1>
+    <p class="cs-lede reveal" data-delay="2">
+      Proshort is the meeting intelligence layer for revenue teams — <em>capture, recall, coach, rehearse.</em> I led the UX across three flows: <em>Meeting Intelligence</em>, <em>Ask Anything</em>, and <em>AI Roleplay</em>.
+    </p>
+
+    <div class="cs-facts reveal" data-delay="3">
+      <div class="item"><span class="l">Role</span><span class="v serif">Sr. UX Designer</span></div>
+      <div class="item"><span class="l">Team</span><span class="v">PM · ML · 3 eng pods · 1 designer (me)</span></div>
+      <div class="item"><span class="l">Timeline</span><span class="v">12 months · 4 release trains</span></div>
+      <div class="item"><span class="l">Platform</span><span class="v">Web app · Chrome ext.</span></div>
+      <div class="item"><span class="l">Status</span><span class="v">v2 live in prod · v3 (this) under dev</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO IMAGE ============ -->
+<section class="cs-hero-image cs-hero-stage" data-screen-label="02 hero image">
+  <div class="wrap">
+    <div class="stage reveal">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <div class="url">
+            <span class="lock">◉</span>
+            <span>app.proshort.ai<span class="path">/meetings/acme-product-demo</span></span>
+          </div>
+          <span class="window-spacer"></span>
+        </div>
+        <image-slot id="proshort-hero" shape="rounded" radius="0" fit="contain" src="../assets/proshort-overview.png" placeholder="Drop hero shot — dashboard or signature screen"></image-slot>
+      </div>
+
+      <div class="chip chip-live">
+        <span class="chip-dot"></span>
+        <div>
+          <div class="chip-l">Listening</div>
+          <div class="chip-v">Live capture · 1:05:26</div>
+        </div>
+      </div>
+
+      <div class="chip chip-ai">
+        <div class="chip-icn">✨</div>
+        <div>
+          <div class="chip-l">Summary drafted</div>
+          <div class="chip-v">in 4.2s after the call</div>
+        </div>
+      </div>
+
+      <div class="chip chip-crm">
+        <div>
+          <div class="chip-l">Sync to CRM</div>
+          <div class="chip-v">12 fields · auto-mapped</div>
+        </div>
+        <span class="chip-arrow">↗</span>
+      </div>
+
+      <div class="note note-action">
+        <div class="note-l">Action item</div>
+        <div class="note-t">Send proposal to Carlos<br><span class="sub">Include pricing &amp; onboarding timeline</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE PROBLEM ============ -->
+<section class="cs-block" data-screen-label="03 problem">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">01</span>The Problem</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Calls happen.<br>The <em>work after</em> doesn't.</h3>
+        <p>A rep walks out of a 60-minute Acme Corp demo with a head full of half-promises — Carlos wants an onboarding plan, IT needs security docs, the CFO never even joined the call. They have four other meetings today. By Friday, none of it has moved. The deal slips a quarter.</p>
+        <p>This isn't a recording problem. Every team already records. It's a <em>retrieval</em> problem dressed up as a coaching problem. Gong, Chorus and Wingman all hand you a dashboard and walk away — strong at indexing what was said, weak at telling you what to <em>do</em> about it on a Tuesday afternoon when you have eleven minutes between calls.</p>
+        <div class="pull">&ldquo;If the call doesn't change what happens next, why did we have it?&rdquo;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MY ROLE ============ -->
+<section class="cs-block" data-screen-label="04 my role">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">02</span>My Role</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>The <em>only</em> designer on a three-pod team.</h3>
+        <p>Solo on UX across all three product surfaces — research, IA, flows, interaction, visual, prototyping, design system. The founding PM was my closest partner; the ML lead taught me what the model could actually be trusted to do; three eng pods (web, real-time, integrations) shipped to my Figma every two weeks. The constraint of being one designer pushed me to a single mental model — &ldquo;the meeting is the unit of work&rdquo; — so the three surfaces could share components and language instead of becoming three different products.</p>
+        <ul class="steps">
+          <li><strong>Research &amp; framing.</strong> Sat in on 30+ live sales calls across 4 segments to map the work that actually happens around a meeting.</li>
+          <li><strong>Flow ownership.</strong> Defined and shipped the three flagship flows: Meeting Intelligence, Ask Anything, AI Roleplay.</li>
+          <li><strong>Design system.</strong> Built a token-level system from scratch as we shipped, so the three surfaces stay one product.</li>
+          <li><strong>Sales-floor proof.</strong> Ran bi-weekly internal feedback loops with our own SDR &amp; AE teams as the pilot users.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEARCH ============ -->
+<section class="cs-block" data-screen-label="04a research">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">03</span>Research</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>What's missing<br>in the market.</h3>
+        <p>Before I drew a single screen I went deep on the three platforms revenue teams already pay for — Gong, Chorus and Wingman. I logged into trials, watched two dozen demo recordings, mapped competitor surfaces flow-by-flow, and read three months of community threads to see what reps and managers actually complain about. The point wasn't a feature matrix; it was finding the smallest opening that would justify building a new product.</p>
+        <p>The thesis that emerged was uncomfortable to share with the team: all three are <em>dashboards</em>. Strong at retrieval. Weak at conversation. No rep can sit at their desk between calls and ask &ldquo;how did I handle pricing today?&rdquo; and get back a usable answer. That single sentence became the wedge for AVA — and turned a vague &ldquo;AI for sales&rdquo; brief into a sharper coaching-first product I could actually design for.</p>
+        <p>From there I pulled the wedge into a working list of <em>coaching scenarios</em> — concrete questions a rep or manager would type, paired with the response shape (clips, scores, tips, comparisons) AVA would need to answer them. Each scenario got a priority tag, which became the build order for the first two release trains.</p>
+
+        <div class="research-findings">
+          <div class="finding gap reveal">
+            <span class="tag">The gap · None of them do this</span>
+            <h4>Conversation, not dashboards.</h4>
+            <p>Gong, Chorus and Wingman all make you <em>navigate</em>. None let a rep ask &ldquo;how did I handle pricing?&rdquo; and get back a clip, a top-rep comparison, and a coaching tip in one response. That's the wedge.</p>
+          </div>
+          <div class="finding reveal" data-delay="1">
+            <span class="tag">Build order · 6 scenarios</span>
+            <h4>Coaching queries, prioritised.</h4>
+            <p>Each scenario was scored on rep frequency, manager value, and AVA's ability to ground the answer in a clip. The top three became the launch surface.</p>
+            <div class="priority">
+              <span class="pill now">Pricing objection · Build now</span>
+              <span class="pill now">Talk-to-listen · Build now</span>
+              <span class="pill now">Discovery depth · Build now</span>
+              <span class="pill next">Where it went cold · Next</span>
+              <span class="pill next">Competitor mention · Next</span>
+              <span class="pill later">Best moment · Later</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="research-artifact reveal" data-delay="2">
+          <div class="artifact-cap">
+            <span class="l">Fig. 00 · <span>Competitive landscape &amp; coaching scenarios</span></span>
+            <span>Working doc · Mar 2024</span>
+          </div>
+          <div class="artifact-frame">
+            <img src="../assets/research-comp-coaching.png" alt="Research artifact — competitive landscape across Gong, Chorus, Wingman, and a list of coaching scenarios to build with priority tags and response shapes">
+          </div>
+          <div class="artifact-foot">
+            <span>Source · Trial logins · 12 demo recordings · 3 months community threads</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INFORMATION ARCHITECTURE ============ -->
+<section class="cs-block" data-screen-label="04b information architecture">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">04</span>Information Architecture</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Three surfaces.<br><em>One</em> system.</h3>
+        <p>The hardest IA decision happened before the first frame: pick the unit of work. We landed on the <em>meeting</em>. Every surface reads from it, writes back to it, or asks a question about it. A meeting lives in one of two states — <em>upcoming</em>, where the work is prep, and <em>recorded</em>, where the work is recall — and the AVA assistant cuts across both. That single anchor is what lets a rep jump from a comment on yesterday's call straight into a roleplay against the same persona, without ever feeling like they switched products.</p>
+      </div>
+    </div>
+
+    <div class="ia reveal" data-delay="2">
+          <div class="ia-cap">
+            <span class="lbl">Fig. 01 · <span>Information architecture</span></span>
+            <span>v2.4 — May 2026</span>
+          </div>
+
+          <div class="ia-slider" data-interval="10000">
+            <div class="ia-tabs" role="tablist" aria-label="Information architecture views">
+              <button class="ia-tab is-active" type="button" role="tab" aria-selected="true" data-slide="0">
+                <span class="t-row"><span class="t-num">01</span><span class="t-name">Top-level structure</span></span>
+                <span class="t-sub">Root · Meetings</span>
+                <span class="t-track"><span class="ia-tab-fill"></span></span>
+              </button>
+              <button class="ia-tab" type="button" role="tab" aria-selected="false" data-slide="1">
+                <span class="t-row"><span class="t-num">02</span><span class="t-name">Upcoming meeting flow</span></span>
+                <span class="t-sub">State · Before the call</span>
+                <span class="t-track"><span class="ia-tab-fill"></span></span>
+              </button>
+              <button class="ia-tab" type="button" role="tab" aria-selected="false" data-slide="2">
+                <span class="t-row"><span class="t-num">03</span><span class="t-name">Recorded meeting flow</span></span>
+                <span class="t-sub">State · After the call</span>
+                <span class="t-track"><span class="ia-tab-fill"></span></span>
+              </button>
+              <button class="ia-tab" type="button" role="tab" aria-selected="false" data-slide="3">
+                <span class="t-row"><span class="t-num">04</span><span class="t-name">AVA assistant</span></span>
+                <span class="t-sub">Cross-cutting · AI</span>
+                <span class="t-track"><span class="ia-tab-fill"></span></span>
+              </button>
+            </div>
+
+            <div class="ia-stage">
+              <figure class="ia-slide is-active" data-slide="0" role="tabpanel">
+                <div class="ia-slide-frame">
+                  <img src="../assets/IA/1.%20Top-level%20structure.png" alt="Top-level information architecture — Meetings branches into Upcoming (scheduled), Recorded (past) and AVA assistant (cross-cutting); rep flow and deal flow noted as future scope.">
+                </div>
+                <figcaption class="ia-slide-cap">
+                  <span class="d">The meeting is the spine. Three surfaces hang off it — Upcoming, Recorded and the cross-cutting AVA assistant — with rep- and deal-level flows scoped for later.</span>
+                </figcaption>
+              </figure>
+
+              <figure class="ia-slide" data-slide="1" role="tabpanel" hidden>
+                <div class="ia-slide-frame">
+                  <img src="../assets/IA/2.%20Upcoming%20meeting%20flow.png" alt="Upcoming meeting flow — a mapped or not-mapped card opens a map drawer (recommend or create deal), then the prep drawer with Summary, Participants, Company info, MEDDICC, Start roleplay and View deal; two CTAs route out to roleplay and CRM deal detail.">
+                </div>
+                <figcaption class="ia-slide-cap">
+                  <span class="d">Mapped or not, a card opens the prep drawer — Summary, Participants, Company, MEDDICC — with two exits: start a roleplay or jump to the deal.</span>
+                </figcaption>
+              </figure>
+
+              <figure class="ia-slide" data-slide="2" role="tabpanel" hidden>
+                <div class="ia-slide-frame">
+                  <img src="../assets/IA/3.%20Recorded%20meeting%20flow.png" alt="Recorded meeting flow — the recorded card opens the media player: video on the left, tabbed content (Summary, Transcript, MEDDIC, Notes) on the right, and Sync to CRM, Share meeting and Ask AVA actions; Ask AVA hands off to the assistant.">
+                </div>
+                <figcaption class="ia-slide-cap">
+                  <span class="d">The card opens the media player: video left, tabbed intel right (Summary, Transcript, MEDDIC, Notes), and Sync to CRM, Share or hand off to AVA.</span>
+                </figcaption>
+              </figure>
+
+              <figure class="ia-slide" data-slide="3" role="tabpanel" hidden>
+                <div class="ia-slide-frame">
+                  <img src="../assets/IA/4.%20AVA%20assistant.png" alt="AVA assistant — conversational AI branching into Deal (risk analysis on the current deal), Follow-up (three email variants) and Coaching (skill comparison, feedback, suggest roleplay); reachable from the prep drawer, media player and globally.">
+                </div>
+                <figcaption class="ia-slide-cap">
+                  <span class="d">Reachable from the prep drawer, the media player and globally. Three intents — deal risk, follow-up drafting and coaching — with coaching looping back into roleplay.</span>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <p class="ia-bridge">The three flagship flows that follow live inside this map: <em>Meeting Intelligence</em> is the Recorded surface, <em>Ask Anything</em> is AVA, and <em>AI Roleplay</em> is the practice loop reached from a meeting's prep drawer and AVA's coaching answers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DESIGN SYSTEM ============ -->
+<section class="cs-block" data-screen-label="04b design system">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">05</span>Design System</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>One designer.<br><em>One</em> system.</h3>
+        <p>Three product surfaces, one designer, twelve-month timeline. The only way that math worked was a token-first system, built in lockstep with the product. The rule I held the team to: <em>every value in a screen comes from a variable</em>. Color, type, spacing, radius, shadow. If it wasn't a token, it didn't ship.</p>
+        <p>The library lives in Figma as a single <em>Proshort</em> collection with primitive ramps (Gray, Green, Orange, Red, Blue, Purple) feeding semantic aliases (Success, Warning, Danger, Info, Neutral, Surface, Border, Text, Icon, Brand). Components are organised around how product talks about them in standups — Avatar, Atoms, Badge, Buttons, Chips, Forms, Slots, Toast — not how a design tool would file them.</p>
+
+        <div class="ds-stats">
+          <div class="item"><span class="n">144</span><span class="l">Color tokens</span></div>
+          <div class="item"><span class="n">46</span><span class="l">Type tokens</span></div>
+          <div class="item"><span class="n">6</span><span class="l">Primitive ramps</span></div>
+          <div class="item"><span class="n"><em>100%</em></span><span class="l">Token coverage</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-wall reveal" data-delay="2">
+      <div class="ds-wall-cap">
+        <span class="l">Fig. 02 · <span>Proshort design system — specimen wall</span></span>
+        <span class="meta">Figma · 144 vars · 14 groups · v3</span>
+      </div>
+      <a class="ds-specimen" href="../assets/elemets.png" target="_blank" rel="noopener">
+        <img src="../assets/elemets.png" alt="Proshort design system specimen wall — AVA ask bar, avatars and badges, deal-pipeline search rows, metrics card, skills-profile radar, the full color ramp, the AVA reasoning panel, and applied deal and company cards, all built from shared tokens and components.">
+      </a>
+      <div class="ds-wall-foot">
+        <span>One image, every layer — primitives &amp; semantic ramps, atoms &amp; badges, and applied surfaces (deal card, company card, AVA bar, reasoning panel, skills radar) all drawn from the same collection.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FLOW 01 — MEETING INTELLIGENCE
+     ============================================================ -->
+<section class="flow" data-screen-label="05 flow · meeting intelligence">
+  <div class="wrap">
+    <div class="flow-head">
+      <div class="flow-label reveal"><span class="num">Flow 01</span>Meeting Intelligence<span class="surface">IA · <b>Recorded</b> surface</span></div>
+      <div class="reveal" data-delay="1">
+        <h2 class="flow-headline">A call you can <em>walk back into</em>.</h2>
+        <div class="flow-lede">
+          <p>The detail surface is where every other flow ends up eventually — you click into it from a comment, a CRM sync, a coaching alert, an AVA citation. So it had to <em>feel</em> like a place, not a report. Player anchored left, transcript right, every line addressable. Categories like Objection, Discovery, Pushback and Question are auto-tagged so a manager can scan the call in twenty seconds instead of replaying twenty minutes.</p>
+          <p>The unlock for trust was MEDDICC. Pulling Metrics, Economic Buyer, Decision Criteria, Champion and the rest straight from the transcript — with confidence states a rep can argue with — was the moment the product stopped being &ldquo;a smarter recorder&rdquo; and started being something pipeline reviews actually used.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage reveal" data-delay="1">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <div class="url">
+            <span class="lock">◉</span>
+            <span>app.proshort.ai<span class="path">/meetings/acme-product-demo#t=01:35</span></span>
+          </div>
+          <span></span>
+        </div>
+        <image-slot id="proshort-mi" shape="rounded" radius="0" fit="contain" src="../assets/mi-transcript-main.png" placeholder="Drop screen — Meeting detail with transcript + comments + highlights"></image-slot>
+      </div>
+
+      <!-- Highlighted transcript entry, popping out top-left -->
+      <div class="widget widget-highlight">
+        <span class="widget-tag">Highlight · 01:35</span>
+        <img src="../assets/mi-highlight.png" alt="Highlighted transcript entry with category tags">
+      </div>
+
+      <!-- Category tag picker, top-right -->
+      <div class="widget widget-cats">
+        <span class="widget-tag">Auto-tagged</span>
+        <img src="../assets/mi-categories.png" alt="Transcript categories: Objection, Discovery, Pushback, Question">
+      </div>
+
+      <!-- Comment popover, mid-right -->
+      <div class="widget widget-comment">
+        <span class="widget-tag">Thread</span>
+        <img src="../assets/mi-comment.png" alt="Comment thread with reply">
+      </div>
+
+      <!-- MEDDICC analysis, bottom-left -->
+      <div class="widget widget-meddicc">
+        <span class="widget-tag">MEDDICC · 4/7</span>
+        <img src="../assets/mi-meddicc.png" alt="MEDDICC analysis with confidence levels">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FLOW 02 — ASK ANYTHING
+     ============================================================ -->
+<section class="flow" data-screen-label="06 flow · ask anything">
+  <div class="wrap">
+    <div class="flow-head">
+      <div class="flow-label reveal"><span class="num">Flow 02</span>Ask Anything<span class="surface">IA · <b>AVA assistant</b></span></div>
+      <div class="reveal" data-delay="1">
+        <h2 class="flow-headline">Every call,<br><em>queryable.</em></h2>
+        <div class="flow-lede">
+          <p>AVA is the meeting-grounded assistant that turns months of calls into something a rep can interrogate in plain English. I scoped the design around three queries reps actually type — &ldquo;what are the biggest risks in this deal?&rdquo;, &ldquo;draft an onboarding plan for Carlos&rdquo;, &ldquo;how did I handle the pricing objection?&rdquo; — and reverse-engineered the response shape each one needed. Risks come back as a ranked list with stakeholder sentiment; follow-ups come back as three tone variants so the rep picks instead of edits; coaching comes back as a clip-by-clip comparison with a top performer on the team.</p>
+          <p>The hardest call was the reasoning panel. Showing AVA's working — &ldquo;analysed meeting signals… identified MEDDICC gaps…&rdquo; — sounded like a gimmick on paper but tested as the single biggest trust lever in the flow. Every answer cites the exact transcript moment it came from. No black box, no &ldquo;trust me.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage reveal" data-delay="1">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <div class="url">
+            <span class="lock">◉</span>
+            <span>app.proshort.ai<span class="path">/ai-tools/ask-ava</span></span>
+          </div>
+          <span></span>
+        </div>
+        <image-slot id="proshort-ask" shape="rounded" radius="0" fit="contain" src="../assets/ask-main.png" placeholder="Drop screen — Ask AVA main / empty state"></image-slot>
+      </div>
+
+      <!-- Reasoning panel, top-left -->
+      <div class="widget widget-ask-reason">
+        <span class="widget-tag">Reasoning · 4 steps</span>
+        <img src="../assets/ask-reasoning.png" alt="Analyzed meeting signals and stakeholder activity">
+      </div>
+
+      <!-- Coaching answer card, right -->
+      <div class="widget widget-ask-answer">
+        <span class="widget-tag">Answer · Coaching</span>
+        <img src="../assets/ask-answer.png" alt="AI answer comparing your moment to a top rep's clip">
+      </div>
+
+      <!-- Follow-up email composer, bottom -->
+      <div class="widget widget-ask-email">
+        <span class="widget-tag">Follow-up · Champion-led</span>
+        <img src="../assets/ask-email.png" alt="Drafted follow-up email — Champion-led variant">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FLOW 03 — AI ROLEPLAY
+     ============================================================ -->
+<section class="flow" data-screen-label="07 flow · ai roleplay">
+  <div class="wrap">
+    <div class="flow-head">
+      <div class="flow-label reveal"><span class="num">Flow 03</span>AI Roleplay<span class="surface">IA · Off <b>prep drawer</b> + coaching</span></div>
+      <div class="reveal" data-delay="1">
+        <h2 class="flow-headline">Practice on a <em>buyer</em>,<br>not on a real one.</h2>
+        <div class="flow-lede">
+          <p>The argument for Roleplay was simple: every rep is bad at the things they haven't said out loud yet. The design challenge was the awkwardness of practising — nobody wants to feel scored. So the flow front-loads context (deal stage, buyer persona, coaching signals) so the rep walks in feeling briefed, runs a voice session against an AI buyer modelled on their real ICP, and lands on a debrief that points to <em>specific phrases</em> instead of vibes.</p>
+          <p>I leaned hard on rhythm. A pre-call card that mirrors a real Pre-Call Briefing template. A &ldquo;Building your simulation…&rdquo; beat that buys the model time without feeling like a loading screen. A live session UI that's mostly the buyer's face, because that's the only thing on screen during a real call. A debrief that opens with a single number (85 / 100), then a coaching breakdown organised the way a manager would say it out loud — strongest moment, critical miss, partially covered.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage reveal" data-delay="1">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <div class="url">
+            <span class="lock">◉</span>
+            <span>app.proshort.ai<span class="path">/roleplay/objection-handling-julia-tran</span></span>
+          </div>
+          <span></span>
+        </div>
+        <image-slot id="proshort-rp" shape="rounded" radius="0" fit="contain" src="../assets/rp-session.png" placeholder="Drop screen — Roleplay live session"></image-slot>
+      </div>
+
+      <!-- Pre-call briefing, top-left -->
+      <div class="widget widget-rp-briefing">
+        <span class="widget-tag">Pre-call · Briefing</span>
+        <img src="../assets/rp-briefing.png" alt="Pre-call briefing: deal context, buyer persona, coaching signals">
+      </div>
+
+      <!-- Building simulation modal, top-right -->
+      <div class="widget widget-rp-building">
+        <span class="widget-tag">Spinning up · 2s</span>
+        <img src="../assets/rp-building.png" alt="Building your simulation — parsing deal intelligence">
+      </div>
+
+      <!-- AVA Assessment, mid-right -->
+      <div class="widget widget-rp-assessment">
+        <span class="widget-tag">Debrief · Score 85</span>
+        <img src="../assets/rp-assessment.png" alt="AVA assessment with score and skills breakdown">
+      </div>
+
+      <!-- Coaching breakdown, bottom-left -->
+      <div class="widget widget-rp-coaching">
+        <span class="widget-tag">Coaching · Moment replay</span>
+        <img src="../assets/rp-coaching.png" alt="Coaching breakdown — strongest moment + critical miss">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUTCOMES ============ -->
+<section class="cs-block" data-screen-label="08 outcomes">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">06</span>Outcomes</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>From <em>recording tool</em><br>to daily-open habit.</h3>
+        <p>Two release trains in, the product moved from &ldquo;the thing the manager makes us use&rdquo; to a tab reps open before their first call of the day. The numbers below are directional from internal pilots — the v3 cycle (this version) is targeting a 2x lift on the same metrics with the new AVA reasoning panel and the Roleplay debrief surface.</p>
+        <div class="cs-metrics">
+          <div class="item"><span class="n"><em>3.4×</em></span><span class="l">Rep daily active</span></div>
+          <div class="item"><span class="n">+36<em>pt</em></span><span class="l">Internal NPS shift</span></div>
+          <div class="item"><span class="n">&lt;5<em>m</em></span><span class="l">Post-call admin</span></div>
+          <div class="item"><span class="l">Surfaces shipped</span><span class="n">3</span></div>
+        </div>
+
+        <div class="recognition reveal" data-delay="2">
+          <div class="proofs">
+            <div class="badge-shot">
+              <img src="../assets/g2-spring-2026.png" alt="G2 Spring 2026 High Performer badge">
+            </div>
+            <div class="post-shot">
+              <img src="../assets/linkedin-rahul.png" alt="LinkedIn post from Rahul Aggarwal celebrating 16 G2 badges and crediting Boopalakannan Kamaraj">
+            </div>
+          </div>
+          <p class="quote">&ldquo;We just earned <em>16 G2 badges</em> across Conversation Intelligence and Sales Coaching this Spring. We're increasingly seeing adoption with <em>larger, more complex enterprises</em> — this isn't a niche problem anymore.&rdquo;</p>
+          <div class="attr"><span>Rahul Aggarwal</span> &middot; VP &amp; GM, Proshort &middot; LinkedIn, Spring 2026 &middot; Tagged me by name in the shipping team</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REFLECTIONS ============ -->
+<section class="cs-block" data-screen-label="09 reflections">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">07</span>Reflections</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>What I'd <em>change.</em></h3>
+        <p>Citations should have been on day one, not patch three — the moment AVA started feeling like a black box, trust dipped fast and the team had to design the recovery flow under pressure. I'd also start the design system work earlier; we shipped three product surfaces in twelve months and the seams showed for a release before tokens caught up. And the Roleplay debrief was almost too dense at launch — the v3 version (shown here) is the second pass, organised around &ldquo;what you'd actually replay&rdquo; instead of every metric we could compute.</p>
+        <div class="tag-list">
+          <span class="tag">Meeting intelligence</span>
+          <span class="tag">AI · LLM</span>
+          <span class="tag">Real-time</span>
+          <span class="tag">Voice</span>
+          <span class="tag">CRM integration</span>
+          <span class="tag">Design system</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEXT ============ -->
+<section class="cs-next" data-screen-label="10 next">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="label">Next case · 02 / 03</div>
+        <a class="next-link" href="cemintel-estimator.html">
+          <div class="ttl">Cladding Sheet&nbsp;<em>Estimator</em> <span class="arr">↗</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>© 2026 Boopalakannan Kamaraj</div>
+  <div><a href="../index.html">← Index</a></div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+  requestAnimationFrame(() => {
+    const vh = window.innerHeight;
+    reveals.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) { el.classList.add('in'); io.unobserve(el); }
+    });
+  });
+  setTimeout(() => { document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')); }, 1200);
+
+  const nav = document.getElementById('nav');
+  const onScroll = () => { if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ============================================================
+     Scroll-driven sequential reveal of floating cards inside each .stage
+     — viewer sees the key screen first, then as they keep scrolling,
+       each chip / widget / note pops in one at a time, in DOM order.
+     ============================================================ */
+  (function () {
+    const stages = document.querySelectorAll('.stage');
+    if (!stages.length) return;
+
+    // Pre-compute floaters per stage
+    const records = [...stages].map(stage => ({
+      stage,
+      floaters: [...stage.querySelectorAll(':scope > .chip, :scope > .note, :scope > .widget')]
+    })).filter(r => r.floaters.length);
+
+    // Per-card reveal thresholds along the stage's scroll progress 0→1.
+    // 0   = stage top has just entered the lower 85% of viewport (key screen now visible)
+    // 1   = stage bottom is leaving the upper 15% of viewport
+    // First card waits until progress > KEY_HOLD so the key screen is read first.
+    const KEY_HOLD   = 0.12;
+    const LAST_AT    = 0.70;
+
+    function computeProgress(stage) {
+      const rect = stage.getBoundingClientRect();
+      const vh   = window.innerHeight;
+      const startY = vh * 0.85;        // stage top reaches here → progress 0
+      const endY   = vh * 0.10;        // stage top reaches here → progress 1
+      const t = (startY - rect.top) / (startY - endY);
+      return Math.max(0, Math.min(1, t));
+    }
+
+    function tick() {
+      for (const r of records) {
+        const p = computeProgress(r.stage);
+        const n = r.floaters.length;
+        const span = LAST_AT - KEY_HOLD;
+        const step = n > 1 ? span / (n - 1) : 0;
+        r.floaters.forEach((el, i) => {
+          const threshold = KEY_HOLD + i * step;
+          if (p >= threshold) el.classList.add('in');
+        });
+      }
+    }
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { tick(); ticking = false; });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    // Kick once on load.
+    requestAnimationFrame(tick);
+
+    // Final fallback: after 12s force everything to be visible no matter what.
+    setTimeout(() => {
+      for (const r of records) r.floaters.forEach(el => el.classList.add('in'));
+    }, 12000);
+  })();
+
+  /* ============================================================
+     IA slider — tabbed, auto-advancing diagram viewer
+     — tabs switch instantly; the active tab's bar fills over the
+       interval, then advances; pauses on hover/focus and only runs
+       while the slider is on screen.
+     ============================================================ */
+  (function () {
+    const slider = document.querySelector('.ia-slider');
+    if (!slider) return;
+
+    const interval = parseInt(slider.dataset.interval, 10) || 10000;
+    const tabs   = [...slider.querySelectorAll('.ia-tab')];
+    const slides = [...slider.querySelectorAll('.ia-slide')];
+    const fills  = tabs.map(t => t.querySelector('.ia-tab-fill'));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let idx = 0, elapsed = 0, lastTime = 0, raf = 0, running = false, paused = false;
+
+    function show(i) {
+      idx = (i + slides.length) % slides.length;
+      tabs.forEach((t, j) => {
+        const on = j === idx;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      slides.forEach((s, j) => {
+        const on = j === idx;
+        s.hidden = !on;
+        s.classList.toggle('is-active', on);
+      });
+      fills.forEach(f => { f.style.width = '0%'; });
+      elapsed = 0; lastTime = 0;
+    }
+
+    function frame(now) {
+      if (!running) return;
+      if (!lastTime) lastTime = now;
+      if (!paused) {
+        elapsed += now - lastTime;
+        const p = Math.min(elapsed / interval, 1);
+        fills[idx].style.width = (p * 100) + '%';
+        if (p >= 1) { show(idx + 1); lastTime = now; }
+      }
+      lastTime = now;
+      raf = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (running || reduce) return;
+      running = true; elapsed = 0; lastTime = 0;
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() { running = false; cancelAnimationFrame(raf); }
+
+    tabs.forEach((t, i) => t.addEventListener('click', () => show(i)));
+    slider.addEventListener('mouseenter', () => { paused = true; });
+    slider.addEventListener('mouseleave', () => { paused = false; });
+    slider.addEventListener('focusin',  () => { paused = true; });
+    slider.addEventListener('focusout', () => { paused = false; });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.25 });
+    io.observe(slider);
+
+    show(0);
+  })();
+</script>
+</body>
+</html>
