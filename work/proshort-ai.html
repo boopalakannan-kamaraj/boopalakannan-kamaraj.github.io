@@ -126,6 +126,13 @@
     .ask-cases { grid-template-columns: 1fr; gap: 16px; }
   }
 
+  /* On phones the absolutely-positioned snippet cards overflow the stage,
+     so hide them (the in-window screenshot carries the story) like the chips. */
+  @media (max-width: 760px) {
+    .stage .widget { display: none; }
+    .stage.compact { padding: 36px 18px 56px; }
+  }
+
   /* Reduce vertical breathing space inside stages used for sub-flows */
   .stage.compact { padding: 60px 50px 90px; }
   .stage.compact .window image-slot { aspect-ratio: 16/9; }

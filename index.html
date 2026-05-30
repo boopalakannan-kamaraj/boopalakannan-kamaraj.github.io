@@ -383,79 +383,39 @@
     .contact .channels a:nth-child(3) { border-left: 0; }
   }
 
-  /* ============ INTRO / LOADING OVERLAY ============ */
-  .intro {
-    position: fixed; inset: 0; z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    padding: 32px;
-    background:
-      radial-gradient(120% 80% at 50% 0%, var(--bg-warm) 0%, var(--bg) 60%);
-    opacity: 1;
-    transition: opacity 600ms ease, visibility 600ms ease;
+  /* ---- Phones ---- */
+  @media (max-width: 600px) {
+    .nav { padding: 16px 20px; }
+    .nav.scrolled { padding: 12px 20px; }
+    .nav .brand { font-size: 19px; }
+    .nav-actions { gap: 8px; }
+    .nav .resume { padding: 8px 12px; gap: 5px; }
+    .nav .cta { padding: 8px 13px; }
+    footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .wrap { padding: 0 20px; }
+    section { padding: 72px 0; }
+    .hero { padding: 112px 0 64px; }
+    .hero h1 { font-size: clamp(40px, 12.5vw, 72px); }
+    .hero-foot { gap: 22px; margin-top: 52px; }
+    .ticker { gap: 18px; }
+    .about .signature { font-size: 22px; }
+    .work-intro { margin-bottom: 48px; }
+    .case { padding: 56px 0; gap: 32px; }
+    .contact { padding: 96px 0; }
+    .contact h2 { font-size: clamp(44px, 15vw, 88px); }
+    .contact .channels { margin-top: 48px; }
   }
-  .intro.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  body.intro-lock { overflow: hidden; }
-  .intro-inner { max-width: 560px; text-align: left; }
-  .intro-brand {
-    display: flex; align-items: center; gap: 10px;
-    font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em; color: var(--ink);
-    margin-bottom: 36px;
+
+  /* ---- Small phones: drop the secondary résumé pill so the nav never wraps ---- */
+  @media (max-width: 420px) {
+    .nav .resume { display: none; }
+    .contact .channels { grid-template-columns: 1fr; }
+    .contact .channels a { border-left: 0; }
   }
-  .intro-brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); transform: translateY(-2px); }
-  .intro-eyebrow {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--muted); display: flex; align-items: center; gap: 12px; margin: 0 0 18px;
-  }
-  .intro-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--muted-2); }
-  .intro-title {
-    font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 5vw, 44px); line-height: 1.05;
-    letter-spacing: -0.02em; color: var(--ink); margin: 0 0 18px;
-  }
-  .intro-title em { font-style: italic; color: var(--accent-ink); }
-  .intro-note { font-size: 15px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 28px; }
-  .intro-bar {
-    position: relative; height: 2px; width: 100%; border-radius: 999px;
-    background: color-mix(in oklab, var(--ink) 10%, transparent); overflow: hidden; margin-bottom: 22px;
-  }
-  .intro-bar span {
-    position: absolute; inset: 0 100% 0 0; background: var(--accent);
-    /* keep in sync with the desktop dismiss timeout in JS (~10s) */
-    animation: introFill 10s cubic-bezier(.25,.1,.25,1) forwards;
-  }
-  @keyframes introFill { to { right: 0; } }
-  .intro-foot {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
-    margin: 0; display: flex; align-items: center; gap: 9px;
-  }
-  .intro-foot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
-  .intro-enter {
-    margin-top: 26px; display: inline-block;
-    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 11px 20px; border: 1px solid var(--ink); border-radius: 999px;
-    background: transparent; color: var(--ink); cursor: pointer;
-    transition: background 200ms, color 200ms;
-  }
-  .intro-enter:hover { background: var(--ink); color: var(--bg); }
-  @media (prefers-reduced-motion: reduce) {
-    .intro-bar span { animation-duration: 1ms; }
-    .intro { transition-duration: 1ms; }
-  }
+
 </style>
 </head>
 <body>
-
-<!-- ============ INTRO / LOADING OVERLAY ============ -->
-<div class="intro" id="intro">
-  <div class="intro-inner">
-    <div class="intro-brand"><span class="dot"></span>Boopalakannan&nbsp;K.</div>
-    <p class="intro-eyebrow">Welcome · still building</p>
-    <h1 class="intro-title">Built by <em>exploring</em>.</h1>
-    <p class="intro-note">No templates. Just ideas, iterations, and exploration with Cursor and Claude.</p>
-    <div class="intro-bar"><span></span></div>
-    <p class="intro-foot">Best viewed on desktop.</p>
-    <button class="intro-enter" id="introEnter" type="button">Continue →</button>
-  </div>
-</div>
 
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav" data-screen-label="nav">
@@ -470,7 +430,7 @@
     <a href="#contact">Contact</a>
   </div>
   <div class="nav-actions">
-    <a class="resume" href="https://drive.google.com/drive/folders/1cPXt0Nh26QPbLAzWE-SPMQEx7-s7u_fI" target="_blank" rel="noopener">Résumé <span class="ar">↓</span></a>
+    <a class="resume" href="assets/resume/My%20Explorations.pdf" target="_blank" rel="noopener">Résumé <span class="ar">↓</span></a>
     <a class="cta" href="#contact">Let's talk</a>
   </div>
 </nav>
@@ -790,9 +750,9 @@
       <div class="eyebrow reveal">04 — Contact</div>
       <h2 class="reveal" data-delay="1">Let's make<br>something <em>clear</em>. <span class="arrow">↗</span></h2>
       <div class="channels reveal" data-delay="2">
-        <a href="mailto:boobalankanan6@gmail.com">
+        <a href="mailto:boobalankannan6@gmail.com">
           <span class="l">Email</span>
-          <span class="v">boobalankanan6@gmail.com</span>
+          <span class="v">boobalankannan6@gmail.com</span>
         </a>
         <a href="https://www.linkedin.com/in/boopalakannan-kamaraj-aa3603144/" target="_blank" rel="noopener">
           <span class="l">LinkedIn</span>
@@ -806,9 +766,9 @@
           <span class="l">Phone</span>
           <span class="v">+91 97862 38277</span>
         </a>
-        <a href="https://drive.google.com/drive/folders/1cPXt0Nh26QPbLAzWE-SPMQEx7-s7u_fI" target="_blank" rel="noopener">
+        <a href="assets/resume/My%20Explorations.pdf" target="_blank" rel="noopener">
           <span class="l">Resume</span>
-          <span class="v">Download resume</span>
+          <span class="v">View / download PDF</span>
         </a>
       </div>
     </div>
@@ -825,36 +785,6 @@
 </footer>
 
 <script>
-  // Intro / loading overlay — quick loader on desktop, tap-to-enter on mobile
-  (function () {
-    const intro = document.getElementById('intro');
-    if (!intro) return;
-    // Only greet once per browser session — a refresh or back-navigation skips it.
-    let seen = false;
-    try { seen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
-    if (seen) { intro.remove(); return; }
-
-    const isMobile = window.matchMedia('(max-width: 720px)').matches;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    document.body.classList.add('intro-lock');
-
-    function dismiss() {
-      intro.classList.add('is-hidden');
-      document.body.classList.remove('intro-lock');
-      try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
-    }
-    const enter = document.getElementById('introEnter');
-    if (enter) enter.addEventListener('click', dismiss);
-
-    // Desktop: fade out automatically once the loader bar finishes.
-    // Mobile: leave the under-construction note up until the visitor taps in.
-    if (!isMobile) {
-      setTimeout(dismiss, reduce ? 1500 : 10000);
-    }
-    // Safety net: never trap the visitor behind the overlay.
-    setTimeout(() => { if (!intro.classList.contains('is-hidden')) document.body.classList.remove('intro-lock'); }, 14000);
-  })();
-
   // Scroll reveal (with manual kick + safety net so content never stays blank)
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {

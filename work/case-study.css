@@ -222,3 +222,16 @@ footer {
   .fig-grid, .fig-grid.three { grid-template-columns: 1fr; }
   .cs-metrics { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---- Phones ---- */
+@media (max-width: 600px) {
+  .nav, footer { padding-left: 18px; padding-right: 18px; }
+  .nav { padding-top: 16px; padding-bottom: 16px; }
+  .nav .brand { font-size: 19px; }
+  .nav .back { display: none; }
+  .wrap, .wrap--narrow { padding: 0 18px; }
+  .cs-header { padding-top: 104px; }
+  .cs-facts { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .cs-metrics { grid-template-columns: 1fr; }
+  footer { flex-direction: column; align-items: flex-start; gap: 10px; padding: 28px 18px; }
+}
