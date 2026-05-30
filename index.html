@@ -428,23 +428,14 @@
     margin: 0; display: flex; align-items: center; gap: 9px;
   }
   .intro-foot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
-  .intro-mobile { display: none; }
   .intro-enter {
-    margin-top: 26px; display: none;
+    margin-top: 26px; display: inline-block;
     font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
     padding: 11px 20px; border: 1px solid var(--ink); border-radius: 999px;
     background: transparent; color: var(--ink); cursor: pointer;
     transition: background 200ms, color 200ms;
   }
   .intro-enter:hover { background: var(--ink); color: var(--bg); }
-
-  /* On phones: lead with the under-construction note and require a tap to enter */
-  @media (max-width: 720px) {
-    .intro-desktop { display: none; }
-    .intro-mobile { display: flex; align-items: flex-start; }
-    .intro-mobile::before { margin-top: 5px; }
-    .intro-enter { display: inline-block; }
-  }
   @media (prefers-reduced-motion: reduce) {
     .intro-bar span { animation-duration: 1ms; }
     .intro { transition-duration: 1ms; }
@@ -458,11 +449,10 @@
   <div class="intro-inner">
     <div class="intro-brand"><span class="dot"></span>Boopalakannan&nbsp;K.</div>
     <p class="intro-eyebrow">Welcome · still building</p>
-    <h1 class="intro-title">Made by hand,<br><em>not</em> from a template.</h1>
-    <p class="intro-note">I'm exploring every screen here myself — pixel by pixel, prompt by prompt — with Cursor and Claude as my pair. So it's opinionated on purpose, and happily a work in progress.</p>
+    <h1 class="intro-title">Built by <em>exploring</em>.</h1>
+    <p class="intro-note">No templates. Just ideas, iterations, and exploration with Cursor and Claude.</p>
     <div class="intro-bar"><span></span></div>
-    <p class="intro-foot intro-desktop">Best experienced on a wider screen.</p>
-    <p class="intro-foot intro-mobile">Mobile is still under construction — I'm designing it the same slow, curious way. For the full picture, swing by on a laptop.</p>
+    <p class="intro-foot">Best viewed on desktop.</p>
     <button class="intro-enter" id="introEnter" type="button">Continue →</button>
   </div>
 </div>
