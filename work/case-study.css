@@ -26,6 +26,9 @@ html { color-scheme: light; }
 html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
 html, body { transition: background-color 320ms ease, color 320ms ease; }
 body { font-size: 16px; line-height: 1.55; }
+/* Prevent any horizontal scroll at every width. `clip` (not `hidden`) keeps the
+   sticky side-labels working on desktop, since it never becomes a scroll container. */
+html { overflow-x: clip; }
 ::selection { background: var(--accent); color: #fff; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
@@ -225,9 +228,6 @@ footer {
 
 /* ---- Phones ---- */
 @media (max-width: 600px) {
-  /* Safety net: the sticky label is already static below 960px, so clipping
-     overflow here is harmless and guarantees no horizontal scroll. */
-  html, body { overflow-x: hidden; }
   .nav, footer { padding-left: 18px; padding-right: 18px; }
   .nav { padding-top: 16px; padding-bottom: 16px; }
   .nav .brand { font-size: 19px; }

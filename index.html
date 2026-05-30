@@ -31,6 +31,7 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
   body { font-size: 16px; line-height: 1.55; font-weight: 400; }
+  html { overflow-x: clip; }
 
   ::selection { background: var(--accent); color: #fff; }
 
@@ -385,7 +386,6 @@
 
   /* ---- Phones ---- */
   @media (max-width: 600px) {
-    html, body { overflow-x: hidden; }
     .nav { padding: 16px 20px; }
     .nav.scrolled { padding: 12px 20px; }
     .nav .brand { font-size: 19px; }
