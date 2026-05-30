@@ -382,9 +382,89 @@
     .contact .channels { grid-template-columns: 1fr 1fr; }
     .contact .channels a:nth-child(3) { border-left: 0; }
   }
+
+  /* ============ INTRO / LOADING OVERLAY ============ */
+  .intro {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px;
+    background:
+      radial-gradient(120% 80% at 50% 0%, var(--bg-warm) 0%, var(--bg) 60%);
+    opacity: 1;
+    transition: opacity 600ms ease, visibility 600ms ease;
+  }
+  .intro.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  body.intro-lock { overflow: hidden; }
+  .intro-inner { max-width: 560px; text-align: left; }
+  .intro-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em; color: var(--ink);
+    margin-bottom: 36px;
+  }
+  .intro-brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); transform: translateY(-2px); }
+  .intro-eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 12px; margin: 0 0 18px;
+  }
+  .intro-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--muted-2); }
+  .intro-title {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 5vw, 44px); line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--ink); margin: 0 0 18px;
+  }
+  .intro-title em { font-style: italic; color: var(--accent-ink); }
+  .intro-note { font-size: 15px; line-height: 1.65; color: var(--ink-soft); margin: 0 0 28px; }
+  .intro-bar {
+    position: relative; height: 2px; width: 100%; border-radius: 999px;
+    background: color-mix(in oklab, var(--ink) 10%, transparent); overflow: hidden; margin-bottom: 22px;
+  }
+  .intro-bar span {
+    position: absolute; inset: 0 100% 0 0; background: var(--accent);
+    animation: introFill 1.5s cubic-bezier(.4,.1,.2,1) forwards;
+  }
+  @keyframes introFill { to { right: 0; } }
+  .intro-foot {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin: 0; display: flex; align-items: center; gap: 9px;
+  }
+  .intro-foot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+  .intro-mobile { display: none; }
+  .intro-enter {
+    margin-top: 26px; display: none;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 11px 20px; border: 1px solid var(--ink); border-radius: 999px;
+    background: transparent; color: var(--ink); cursor: pointer;
+    transition: background 200ms, color 200ms;
+  }
+  .intro-enter:hover { background: var(--ink); color: var(--bg); }
+
+  /* On phones: lead with the under-construction note and require a tap to enter */
+  @media (max-width: 720px) {
+    .intro-desktop { display: none; }
+    .intro-mobile { display: flex; align-items: flex-start; }
+    .intro-mobile::before { margin-top: 5px; }
+    .intro-enter { display: inline-block; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .intro-bar span { animation-duration: 1ms; }
+    .intro { transition-duration: 1ms; }
+  }
 </style>
 </head>
 <body>
+
+<!-- ============ INTRO / LOADING OVERLAY ============ -->
+<div class="intro" id="intro">
+  <div class="intro-inner">
+    <div class="intro-brand"><span class="dot"></span>Boopalakannan&nbsp;K.</div>
+    <p class="intro-eyebrow">Welcome · still building</p>
+    <h1 class="intro-title">Made by hand,<br><em>not</em> from a template.</h1>
+    <p class="intro-note">I'm exploring every screen here myself — pixel by pixel, prompt by prompt — with Cursor and Claude as my pair. So it's opinionated on purpose, and happily a work in progress.</p>
+    <div class="intro-bar"><span></span></div>
+    <p class="intro-foot intro-desktop">Best experienced on a wider screen.</p>
+    <p class="intro-foot intro-mobile">Mobile is still under construction — I'm designing it the same slow, curious way. For the full picture, swing by on a laptop.</p>
+    <button class="intro-enter" id="introEnter" type="button">Continue →</button>
+  </div>
+</div>
 
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav" data-screen-label="nav">
@@ -754,6 +834,36 @@
 </footer>
 
 <script>
+  // Intro / loading overlay — quick loader on desktop, tap-to-enter on mobile
+  (function () {
+    const intro = document.getElementById('intro');
+    if (!intro) return;
+    // Only greet once per browser session — a refresh or back-navigation skips it.
+    let seen = false;
+    try { seen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
+    if (seen) { intro.remove(); return; }
+
+    const isMobile = window.matchMedia('(max-width: 720px)').matches;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.body.classList.add('intro-lock');
+
+    function dismiss() {
+      intro.classList.add('is-hidden');
+      document.body.classList.remove('intro-lock');
+      try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+    }
+    const enter = document.getElementById('introEnter');
+    if (enter) enter.addEventListener('click', dismiss);
+
+    // Desktop: fade out automatically once the loader bar finishes.
+    // Mobile: leave the under-construction note up until the visitor taps in.
+    if (!isMobile) {
+      setTimeout(dismiss, reduce ? 350 : 1900);
+    }
+    // Safety net: never trap the visitor behind the overlay.
+    setTimeout(() => { if (!intro.classList.contains('is-hidden')) document.body.classList.remove('intro-lock'); }, 12000);
+  })();
+
   // Scroll reveal (with manual kick + safety net so content never stays blank)
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
