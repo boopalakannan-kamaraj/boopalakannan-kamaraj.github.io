@@ -4,18 +4,24 @@
    ============================================================ */
 
 :root {
-  --bg: #f3efe7;
-  --bg-warm: #ebe4d6;
-  --ink: #16140f;
-  --ink-soft: #2c2820;
-  --muted: #7a6f5f;
-  --muted-2: #a89e8c;
-  --line: #d9d2c2;
-  --line-soft: #e4ddcc;
-  --accent: oklch(0.62 0.13 38);
-  --accent-ink: oklch(0.42 0.10 38);
-  --paper: #faf7f0;
-  --surface: #fff;
+  --color-bg: #FFFFFF;
+  --color-surface: #F8F8F8;
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #555555;
+  --color-accent: #4F46E5;
+  --color-border: #E5E5E5;
+  --bg: #FFFFFF;
+  --bg-warm: #F8F8F8;
+  --ink: #0A0A0A;
+  --ink-soft: #555555;
+  --muted: #555555;
+  --muted-2: #888888;
+  --line: #E5E5E5;
+  --line-soft: #EFEFEF;
+  --accent: #4F46E5;
+  --accent-ink: #4338CA;
+  --paper: #FFFFFF;
+  --surface: #F8F8F8;
   --serif: 'Instrument Serif', 'Times New Roman', serif;
   --sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -190,7 +196,7 @@ section { padding: 96px 0; }
 
 /* ===== image-slot polish ===== */
 image-slot {
-  background: repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklab, var(--bg-warm) 70%, #d3c8b0 30%) 12px 13px), var(--bg-warm);
+  background: repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklab, var(--bg-warm) 70%, #E0E0E0 30%) 12px 13px), var(--bg-warm);
 }
 
 /* ===== Next case ===== */

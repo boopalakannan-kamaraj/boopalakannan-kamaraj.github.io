@@ -74,7 +74,7 @@
   }
   .ask-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 36px -16px rgba(20, 16, 8, 0.18);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   .ask-card .badge {
     align-self: flex-start;
@@ -138,8 +138,8 @@
   .stage.compact .window image-slot { aspect-ratio: 16/9; }
 
   /* Chip variants for sub-flows */
-  .chip-note { /* generic small chip */ background: #fff; }
-  .chip-icn.violet { background: linear-gradient(135deg, oklch(0.75 0.14 300) 0%, oklch(0.5 0.18 300) 100%); }
+  .chip-note { /* generic small chip */ background: #FFFFFF; }
+  .chip-icn.violet { background: linear-gradient(135deg, color-mix(in oklab, #4F46E5 70%, #FFFFFF) 0%, #4F46E5 100%); }
   .chip-icn.amber  { background: linear-gradient(135deg, oklch(0.85 0.14 80)  0%, oklch(0.65 0.18 70)  100%); }
 
   /* ===== Hover-pause for all stage floaters ===== */
@@ -212,9 +212,9 @@
 
   /* ===== The coded AVA app inside the window ===== */
   .ava-app {
-    --pv: #6366f1; --pv-50: #eef2ff; --pv-100: #e0e7ff; --pv-600: #4f46e5;
-    --pt: #111827; --pm: #6b7280; --pl: #e5e7eb;
-    --pbg: #ffffff; --pbg2: #f9fafb;
+    --pv: #4F46E5; --pv-50: #F0EFFF; --pv-100: #F0EFFF; --pv-600: #4338CA;
+    --pt: #0A0A0A; --pm: #555555; --pl: #E5E5E5;
+    --pbg: #FFFFFF; --pbg2: #F8F8F8;
     display: grid; grid-template-columns: 240px 1fr;
     grid-template-rows: auto 1fr;
     background: var(--pbg);
@@ -228,11 +228,11 @@
     display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;
     padding: 12px 24px;
     border-bottom: 1px solid var(--pl);
-    background: #fff;
+    background: #FFFFFF;
   }
   .ava-topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .ava-back { width: 24px; height: 24px; border-radius: 6px; background: var(--pbg2); display: inline-flex; align-items: center; justify-content: center; color: var(--pm); font-size: 14px; }
-  .ava-circ { width: 30px; height: 30px; border-radius: 50%; background: var(--pv-100); color: var(--pv-600); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+  .ava-circ { width: 30px; height: 30px; border-radius: 50%; background: #F0EFFF; color: var(--pv-600); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
   .ava-mt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .ava-mt-name { font-size: 14px; font-weight: 600; color: var(--pt); }
   .ava-mt-meta { font-size: 11px; color: var(--pm); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -241,14 +241,14 @@
   .ava-tag.success { background: #d1fae5; color: #065f46; }
   .ava-topbar-right { display: flex; align-items: center; gap: 8px; font-size: 12px; }
   .ava-cta { padding: 8px 12px; border-radius: 8px; background: var(--pv); color: #fff; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; border: 0; cursor: pointer; font-family: inherit; }
-  .ava-cta-ghost { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--pl); background: #fff; color: var(--pt); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: inherit; }
+  .ava-cta-ghost { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--pl); background: #FFFFFF; color: var(--pt); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: inherit; }
 
   /* Sidebar */
   .ava-sidebar {
     border-right: 1px solid var(--pl);
     display: flex; flex-direction: column;
     padding: 16px 12px;
-    background: #fff;
+    background: #FFFFFF;
     overflow: hidden;
   }
   .ava-search { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--pbg2); border-radius: 8px; margin-bottom: 12px; font-size: 12px; color: var(--pm); }
@@ -261,7 +261,7 @@
   .ava-thread .ttl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* Chat area */
-  .ava-chat { display: flex; flex-direction: column; background: #fff; overflow: hidden; min-width: 0; }
+  .ava-chat { display: flex; flex-direction: column; background: #FFFFFF; overflow: hidden; min-width: 0; }
   .ava-chat-body { flex: 1; overflow-y: auto; padding: 28px 32px 16px; display: flex; flex-direction: column; gap: 14px; min-height: 0; scroll-behavior: smooth; }
   .ava-chat-body::-webkit-scrollbar { width: 6px; }
   .ava-chat-body::-webkit-scrollbar-thumb { background: var(--pl); border-radius: 3px; }
@@ -275,9 +275,9 @@
   .ava-empty-suggestions button { background: var(--pbg2); border: 1px solid var(--pl); padding: 8px 12px; border-radius: 8px; font-size: 12px; color: var(--pt); cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
 
   /* Input area */
-  .ava-input { border-top: 1px solid var(--pl); padding: 14px 20px 16px; background: #fff; }
-  .ava-input-box { border: 1px solid var(--pl); border-radius: 12px; padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 8px; background: #fff; transition: border-color 200ms, box-shadow 200ms; }
-  .ava-input-box.active { border-color: var(--pv); box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+  .ava-input { border-top: 1px solid var(--pl); padding: 14px 20px 16px; background: #FFFFFF; }
+  .ava-input-box { border: 1px solid var(--pl); border-radius: 12px; padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; transition: border-color 200ms, box-shadow 200ms; }
+  .ava-input-box.active { border-color: var(--pv); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12); }
   .ava-input-text { font-size: 13px; color: var(--pt); min-height: 18px; line-height: 1.4; }
   .ava-input-text .placeholder { color: var(--pm); }
   .ava-input-text .cursor { display: inline-block; width: 2px; height: 14px; background: var(--pt); vertical-align: text-bottom; margin-left: 1px; animation: ava-blink 1s steps(2) infinite; }
@@ -318,7 +318,7 @@
   .ava-pill.red { color: #b91c1c; border-color: #fecaca; background: #fef2f2; }
   .ava-pill.amber { color: #b45309; border-color: #fde68a; background: #fffbeb; }
   .ava-pill.green { color: #047857; border-color: #a7f3d0; background: #ecfdf5; }
-  .ava-pill.violet { color: var(--pv-600); border-color: #c7d2fe; background: var(--pv-50); }
+  .ava-pill.violet { color: var(--pv-600); border-color: #C7D2FE; background: var(--pv-50); }
   .ava-section-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--pt); margin: 0 0 10px; }
   .ava-section-title .ic { font-size: 14px; }
 
@@ -336,7 +336,7 @@
   /* People sentiment */
   .ava-people { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .ava-person { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--pl); border-radius: 8px; }
-  .ava-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--pv-100); color: var(--pv-600); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
+  .ava-avatar { width: 28px; height: 28px; border-radius: 50%; background: #F0EFFF; color: var(--pv-600); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; }
   .ava-person .ava-name { font-size: 13px; font-weight: 600; color: var(--pt); }
   .ava-person .ava-role { font-size: 11px; color: var(--pm); }
   .ava-sent { font-size: 11px; padding: 3px 10px; border-radius: 4px; font-weight: 500; }
@@ -361,11 +361,11 @@
   .ava-whatnext-chips button { background: var(--pbg2); border: 1px solid var(--pl); padding: 8px 12px; border-radius: 6px; font-size: 12px; color: var(--pt); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
 
   /* Follow-up tone tabs */
-  .ava-tabrow { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--pl); background: #fff; }
+  .ava-tabrow { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid var(--pl); background: #FFFFFF; }
   .ava-tabrow-btn { padding: 10px; background: transparent; border: 0; border-bottom: 2px solid transparent; font-size: 12px; color: var(--pm); cursor: pointer; font-family: inherit; font-weight: 500; }
   .ava-tabrow-btn.active { color: var(--pv-600); border-bottom-color: var(--pv); background: var(--pv-50); }
 
-  .ava-email { border: 1px solid var(--pv); border-radius: 8px; background: #fff; overflow: hidden; }
+  .ava-email { border: 1px solid var(--pv); border-radius: 8px; background: #FFFFFF; overflow: hidden; }
   .ava-email-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px 12px; border-bottom: 1px solid var(--pl); font-size: 12px; }
   .ava-email-row .label { color: var(--pm); width: 28px; flex-shrink: 0; }
   .ava-email-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 4px; background: var(--pv-50); border-radius: 999px; color: var(--pt); font-size: 11px; }
@@ -377,7 +377,7 @@
 
   /* Coaching clips */
   .ava-clips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .ava-clip { border: 1.5px solid; border-radius: 10px; padding: 14px; background: #fff; }
+  .ava-clip { border: 1.5px solid; border-radius: 10px; padding: 14px; background: #FFFFFF; }
   .ava-clip.red { border-color: #fecaca; }
   .ava-clip.green { border-color: #a7f3d0; }
   .ava-clip-head { display: grid; grid-template-columns: 24px 1fr auto; gap: 8px; align-items: center; margin-bottom: 4px; }
@@ -418,12 +418,9 @@
     z-index: 3;
     border-radius: 12px;
     /* no overflow:hidden so the tag at top:-10px stays visible */
-    box-shadow:
-      0 1px 0 rgba(255,255,255,0.6) inset,
-      0 22px 50px -16px rgba(20, 16, 8, 0.30),
-      0 8px 20px -8px rgba(20, 16, 8, 0.18);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     border: 1px solid color-mix(in oklab, var(--ink) 6%, transparent);
-    background: #fff;
+    background: #FFFFFF;
     animation: stage-float 6s ease-in-out infinite;
     /* Sequential reveal: hidden until parent stage triggers it */
     opacity: 0;
@@ -450,7 +447,7 @@
     position: absolute; top: -10px; left: 14px;
     font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--accent-ink);
-    background: #fff;
+    background: #FFFFFF;
     padding: 3px 8px; border-radius: 4px;
     border: 1px solid color-mix(in oklab, var(--ink) 6%, transparent);
     z-index: 4;
@@ -687,7 +684,7 @@
     background: var(--surface); border: 1px solid var(--line);
     color: var(--ink-soft);
   }
-  .finding .priority .pill.now { background: color-mix(in oklab, oklch(0.7 0.14 145) 16%, #fff); border-color: color-mix(in oklab, oklch(0.7 0.14 145) 40%, var(--line)); color: oklch(0.42 0.12 145); }
+  .finding .priority .pill.now { background: color-mix(in oklab, oklch(0.7 0.14 145) 16%, #FFFFFF); border-color: color-mix(in oklab, oklch(0.7 0.14 145) 40%, var(--line)); color: oklch(0.42 0.12 145); }
   .finding .priority .pill.next { background: color-mix(in oklab, var(--accent) 14%, var(--surface)); border-color: color-mix(in oklab, var(--accent) 40%, var(--line)); color: var(--accent-ink); }
   .finding .priority .pill.later { background: var(--paper); }
 
@@ -708,7 +705,7 @@
     position: absolute;
     top: -8px; left: 50%;
     width: 100px; height: 22px;
-    background: color-mix(in oklab, var(--accent) 22%, #fff);
+    background: color-mix(in oklab, var(--accent) 22%, #FFFFFF);
     border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--line));
     border-radius: 2px;
     transform: translateX(-50%) rotate(-1.5deg);
@@ -721,11 +718,11 @@
   }
   .research-artifact .artifact-cap span.l span { color: var(--ink); }
   .research-artifact .artifact-frame {
-    background: #fff;
+    background: #FFFFFF;
     border: 1px solid var(--line);
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 22px 50px -22px rgba(20, 16, 8, 0.18);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   .research-artifact .artifact-frame img {
     display: block; width: 100%; height: auto;
@@ -806,11 +803,11 @@
   /* full-width specimen — single composite image */
   .ds-specimen {
     position: relative; display: block;
-    background: #fff;
+    background: #FFFFFF;
     border: 1px solid var(--line);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 22px 44px -26px rgba(20, 16, 8, 0.22);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   .ds-specimen img { display: block; width: 100%; height: auto; }
   .ds-wall-foot {
@@ -868,7 +865,7 @@
   }
   .recognition .badge-shot img {
     max-width: 100%; height: auto;
-    filter: drop-shadow(0 12px 24px rgba(20, 16, 8, 0.12));
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.08));
   }
   .recognition .post-shot {
     background: var(--paper);

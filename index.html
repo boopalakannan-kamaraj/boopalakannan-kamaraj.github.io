@@ -10,24 +10,24 @@
 <script src="image-slot.js"></script>
 <style>
   :root {
-    --color-bg: #F5F0E8;
-    --color-surface: #EDE8DE;
-    --color-text-primary: #1A1714;
-    --color-text-secondary: #5C5550;
-    --color-accent: #B85C2A;
-    --color-border: #D6CFC4;
-    --bg: #F5F0E8;
-    --bg-warm: #E8E2D6;
-    --ink: #1A1714;
-    --ink-soft: #5C5550;
-    --muted: #5C5550;
-    --muted-2: #8A8279;
-    --line: #D6CFC4;
-    --line-soft: #E2DDD4;
-    --accent: #B85C2A;
-    --accent-ink: #8F4720;
-    --paper: #F5F0E8;
-    --surface: #EDE8DE;
+    --color-bg: #FFFFFF;
+    --color-surface: #F8F8F8;
+    --color-text-primary: #0A0A0A;
+    --color-text-secondary: #555555;
+    --color-accent: #4F46E5;
+    --color-border: #E5E5E5;
+    --bg: #FFFFFF;
+    --bg-warm: #F8F8F8;
+    --ink: #0A0A0A;
+    --ink-soft: #555555;
+    --muted: #555555;
+    --muted-2: #888888;
+    --line: #E5E5E5;
+    --line-soft: #EFEFEF;
+    --accent: #4F46E5;
+    --accent-ink: #4338CA;
+    --paper: #FFFFFF;
+    --surface: #F8F8F8;
     --serif: 'Instrument Serif', 'Times New Roman', serif;
     --sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
     --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -123,6 +123,7 @@
   .hero-headshot {
     width: 260px; height: 260px;
     border-radius: 999999px;
+    background: #F0EFFF;
     filter: saturate(0.92) contrast(1.02);
   }
   .hero-foot {
@@ -238,11 +239,8 @@
   /* ---- Browser / desktop window mockup inside the cover ---- */
   .case-cover .win {
     display: flex; flex-direction: column; max-width: 100%;
-    background: #F5F0E8; border-radius: 12px; overflow: hidden;
-    box-shadow:
-      0 1px 0 rgba(255,255,255,0.6) inset,
-      0 46px 92px -36px rgba(22,20,15,.5),
-      0 16px 34px -18px rgba(22,20,15,.3),
+    background: #FFFFFF; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08),
       0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent);
     transform: perspective(2600px) rotateX(2.5deg);
     transform-origin: 50% 100%;
@@ -252,11 +250,11 @@
   .case-cover .win-bar {
     display: grid; grid-template-columns: 64px 1fr 64px; align-items: center;
     padding: 11px 16px; min-width: 0;
-    background: linear-gradient(180deg, #F5F0E8 0%, #EDE8DE 100%);
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8F8F8 100%);
     border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
   }
   .case-cover .win-bar .dots { display: flex; gap: 7px; }
-  .case-cover .win-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; background: #D6CFC4; }
+  .case-cover .win-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; background: #E5E5E5; }
   .case-cover .win-bar .dots i:nth-child(1) { background: #f06058; }
   .case-cover .win-bar .dots i:nth-child(2) { background: #f9bd2e; }
   .case-cover .win-bar .dots i:nth-child(3) { background: #28c941; }
@@ -264,7 +262,7 @@
     justify-self: center; min-width: 0; max-width: 100%;
     display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
-    background: color-mix(in oklab, var(--ink) 4%, #F5F0E8);
+    background: color-mix(in oklab, var(--ink) 4%, #FFFFFF);
     border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
     border-radius: 999px; padding: 6px 16px; white-space: nowrap; overflow: hidden;
   }
@@ -276,9 +274,9 @@
   }
   .case-cover .win-bar .app-name .badge {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #F5F0E8); color: var(--accent-ink);
+    padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #FFFFFF); color: var(--accent-ink);
   }
-  .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #F5F0E8; }
+  .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #FFFFFF; }
   .case-cover .win image-slot.shot { display: block; width: 780px; max-width: 100%; height: clamp(300px, 38vw, 480px); }
   .case-cover .corner {
     position: absolute; bottom: 16px; left: 18px; margin: 0;
@@ -294,7 +292,7 @@
     padding: 11px 18px; border-radius: 999px;
     background: var(--accent); color: var(--paper);
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;
-    box-shadow: 0 12px 28px -10px color-mix(in oklab, var(--accent) 60%, transparent);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     opacity: 0; transform: translate(-50%, -50%) scale(0.6);
     transition: opacity 220ms ease, transform 320ms cubic-bezier(.2,.8,.2,1);
   }
@@ -364,7 +362,7 @@
 
   /* image-slot polish */
   image-slot {
-    background: repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklab, var(--bg-warm) 70%, #d3c8b0 30%) 12px 13px), var(--bg-warm);
+    background: repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in oklab, var(--bg-warm) 70%, #E0E0E0 30%) 12px 13px), var(--bg-warm);
   }
   image-slot::part(placeholder),
   image-slot::part(label) {

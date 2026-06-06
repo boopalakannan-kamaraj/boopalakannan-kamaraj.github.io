@@ -71,7 +71,7 @@
   }
   .comp-tile:hover {
     transform: translateY(-3px);
-    box-shadow: 0 22px 40px -22px rgba(20, 16, 8, 0.22);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     z-index: 2;
   }
   .comp-tile-head {
@@ -220,8 +220,7 @@
     position: relative; z-index: 1;
     display: block; width: 100%; height: auto;
     filter:
-      drop-shadow(0 36px 80px rgba(20, 16, 8, 0.30))
-      drop-shadow(0 14px 30px rgba(20, 16, 8, 0.16));
+      drop-shadow(0 2px 12px rgba(0,0,0,0.08));
     transform: perspective(2600px) rotateX(2.5deg);
     transform-origin: 50% 100%;
     transition: transform 800ms cubic-bezier(.2,.7,.2,1);
@@ -242,7 +241,7 @@
   .shot-figure img,
   .shot-card img {
     display: block; width: 100%; height: auto;
-    filter: drop-shadow(0 20px 46px rgba(20, 16, 8, 0.16));
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.08));
   }
   .shot-cap {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -263,8 +262,8 @@
     max-height: 560px; overflow: auto;
     border-radius: 12px;
     border: 1px solid var(--line);
-    background: #fff;
-    box-shadow: 0 20px 46px -16px rgba(20, 16, 8, 0.20);
+    background: #FFFFFF;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     -webkit-overflow-scrolling: touch;
   }
   .shot-scroll img {
@@ -274,7 +273,7 @@
     content: '';
     position: sticky; bottom: 0; left: 0; right: 0;
     display: block; height: 44px; margin-top: -44px;
-    background: linear-gradient(180deg, transparent, color-mix(in oklab, #fff 88%, transparent));
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, #FFFFFF 88%, transparent));
     pointer-events: none;
   }
   .scroll-hint {
@@ -303,13 +302,13 @@
   .frameimg { position: relative; display: block; line-height: 0; border-radius: 12px; }
   .frameimg img {
     display: block; width: 100%; height: auto;
-    filter: drop-shadow(0 22px 50px rgba(20, 16, 8, 0.16));
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.08));
   }
   .walk-shot .stack { display: flex; flex-direction: column; gap: 22px; }
   .walk-shot.scroll .port {
     max-height: 520px; overflow: auto;
-    border-radius: 12px; border: 1px solid var(--line); background: #fff;
-    box-shadow: 0 22px 50px -16px rgba(20, 16, 8, 0.20);
+    border-radius: 12px; border: 1px solid var(--line); background: #FFFFFF;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     -webkit-overflow-scrolling: touch;
   }
   .walk-shot.scroll .frameimg { border-radius: 0; }
@@ -317,7 +316,7 @@
   .walk-shot.scroll .port::after {
     content: ''; position: sticky; bottom: 0; left: 0; right: 0;
     display: block; height: 40px; margin-top: -40px;
-    background: linear-gradient(180deg, transparent, color-mix(in oklab, #fff 90%, transparent));
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, #FFFFFF 90%, transparent));
     pointer-events: none;
   }
 
@@ -328,7 +327,7 @@
     background: var(--accent); color: #fff;
     font-family: var(--mono); font-size: 13px; font-weight: 500;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent), 0 4px 12px rgba(20, 16, 8, 0.32);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent), 0 2px 12px rgba(0,0,0,0.08);
   }
   .hot::after {
     content: ''; position: absolute; inset: -5px; border-radius: 50%;
@@ -416,7 +415,7 @@
   .duo-shots figure.wide { flex: 1.32; }
   .duo-shots img {
     display: block; width: 100%; height: auto; border-radius: 9px;
-    filter: drop-shadow(0 14px 30px rgba(20, 16, 8, 0.15));
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.08));
   }
   .duo-shots figcaption {
     margin-top: 9px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
@@ -434,8 +433,8 @@
   .zoom-stage {
     position: sticky; top: 88px;
     overflow: hidden; height: 560px;
-    border-radius: 12px; border: 1px solid var(--line); background: #fff;
-    box-shadow: 0 22px 50px -16px rgba(20, 16, 8, 0.20);
+    border-radius: 12px; border: 1px solid var(--line); background: #FFFFFF;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   .zoom-canvas {
     position: absolute; left: 0; top: 0; width: 100%;
@@ -446,14 +445,14 @@
   .zoom-canvas img { display: block; width: 100%; height: auto; }
   .zoom-stage::after {
     content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 48px; z-index: 2;
-    background: linear-gradient(180deg, transparent, color-mix(in oklab, #fff 88%, transparent));
+    background: linear-gradient(180deg, transparent, color-mix(in oklab, #FFFFFF 88%, transparent));
     pointer-events: none; transition: opacity 0.4s;
   }
   .zoom-stage.zoomed::after { opacity: 0; }
   .zoom-hint {
     position: absolute; top: 12px; right: 12px; z-index: 3;
     font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft);
-    background: color-mix(in oklab, #fff 84%, transparent); border: 1px solid var(--line);
+    background: color-mix(in oklab, #FFFFFF 84%, transparent); border: 1px solid var(--line);
     border-radius: 999px; padding: 5px 11px; transition: opacity 0.35s; backdrop-filter: blur(5px);
   }
   .zoom-stage.zoomed .zoom-hint { opacity: 0; }
@@ -462,7 +461,7 @@
   .hot.dim { opacity: 0.18; }
   .hot.on {
     transform: translate(-50%, -50%) scale(1.22);
-    box-shadow: 0 0 0 5px color-mix(in oklab, var(--accent) 24%, transparent), 0 6px 16px rgba(20, 16, 8, 0.4);
+    box-shadow: 0 0 0 5px color-mix(in oklab, var(--accent) 24%, transparent), 0 2px 12px rgba(0,0,0,0.08);
   }
   /* In zoom mode the canvas is scaled 2×, so the marker would balloon and
      cover the element it points to. Counter-scale the active one into a small
@@ -471,8 +470,8 @@
   .zoom-stage.zoomed .hot.on {
     background: transparent;
     color: transparent;
-    border: 2px solid #fff;
-    box-shadow: 0 0 0 2px var(--accent), 0 2px 10px rgba(20, 16, 8, 0.45);
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 0 0 2px var(--accent), 0 2px 12px rgba(0,0,0,0.08);
     transform: translate(-50%, -50%) scale(0.5);
   }
   .zoom-stage.zoomed .hot.on::after {
