@@ -10,18 +10,24 @@
 <script src="image-slot.js"></script>
 <style>
   :root {
-    --bg: #f3efe7;
-    --bg-warm: #ebe4d6;
-    --ink: #16140f;
-    --ink-soft: #2c2820;
-    --muted: #7a6f5f;
-    --muted-2: #a89e8c;
-    --line: #d9d2c2;
-    --line-soft: #e4ddcc;
-    --accent: oklch(0.62 0.13 38);   /* warm clay */
-    --accent-ink: oklch(0.42 0.10 38);
-    --paper: #faf7f0;
-    --surface: #fff;
+    --color-bg: #F5F0E8;
+    --color-surface: #EDE8DE;
+    --color-text-primary: #1A1714;
+    --color-text-secondary: #5C5550;
+    --color-accent: #B85C2A;
+    --color-border: #D6CFC4;
+    --bg: #F5F0E8;
+    --bg-warm: #E8E2D6;
+    --ink: #1A1714;
+    --ink-soft: #5C5550;
+    --muted: #5C5550;
+    --muted-2: #8A8279;
+    --line: #D6CFC4;
+    --line-soft: #E2DDD4;
+    --accent: #B85C2A;
+    --accent-ink: #8F4720;
+    --paper: #F5F0E8;
+    --surface: #EDE8DE;
     --serif: 'Instrument Serif', 'Times New Roman', serif;
     --sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
     --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -232,7 +238,7 @@
   /* ---- Browser / desktop window mockup inside the cover ---- */
   .case-cover .win {
     display: flex; flex-direction: column; max-width: 100%;
-    background: #fff; border-radius: 12px; overflow: hidden;
+    background: #F5F0E8; border-radius: 12px; overflow: hidden;
     box-shadow:
       0 1px 0 rgba(255,255,255,0.6) inset,
       0 46px 92px -36px rgba(22,20,15,.5),
@@ -246,11 +252,11 @@
   .case-cover .win-bar {
     display: grid; grid-template-columns: 64px 1fr 64px; align-items: center;
     padding: 11px 16px; min-width: 0;
-    background: linear-gradient(180deg, #f8f5ee 0%, #efeadd 100%);
+    background: linear-gradient(180deg, #F5F0E8 0%, #EDE8DE 100%);
     border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
   }
   .case-cover .win-bar .dots { display: flex; gap: 7px; }
-  .case-cover .win-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; background: #d9d2c2; }
+  .case-cover .win-bar .dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; background: #D6CFC4; }
   .case-cover .win-bar .dots i:nth-child(1) { background: #f06058; }
   .case-cover .win-bar .dots i:nth-child(2) { background: #f9bd2e; }
   .case-cover .win-bar .dots i:nth-child(3) { background: #28c941; }
@@ -258,7 +264,7 @@
     justify-self: center; min-width: 0; max-width: 100%;
     display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
-    background: color-mix(in oklab, var(--ink) 4%, #fff);
+    background: color-mix(in oklab, var(--ink) 4%, #F5F0E8);
     border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent);
     border-radius: 999px; padding: 6px 16px; white-space: nowrap; overflow: hidden;
   }
@@ -270,9 +276,9 @@
   }
   .case-cover .win-bar .app-name .badge {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #fff); color: var(--accent-ink);
+    padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #F5F0E8); color: var(--accent-ink);
   }
-  .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #fff; }
+  .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #F5F0E8; }
   .case-cover .win image-slot.shot { display: block; width: 780px; max-width: 100%; height: clamp(300px, 38vw, 480px); }
   .case-cover .corner {
     position: absolute; bottom: 16px; left: 18px; margin: 0;
@@ -431,7 +437,7 @@
     <a href="#contact">Contact</a>
   </div>
   <div class="nav-actions">
-    <a class="resume" href="assets/resume/My%20Explorations.pdf" target="_blank" rel="noopener">Résumé <span class="ar">↓</span></a>
+    <a class="resume" href="assets/resume/boopalakannan_resume.pdf" target="_blank" rel="noopener">Résumé <span class="ar">↓</span></a>
     <a class="cta" href="#contact">Let's talk</a>
   </div>
 </nav>
@@ -767,7 +773,7 @@
           <span class="l">Phone</span>
           <span class="v">+91 97862 38277</span>
         </a>
-        <a href="assets/resume/My%20Explorations.pdf" target="_blank" rel="noopener">
+        <a href="assets/resume/boopalakannan_resume.pdf" target="_blank" rel="noopener">
           <span class="l">Resume</span>
           <span class="v">View / download PDF</span>
         </a>
