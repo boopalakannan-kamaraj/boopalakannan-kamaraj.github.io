@@ -36,8 +36,9 @@
   html, body { transition: background-color 320ms ease, color 320ms ease; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
-  body { font-size: 16px; line-height: 1.55; font-weight: 400; }
+  body { font-size: 16px; line-height: 1.55; font-weight: 400; overflow-x: clip; }
   html { overflow-x: clip; }
+  main { overflow-x: clip; max-width: 100%; }
 
   ::selection { background: var(--accent); color: #fff; }
 
@@ -56,21 +57,24 @@
   /* ============ NAV ============ */
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 22px 40px;
+    padding: 22px 0;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     background: color-mix(in oklab, var(--bg) 70%, transparent);
     border-bottom: 1px solid transparent;
     transition: border-color 400ms ease, background 400ms ease, padding 400ms ease;
   }
-  .nav.scrolled { border-bottom-color: var(--line-soft); padding: 14px 40px; }
+  .nav .wrap {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .nav.scrolled { border-bottom-color: var(--line-soft); padding: 14px 0; }
   .nav .brand {
     font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em;
     display: flex; align-items: baseline; gap: 10px;
   }
   .nav .brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; transform: translateY(-2px); }
-  .nav .links { display: flex; gap: 32px; align-items: center; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .nav .links { display: flex; gap: 32px; align-items: center; flex-shrink: 1; min-width: 0; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .nav-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
   .nav .links a { position: relative; padding: 6px 0; transition: color 200ms; }
   .nav .links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--ink); transition: right 280ms cubic-bezier(.2,.7,.2,1); }
   .nav .links a:hover { color: var(--ink); }
@@ -90,10 +94,12 @@
   .nav .resume:hover { color: var(--ink); border-color: var(--muted-2); background: color-mix(in oklab, var(--ink) 5%, transparent); }
   .nav .resume .ar { font-size: 13px; transition: transform 200ms; }
   .nav .resume:hover .ar { transform: translateY(2px); }
-  .nav-actions { display: flex; align-items: center; gap: 12px; }
 
   /* ============ LAYOUT ============ */
-  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+  .wrap {
+    width: 100%; max-width: 1280px; margin-inline: auto;
+    padding-inline: 40px; box-sizing: border-box;
+  }
   section { padding: 120px 0; border-top: 1px solid var(--line-soft); }
   section:first-of-type { border-top: 0; }
 
@@ -108,9 +114,8 @@
   .hero-grid { display: grid; grid-template-columns: 1fr 280px; gap: 80px; align-items: end; }
   .hero h1 {
     font-family: var(--serif); font-weight: 400;
-    font-size: clamp(64px, 9vw, 156px); line-height: 0.96; letter-spacing: -0.025em;
+    font-size: clamp(56px, 5.8vw, 112px); line-height: 0.96; letter-spacing: -0.025em;
     margin: 0; color: var(--ink);
-    text-wrap: balance;
   }
   .hero h1 .it { font-style: italic; color: var(--accent-ink); }
   .hero h1 .amp { font-style: italic; color: var(--muted-2); font-weight: 400; }
@@ -121,7 +126,7 @@
   }
   .hero-meta .role span { color: var(--ink); }
   .hero-headshot {
-    width: 260px; height: 260px;
+    width: 260px; height: 260px; max-width: 100%;
     border-radius: 999999px;
     background: #F0EFFF;
     filter: saturate(0.92) contrast(1.02);
@@ -137,7 +142,7 @@
     margin-top: 40px; padding: 16px 0; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
     font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
     display: flex; align-items: center; gap: 32px; color: var(--muted);
-    overflow: hidden; white-space: nowrap;
+    overflow: hidden; white-space: nowrap; min-width: 0; max-width: 100%;
   }
   .ticker .live { color: var(--accent-ink); display: inline-flex; align-items: center; gap: 8px; }
   .ticker .live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s infinite; }
@@ -177,7 +182,7 @@
   .case-cta .open-link { color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
   .case-cta .arr { display: inline-block; transition: transform 300ms cubic-bezier(.2,.7,.2,1); font-family: var(--serif); font-style: italic; font-size: 14px; }
   .case-body, .case-strip, .case-visual, .case-header { position: relative; z-index: 1; }
-  .case-header { display: grid; grid-template-columns: 80px 1fr 1fr 180px; gap: 40px; align-items: baseline; }
+  .case-header { display: grid; grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 180px); gap: 40px; align-items: baseline; }
   .case-num { font-family: var(--mono); font-size: 13px; color: var(--muted-2); letter-spacing: 0.04em; }
   .case-title { font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.02em; margin: 0; }
   .case-title .it { font-style: italic; }
@@ -277,7 +282,7 @@
     padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #FFFFFF); color: var(--accent-ink);
   }
   .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #FFFFFF; }
-  .case-cover .win image-slot.shot { display: block; width: 780px; max-width: 100%; height: clamp(300px, 38vw, 480px); }
+  .case-cover .win image-slot.shot { display: block; width: 100%; max-width: 780px; height: clamp(300px, 38vw, 480px); }
   .case-cover .corner {
     position: absolute; bottom: 16px; left: 18px; margin: 0;
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
@@ -355,9 +360,11 @@
 
   /* ============ FOOTER ============ */
   footer {
-    padding: 40px 40px; display: flex; justify-content: space-between; align-items: center;
+    padding: 40px 0; border-top: 1px solid var(--line-soft);
+  }
+  footer .wrap {
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
-    border-top: 1px solid var(--line-soft);
   }
 
   /* image-slot polish */
@@ -370,9 +377,8 @@
   }
 
   @media (max-width: 960px) {
-    .nav, footer { padding-left: 24px; padding-right: 24px; }
+    .wrap { padding-inline: 24px; }
     .nav .links { display: none; }
-    .wrap { padding: 0 24px; }
     .hero { padding: 140px 0 80px; }
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
     .hero-headshot { width: 180px; }
@@ -390,14 +396,15 @@
 
   /* ---- Phones ---- */
   @media (max-width: 600px) {
-    .nav { padding: 16px 20px; }
-    .nav.scrolled { padding: 12px 20px; }
+    .nav { padding-block: 16px; }
+    .nav.scrolled { padding-block: 12px; }
     .nav .brand { font-size: 19px; }
     .nav-actions { gap: 8px; }
     .nav .resume { padding: 8px 12px; gap: 5px; }
     .nav .cta { padding: 8px 13px; }
-    footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
-    .wrap { padding: 0 20px; }
+    footer { padding-block: 28px; }
+    footer .wrap { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .wrap { padding-inline: 20px; }
     section { padding: 72px 0; }
     .hero { padding: 112px 0 64px; }
     .hero h1 { font-size: clamp(40px, 12.5vw, 72px); }
@@ -424,6 +431,7 @@
 
 <!-- ============ NAV ============ -->
 <nav class="nav" id="nav" data-screen-label="nav">
+  <div class="wrap">
   <a class="brand" href="#top">
     <span class="dot"></span>
     Boopalakannan&nbsp;K.
@@ -437,6 +445,7 @@
   <div class="nav-actions">
     <a class="resume" href="assets/resume/boopalakannan_resume.pdf" target="_blank" rel="noopener">Résumé <span class="ar">↓</span></a>
     <a class="cta" href="#contact">Let's talk</a>
+  </div>
   </div>
 </nav>
 
@@ -785,8 +794,10 @@
 <div class="cursor-bubble" id="cursorBubble" aria-hidden="true">View case study <span class="arr">↗</span></div>
 
 <footer>
-  <div>© 2026 Boopalakannan Kamaraj</div>
-  <div>Crafted in Bengaluru</div>
+  <div class="wrap">
+    <div>© 2026 Boopalakannan Kamaraj</div>
+    <div>Crafted in Bengaluru</div>
+  </div>
 </footer>
 
 <script>
