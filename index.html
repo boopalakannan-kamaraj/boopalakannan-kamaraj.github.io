@@ -191,14 +191,16 @@
   .case-titlewrap { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
   .built-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--accent-ink);
-    background: color-mix(in oklab, var(--accent) 12%, var(--paper));
-    border: 1px solid color-mix(in oklab, var(--accent) 32%, var(--line));
-    padding: 6px 13px 6px 11px; border-radius: 999px;
+    font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--paper);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 8px 16px 8px 14px; border-radius: 999px;
+    box-shadow: 0 4px 14px -2px color-mix(in oklab, var(--accent) 50%, transparent);
+    transition: box-shadow 300ms, transform 300ms;
   }
-  .built-badge .spark { font-size: 11px; line-height: 1; color: var(--accent); transform: translateY(0.5px); }
-  .case:hover .built-badge { border-color: color-mix(in oklab, var(--accent) 55%, var(--line)); background: color-mix(in oklab, var(--accent) 16%, var(--paper)); }
+  .built-badge .spark { font-size: 13px; line-height: 1; color: var(--paper); transform: translateY(0.5px); }
+  .case:hover .built-badge { transform: translateY(-1px); box-shadow: 0 6px 20px -2px color-mix(in oklab, var(--accent) 65%, transparent); }
   .case-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .case-meta div + div { margin-top: 8px; }
   .case-meta span { color: var(--ink); }
@@ -207,6 +209,7 @@
   .case-body .narrative { font-size: 17px; line-height: 1.65; color: var(--ink-soft); max-width: 540px; }
   .case-body .narrative p { margin: 0 0 1em; }
   .case-body .narrative p:last-child { margin-bottom: 0; }
+  .case-body .narrative strong { font-weight: 600; color: var(--ink); }
   .case-body .narrative .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 14px; display: block; }
 
   .case-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-soft); border: 1px solid var(--line-soft); margin-top: 32px; }
@@ -574,7 +577,7 @@
         <div class="case-num">02 / 03</div>
         <div class="case-titlewrap">
           <h3 class="case-title">Cladding Sheet&nbsp;<span class="it">Estimator</span></h3>
-          <span class="built-badge"><span class="spark">✦</span>Built with Cursor</span>
+          <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
         </div>
         <div class="case-meta">
           <div>Role · <span>UX Lead · Freelance</span></div>
@@ -602,7 +605,7 @@
         <div class="narrative reveal">
           <span class="kicker">The brief</span>
           <p>Estimators were doing maths on paper, in Excel, on the back of brochures. Cemintel needed a tool that let a project manager spec a façade — panels, trims, fasteners, joins — in the time it takes to drink a coffee.</p>
-          <p>Designed the input model around how trades actually measure: by elevation, not by SKU. Paired with Cursor AI to ship a working estimator in weeks, not quarters — the design and the build kept pace with each other.</p>
+          <p>Designed the input model around how trades actually measure: by elevation, not by SKU. <strong>Paired with Cursor AI to ship a working estimator in weeks, not quarters</strong> — the design and the build kept pace with each other.</p>
           <p>The unlock was treating the estimate as a <em>living document</em>: change a panel size and watch fasteners, off-cuts, and lead-time slide in sympathy.</p>
         </div>
         <div class="reveal" data-delay="2">
@@ -623,7 +626,7 @@
         <div class="case-num">03 / 03</div>
         <div class="case-titlewrap">
           <h3 class="case-title">Proshort&nbsp;<span class="it">Notetaker</span></h3>
-          <span class="built-badge"><span class="spark">✦</span>Built with Cursor</span>
+          <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
         </div>
         <div class="case-meta">
           <div>Role · <span>Sr. UX Designer</span></div>
@@ -653,7 +656,7 @@
           <span class="kicker">The exploration</span>
           <p>A desktop recorder that quietly notices whatever call is running on your laptop — Zoom, Meet, Teams, a Slack huddle, even a WhatsApp call — and offers to capture it. No bot to admit, no platform lock, no CRM weight around it.</p>
           <p>After the call it hands back a summary, owned action items, a searchable transcript and auto-highlights, with a meeting-details rail kept in plain sight. Ask anything across every call you've recorded.</p>
-          <p>The whole thing was prompted into a working, clickable state in Cursor — researched and built, not mocked. The prototype was the spec: the &ldquo;lightweight vs. heavy&rdquo; argument made by being lightweight.</p>
+          <p><strong>The whole thing was prompted into a working, clickable state in Cursor — researched and built, not mocked.</strong> The prototype was the spec: the &ldquo;lightweight vs. heavy&rdquo; argument made by being lightweight.</p>
         </div>
         <div class="reveal" data-delay="2">
           <div class="case-metrics">
