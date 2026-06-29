@@ -141,13 +141,27 @@
   .ticker {
     margin-top: 40px; padding: 16px 0; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
     font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-    display: flex; align-items: center; gap: 32px; color: var(--muted);
+    display: flex; align-items: center; color: var(--muted);
     overflow: hidden; white-space: nowrap; min-width: 0; max-width: 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+  }
+  .ticker-track {
+    display: flex; align-items: center; gap: 32px; width: max-content; flex-shrink: 0;
+    animation: ticker-scroll 36s linear infinite;
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
   .ticker .live { color: var(--accent-ink); display: inline-flex; align-items: center; gap: 8px; }
   .ticker .live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   .ticker .sep { color: var(--muted-2); }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+  }
 
   /* ============ ABOUT ============ */
   .about-grid { display: grid; grid-template-columns: 280px 1fr; gap: 100px; align-items: start; }
@@ -478,15 +492,30 @@
     </div>
 
     <div class="ticker reveal" data-delay="3">
-      <span class="live">Open to senior &amp; lead roles</span>
-      <span class="sep">/</span>
-      <span>Designs &amp; ships with Cursor AI + Claude Code</span>
-      <span class="sep">/</span>
-      <span>Currently @ Proshort AI</span>
-      <span class="sep">/</span>
-      <span>Sales enablement · AI tooling · Supply chain</span>
-      <span class="sep">/</span>
-      <span>Figma · Cursor · Framer</span>
+      <div class="ticker-track">
+        <!-- Set 1 -->
+        <span class="live">Open to senior &amp; lead roles</span>
+        <span class="sep">/</span>
+        <span>Designs &amp; ships with Cursor AI + Claude Code</span>
+        <span class="sep">/</span>
+        <span>Currently @ Proshort AI</span>
+        <span class="sep">/</span>
+        <span>Sales enablement · AI tooling · Supply chain</span>
+        <span class="sep">/</span>
+        <span>Figma · Cursor · Framer</span>
+        <span class="sep">/</span>
+        <!-- Set 2 (duplicate for seamless loop) -->
+        <span class="live" aria-hidden="true">Open to senior &amp; lead roles</span>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-hidden="true">Designs &amp; ships with Cursor AI + Claude Code</span>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-hidden="true">Currently @ Proshort AI</span>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-hidden="true">Sales enablement · AI tooling · Supply chain</span>
+        <span class="sep" aria-hidden="true">/</span>
+        <span aria-hidden="true">Figma · Cursor · Framer</span>
+        <span class="sep" aria-hidden="true">/</span>
+      </div>
     </div>
 
     <div class="hero-foot reveal" data-delay="4">
