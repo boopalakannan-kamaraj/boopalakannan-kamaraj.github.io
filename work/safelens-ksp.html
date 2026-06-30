@@ -147,6 +147,30 @@
   .scd em { font-style: italic; color: var(--accent-ink); }
   @media (max-width: 1040px) { .showcase { width: 100%; } .scwin { width: 100%; } .sc-detail { grid-template-columns: 1fr 1fr; gap: 22px 24px; margin-top: 30px; } }
   @media (max-width: 600px) { .sc-detail { grid-template-columns: 1fr; } }
+  .scd code, .prose code { font-family: var(--mono); font-size: 11px; background: color-mix(in oklab, var(--ink) 5%, #FFFFFF);
+    border: 1px solid var(--line-soft); border-radius: 4px; padding: 1px 5px; color: var(--ink); white-space: nowrap; }
+
+  /* Floating "in progress" indicator (real captures still pending) */
+  .wip-chip { position: fixed; right: 22px; bottom: 22px; z-index: 40;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    color: var(--accent-ink);
+    background: color-mix(in oklab, var(--accent) 14%, var(--bg));
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in oklab, var(--accent) 45%, var(--line));
+    border-radius: 999px; padding: 9px 15px;
+    box-shadow: 0 2px 16px color-mix(in oklab, var(--accent) 22%, transparent);
+    animation: wip-chip-glow 2.4s ease-in-out infinite;
+    transition: opacity 320ms ease, transform 320ms ease; }
+  .wip-chip.hide { opacity: 0; transform: translateY(8px); pointer-events: none; animation: none; }
+  .wip-chip .wip-dot { color: var(--accent); animation: wip-blink 1.2s ease-in-out infinite; }
+  @keyframes wip-blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.15; transform: scale(0.82); } }
+  @keyframes wip-chip-glow {
+    0%, 100% { box-shadow: 0 2px 16px color-mix(in oklab, var(--accent) 22%, transparent); border-color: color-mix(in oklab, var(--accent) 45%, var(--line)); }
+    50% { box-shadow: 0 2px 22px color-mix(in oklab, var(--accent) 38%, transparent); border-color: color-mix(in oklab, var(--accent) 70%, var(--line)); }
+  }
+  @media (prefers-reduced-motion: reduce) { .wip-chip, .wip-chip .wip-dot { animation: none; } }
+  @media (max-width: 600px) { .wip-chip { right: 12px; bottom: 12px; font-size: 10px; padding: 7px 12px; letter-spacing: 0.04em; } }
 </style>
 <script data-goatcounter="https://boopalakannan.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -344,11 +368,134 @@
   </div>
 </section>
 
-<!-- ============ 04 WALKTHROUGH ============ -->
-<section class="cs-block" data-screen-label="06 walkthrough">
+<!-- ============ 04 BUILT ON CATALYST ============ -->
+<section class="cs-block" data-screen-label="06 built on catalyst">
   <div class="wrap">
     <div class="cs-two">
-      <div class="label reveal"><span class="num">04</span>The surfaces</div>
+      <div class="label reveal"><span class="num">04</span>Built on Catalyst</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>The platform<br>underneath the <em>product</em>.</h3>
+        <p>Every surface in SafeLens runs on Zoho Catalyst &mdash; the competition's mandatory deployment platform, with no external LLMs allowed. That constraint shaped real engineering decisions, not just a deploy target: schema design for the incidents data store, a 30-second hard timeout on serverless functions, and a QuickML connection pattern for the <em>Ask SafeLens</em> RAG layer that's distinct from normal app-user authentication.</p>
+        <p>None of this is visible in the product itself, but it's where most of the actual build time went.</p>
+
+        <div class="status-card reveal" data-delay="2">
+          <div class="item">
+            <span class="l">Design</span>
+            <span class="v">Five surfaces, <em>mapped first</em></span>
+            <p>Each investigative question &mdash; where, when, who, what next &mdash; defined a surface before anything was built.</p>
+          </div>
+          <div class="item">
+            <span class="l">Build</span>
+            <span class="v">Prompted in <em>Cursor</em></span>
+            <p>Dashboard, map, trends, risk and network &mdash; assembled as a live platform wired to 313 mock incidents across 30/31 districts.</p>
+          </div>
+          <div class="item">
+            <span class="l">Constraint</span>
+            <span class="v">Catalyst <em>QuickML</em></span>
+            <p>Risk scoring and the Ask layer were built within Zoho Catalyst &mdash; no external LLMs, per competition rules.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="walk">
+
+      <!-- Catalyst 01: Data store -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Catalyst 01</span><span class="step">&middot; Data store</span></div>
+          <h3 class="wt">313 incidents,<br>one <em>schema</em>.</h3>
+          <p class="lead">The incidents table &mdash; FIR number, sections invoked, district mapping &mdash; built to mirror the official KSP CaseMaster structure.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>console.catalyst.zoho.in<span class="path">/datastore</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-08.svg" alt="Catalyst data store schema, placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Schema design</div>
+            <h5>Typed to the official format</h5>
+            <p>Typed columns matching the official 18-digit <code>CrimeNo</code> format, so the data store mirrors real KSP records.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Staged patches</div>
+            <h5>Loaded in safe stages</h5>
+            <p>Dry-run &rarr; live test &rarr; full patch &rarr; verification, so 313 incidents landed without corrupting the table.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalyst 02: Functions -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Catalyst 02</span><span class="step">&middot; Functions</span></div>
+          <h3 class="wt">Thirty seconds,<br>no <em>more</em>.</h3>
+          <p class="lead">The serverless function powering the API &mdash; built around Catalyst's hard 30-second timeout, with retry logic for the RAG endpoint kept inside that ceiling.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>console.catalyst.zoho.in<span class="path">/functions</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-09.svg" alt="Catalyst serverless functions, placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Timeout constraint</div>
+            <h5>Budgeted under 30s</h5>
+            <p>Functions hard-stop at thirty seconds, so the API and RAG calls are budgeted &mdash; retries included &mdash; to finish well inside it.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>CORS whitelisting</div>
+            <h5>Scoped to one origin</h5>
+            <p>Only the SafeLens front-end origin is whitelisted to call the function endpoints.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalyst 03: QuickML -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Catalyst 03</span><span class="step">&middot; QuickML</span></div>
+          <h3 class="wt">No external LLMs,<br>by <em>design</em>.</h3>
+          <p class="lead">Ask SafeLens runs entirely on Catalyst QuickML &mdash; a Qwen model reachable only through a scoped Catalyst Connection, not a generic API key.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>console.catalyst.zoho.in<span class="path">/quickml</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-10.svg" alt="Catalyst QuickML connection, placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Scoped connection</div>
+            <h5>A connection, not a key</h5>
+            <p>The Qwen model is reached through a scoped Catalyst Connection (<code>quickml.deployment.READ</code>), never a shared API key.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Retry handling</div>
+            <h5>Resilient RAG calls</h5>
+            <p><code>RAG_1004</code> errors are retried within the function's timeout budget, so transient failures don't surface to the user.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 WALKTHROUGH ============ -->
+<section class="cs-block" data-screen-label="07 the surfaces">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">05</span>The surfaces</div>
       <div class="prose reveal" data-delay="1">
         <h3>Dashboard, map, trends,<br>risk, and <em>network</em>.</h3>
         <p>Each surface answers one investigative question, and they hand off to one another &mdash; a number on the dashboard opens the map; an incident on the map opens a suspect's network. <em>Screens below are placeholders</em> while final captures are prepared.</p>
@@ -570,42 +717,11 @@
   </div>
 </section>
 
-<!-- ============ 05 HOW IT WAS BUILT ============ -->
-<section class="cs-block" data-screen-label="07 how it was built">
-  <div class="wrap">
-    <div class="cs-two">
-      <div class="label reveal"><span class="num">05</span>How it was built</div>
-      <div class="prose reveal" data-delay="1">
-        <h3>Prompts in,<br>a <em>deployed</em> platform out.</h3>
-        <p>SafeLens was designed and built solo against a datathon clock. There was no separate design file driving a separate build &mdash; I worked decisions straight into a live, data-wired product in Cursor, deployed on Zoho Catalyst under the competition's constraints: no external LLMs, Catalyst QuickML only.</p>
-
-        <div class="status-card reveal" data-delay="2">
-          <div class="item">
-            <span class="l">Design</span>
-            <span class="v">Five surfaces, <em>mapped first</em></span>
-            <p>Each investigative question &mdash; where, when, who, what next &mdash; defined a surface before anything was built.</p>
-          </div>
-          <div class="item">
-            <span class="l">Build</span>
-            <span class="v">Prompted in <em>Cursor</em></span>
-            <p>Dashboard, map, trends, risk and network &mdash; assembled as a live platform wired to 313 mock incidents across 30/31 districts.</p>
-          </div>
-          <div class="item">
-            <span class="l">Constraint</span>
-            <span class="v">Catalyst <em>QuickML</em></span>
-            <p>Risk scoring and the Ask layer were built within Zoho Catalyst &mdash; no external LLMs, per competition rules.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 06 REFLECTIONS ============ -->
+<!-- ============ 07 REFLECTIONS ============ -->
 <section class="cs-block" data-screen-label="08 reflections">
   <div class="wrap">
     <div class="cs-two">
-      <div class="label reveal"><span class="num">06</span>Reflections</div>
+      <div class="label reveal"><span class="num">07</span>Reflections</div>
       <div class="prose reveal" data-delay="1">
         <h3>Make the data<br><em>answerable</em>.</h3>
         <p>The hard part wasn't drawing five dashboards &mdash; it was making them hand off cleanly, so an investigator never hits a dead end. The map-to-network drill-through and the Ask layer come from the same instinct: the platform earns trust by getting you from a question to an answer in as few moves as possible.</p>
@@ -640,6 +756,8 @@
 
 </main>
 
+<div class="wip-chip" role="status" aria-live="polite"><span class="wip-dot" aria-hidden="true">&#9680;</span>In progress &middot; live captures landing soon</div>
+
 <footer>
   <div>&copy; 2026 Boopalakannan Kamaraj</div>
   <div><a href="../index.html">&larr; Index</a></div>
@@ -662,6 +780,15 @@
   const nav = document.getElementById('nav');
   const onScroll = () => { if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); };
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  // Tuck the "in progress" chip away while the footer/CTA is in view so it never covers a link.
+  const wipChip = document.querySelector('.wip-chip');
+  const footer = document.querySelector('footer');
+  if (wipChip && footer && 'IntersectionObserver' in window) {
+    const wipIo = new IntersectionObserver(([e]) => {
+      wipChip.classList.toggle('hide', e.isIntersecting);
+    }, { rootMargin: '0px 0px 80px 0px' });
+    wipIo.observe(footer);
+  }
 </script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Catalyst data store placeholder">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#EFEFEF" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="#FFFFFF"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <ellipse cx="800" cy="0" rx="720" ry="340" fill="#4F46E5" opacity="0.06"/>
+  <rect x="40" y="40" width="1520" height="920" fill="none" stroke="#E5E5E5" stroke-width="2" rx="16"/>
+  <text x="800" y="430" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="22" letter-spacing="6" fill="#4F46E5">&#10022; PLACEHOLDER</text>
+  <text x="800" y="540" text-anchor="middle" font-family="'Instrument Serif',Georgia,serif" font-size="92" fill="#0A0A0A">Data Store</text>
+  <text x="800" y="602" text-anchor="middle" font-family="'Geist',system-ui,sans-serif" font-size="24" letter-spacing="2" fill="#555555">SafeLens &#183; KSP Datathon 2026</text>
+  <text x="800" y="648" text-anchor="middle" font-family="'Geist Mono','SF Mono',ui-monospace,monospace" font-size="18" letter-spacing="3" fill="#888888">Catalyst 01 &#183; screenshot to follow</text>
+</svg>
