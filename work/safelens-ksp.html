@@ -51,8 +51,8 @@
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
   .comp-wall-cap .l span { color: var(--ink); }
   .comp-wall-cap .meta { color: var(--muted-2); }
-  .comp-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .comp-tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 20px 22px;
+  .comp-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: stretch; }
+  .comp-tile { height: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 20px 22px;
     display: flex; flex-direction: column; transition: transform 280ms cubic-bezier(.2,.7,.2,1), box-shadow 280ms; }
   .comp-tile:hover { transform: translateY(-3px); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
   .comp-tile-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;
@@ -74,13 +74,13 @@
   @media (max-width: 600px) { .comp-grid { grid-template-columns: 1fr; } .comp-takeaway { grid-template-columns: 1fr; gap: 8px; } }
 
   /* Three-pillar "approach" summary */
-  .bet-pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 32px 0 8px; }
-  .bet-pillar { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px 22px; }
+  .bet-pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 32px 0 8px; align-items: stretch; }
+  .bet-pillar { display: flex; flex-direction: column; height: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px 22px; }
   .bet-pillar .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); display: block; margin-bottom: 10px; }
   .bet-pillar h4 { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--ink); }
   .bet-pillar h4 em { font-style: italic; color: var(--accent-ink); }
   .bet-pillar p { font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin: 0; }
-  .bet-pillar .from-to { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft);
+  .bet-pillar .from-to { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line-soft);
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
   .bet-pillar .from-to .k { color: var(--muted); }
   .bet-pillar .from-to .v { color: var(--ink); }
@@ -546,6 +546,23 @@
             <span></span>
           </div>
           <img loading="lazy" src="../assets/safelens-placeholder-07.svg" alt="Ask SafeLens natural-language query — placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Retrieval</div>
+            <h5>Grounded in the data</h5>
+            <p>Answers are retrieval-augmented against the live incident dataset, so they cite real records rather than guessing.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Constraint</div>
+            <h5>No external LLMs</h5>
+            <p>The whole query layer runs inside Zoho Catalyst per the competition rules — no calls out to third-party models.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Questions</div>
+            <h5>Ask in plain English</h5>
+            <p>Counts, trends and locations — &ldquo;which districts spiked last month?&rdquo; — answered without navigating dashboards.</p>
+          </div>
         </div>
       </div>
 
