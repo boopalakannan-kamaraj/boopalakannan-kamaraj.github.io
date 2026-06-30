@@ -311,6 +311,17 @@
     padding: 2px 7px; border-radius: 4px; background: color-mix(in oklab, var(--accent) 14%, #FFFFFF); color: var(--accent-ink);
   }
   .case-cover .win img.shot { display: block; width: auto; max-width: 100%; max-height: clamp(300px, 38vw, 520px); object-fit: contain; background: #FFFFFF; }
+  /* Full-bleed dark cover (no browser chrome) — SafeLens */
+  .case-cover.case-cover--fill { padding: 0; background: #0a0e1a; }
+  .case-cover.case-cover--fill .win.win-bare {
+    width: 100%; max-width: 100%; align-self: stretch;
+    border-radius: 0; box-shadow: none; transform: none; background: #0a0e1a;
+  }
+  .case:hover .case-cover.case-cover--fill .win.win-bare { transform: none; }
+  .case-cover.case-cover--fill .win.win-bare img.shot {
+    width: 100%; max-width: 100%; height: 100%; min-height: clamp(420px, 50vw, 720px);
+    max-height: none; object-fit: cover; object-position: center; background: #0a0e1a;
+  }
   .case-cover .win image-slot.shot { display: block; width: 100%; max-width: 780px; height: clamp(300px, 38vw, 480px); }
   .case-cover .corner {
     position: absolute; bottom: 16px; left: 18px; margin: 0;
@@ -712,16 +723,14 @@
       </div>
     </article>
 
-    <!-- CASE 04: SAFELENS — case study page coming soon (detail link disabled) -->
-    <article class="case is-soon" id="case-safelens">
+    <!-- CASE 04: SAFELENS -->
+    <article class="case" id="case-safelens">
+      <a class="case-link" href="work/safelens-ksp.html" aria-label="Open SafeLens case study"></a>
       <header class="case-header reveal">
         <div class="case-num">04 / 04</div>
         <div class="case-titlewrap">
           <h3 class="case-title">Safe<span class="it">Lens</span></h3>
-          <div class="badge-row">
-            <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
-            <span class="soon-badge">Coming soon</span>
-          </div>
+          <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
         </div>
         <div class="case-meta">
           <div>Role · <span>UX/Product Designer · Solo Build</span></div>
@@ -729,20 +738,14 @@
         </div>
         <div class="case-meta case-cta" style="text-align:right">
           <div>KSP Datathon 2026 · AI crime analytics</div>
-          <div><span class="soon-link">Case study coming soon</span></div>
+          <div><span class="open-link">Read case study <span class="arr">↗</span></span></div>
         </div>
       </header>
 
-      <figure class="case-cover reveal" data-delay="1" data-cover>
-        <div class="win">
-          <div class="win-bar">
-            <span class="dots"><i></i><i></i><i></i></span>
-            <div class="url"><span class="lock">◉</span><span>safelens-ksp.onslate.in<span class="path">/crime-map</span></span></div>
-            <span></span>
-          </div>
-          <img class="shot" src="assets/safelens-cover.png" alt="SafeLens — interactive Karnataka crime map with district drill-down, incident list and risk scoring">
+      <figure class="case-cover case-cover--fill reveal" data-delay="1" data-cover>
+        <div class="win win-bare">
+          <img class="shot" src="assets/safelens-cover.png" alt="SafeLens — AI crime analytics platform: crime map, category distribution, top districts, network graph and recent incidents">
         </div>
-        <figcaption class="corner">Fig. 04 · Interactive crime map</figcaption>
       </figure>
 
       <div class="case-body">
