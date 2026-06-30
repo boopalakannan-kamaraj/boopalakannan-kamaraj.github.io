@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SafeLens — KSP Datathon 2026 · Case study · Boopalakannan Kamaraj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="case-study.css">
+<link rel="stylesheet" href="hero-stage.css">
+<style>
+  /* SafeLens uses the same accent-tinted hero stage pattern as the
+     other "designed & built with Cursor AI" case studies. */
+  .stage.cool {
+    background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in oklab, var(--accent) 24%, transparent) 0%, transparent 55%),
+      linear-gradient(180deg, #F8F8F8 0%, #F0F0F0 100%);
+  }
+  .stage.cool .stage-glow {
+    background: radial-gradient(circle, color-mix(in oklab, var(--accent) 32%, transparent) 0%, transparent 60%);
+  }
+  .hero-app {
+    position: relative; z-index: 1;
+    display: block; width: min(880px, 100%); height: auto; margin: 0 auto;
+    border-radius: 14px;
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.08));
+    transform: perspective(2600px) rotateX(2.5deg);
+    transform-origin: 50% 100%;
+    transition: transform 800ms cubic-bezier(.2,.7,.2,1);
+  }
+  .stage:hover .hero-app { transform: perspective(2600px) rotateX(0deg); }
+
+  /* SafeLens-specific floating chip placements */
+  .chip-map { top: 50px; left: 22px; animation-delay: -0.5s; }
+  .chip-risk { top: 40%; right: 14px; animation-delay: -2s; }
+  .chip-net { bottom: 128px; left: 8px; animation-delay: -3.5s; }
+  .note-ask { bottom: 44px; right: 44px; animation-delay: -1.2s; }
+  @media (max-width: 1100px) {
+    .chip-map { top: 24px; left: 12px; }
+    .chip-risk { top: auto; bottom: 200px; right: 10px; }
+    .chip-net { display: none; }
+    .note-ask { right: 14px; bottom: 20px; max-width: 220px; }
+  }
+
+  /* Challenge teardown grid (same component as Notetaker) */
+  .comp-wall { position: relative; margin-top: 40px; padding: 28px;
+    background: linear-gradient(180deg, var(--paper) 0%, color-mix(in oklab, var(--paper) 80%, var(--bg-warm)) 100%);
+    border: 1px solid var(--line); border-radius: 10px; }
+  .comp-wall-cap { position: relative; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .comp-wall-cap .l span { color: var(--ink); }
+  .comp-wall-cap .meta { color: var(--muted-2); }
+  .comp-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .comp-tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 20px 22px;
+    display: flex; flex-direction: column; transition: transform 280ms cubic-bezier(.2,.7,.2,1), box-shadow 280ms; }
+  .comp-tile:hover { transform: translateY(-3px); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .comp-tile-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .comp-tile-head .step { color: var(--accent-ink); }
+  .comp-tile h4 { font-family: var(--serif); font-weight: 400; font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 12px; color: var(--ink); }
+  .comp-tile-issues { display: flex; flex-direction: column; gap: 10px; }
+  .comp-tile-issues .issue { display: grid; grid-template-columns: 16px 1fr; gap: 10px; font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+  .comp-tile-issues .issue::before { content: '\00d7'; color: oklch(0.55 0.18 28); font-weight: 600; font-size: 16px; line-height: 1.4; }
+  .comp-tile-issues .issue strong { color: var(--ink); font-weight: 500; }
+  .comp-takeaway { margin-top: 28px; padding: 20px 24px;
+    background: color-mix(in oklab, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, var(--line)); border-radius: 8px;
+    display: grid; grid-template-columns: 100px 1fr; gap: 24px; align-items: center; }
+  .comp-takeaway .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); }
+  .comp-takeaway .body { font-family: var(--serif); font-size: 22px; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); margin: 0; }
+  .comp-takeaway .body em { font-style: italic; color: var(--accent-ink); }
+  @media (max-width: 1080px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .comp-grid { grid-template-columns: 1fr; } .comp-takeaway { grid-template-columns: 1fr; gap: 8px; } }
+
+  /* Three-pillar "approach" summary */
+  .bet-pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 32px 0 8px; }
+  .bet-pillar { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px 22px; }
+  .bet-pillar .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); display: block; margin-bottom: 10px; }
+  .bet-pillar h4 { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--ink); }
+  .bet-pillar h4 em { font-style: italic; color: var(--accent-ink); }
+  .bet-pillar p { font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin: 0; }
+  .bet-pillar .from-to { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .bet-pillar .from-to .k { color: var(--muted); }
+  .bet-pillar .from-to .v { color: var(--ink); }
+  .bet-pillar .from-to .v.was { color: var(--muted); text-decoration: line-through; }
+  @media (max-width: 860px) { .bet-pillars { grid-template-columns: 1fr; } }
+
+  /* Status / facts callout */
+  .status-card { margin-top: 32px; padding: 28px 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; position: relative; }
+  .status-card::before { content: 'Datathon 2026'; position: absolute; top: -10px; left: 20px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink);
+    background: var(--bg); padding: 3px 10px; border-radius: 4px; border: 1px solid color-mix(in oklab, var(--accent) 25%, var(--line)); }
+  .status-card .item .l { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 8px; }
+  .status-card .item .v { font-family: var(--serif); font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); display: block; }
+  .status-card .item .v em { font-style: italic; color: var(--accent-ink); }
+  .status-card .item p { margin: 8px 0 0; font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+  @media (max-width: 860px) { .status-card { grid-template-columns: 1fr; gap: 18px; padding: 24px 20px; } }
+
+  /* Walkthrough stack */
+  .walk { display: flex; flex-direction: column; gap: 96px; margin-top: 12px; }
+  @media (max-width: 900px) { .walk { gap: 64px; } }
+  .duo { padding: 4px 0; }
+  .duo-desc { max-width: 760px; margin: 0 0 36px; text-align: left; }
+  .duo-desc .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); }
+  .duo-desc h4 { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.12; letter-spacing: -0.015em; margin: 12px 0 10px; color: var(--ink); }
+  .duo-desc h4 em { font-style: italic; color: var(--accent-ink); }
+  .duo-desc p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink-soft); max-width: 60ch; }
+  .arc-intro { margin: 4px 0 8px; max-width: 760px; text-align: left; }
+  .arc-intro .eyebrow-line { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink); display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 18px; }
+  .arc-intro .eyebrow-line::before { content: ''; width: 26px; height: 1px; background: var(--accent); }
+  .arc-intro h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3vw, 40px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 14px; color: var(--ink); }
+  .arc-intro h3 em { font-style: italic; color: var(--accent-ink); }
+  .arc-intro p { font-size: 16px; line-height: 1.65; color: var(--ink-soft); margin: 0; max-width: 640px; }
+
+  /* Showcase blocks */
+  .showcase { width: 100%; position: relative; margin: 12px auto; }
+  .sc-head { max-width: 760px; margin: 0 0 36px; text-align: left; }
+  .sc-head .eyebrow { justify-content: flex-start; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); display: flex; gap: 10px; align-items: baseline; }
+  .sc-head .eyebrow .step { color: var(--muted-2); }
+  .sc-head h3.wt { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.07; letter-spacing: -0.02em; margin: 12px 0 10px; color: var(--ink); }
+  .sc-head h3.wt em { font-style: italic; color: var(--accent-ink); }
+  .sc-head .lead { font-size: 15px; line-height: 1.6; color: var(--ink-soft); margin: 0; max-width: 60ch; }
+  .scwin { position: relative; width: 100%; margin: 0; background: #FFFFFF; border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent); }
+  .scwin-bar { display: grid; grid-template-columns: 64px 1fr 64px; align-items: center; padding: 11px 16px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8F8F8 100%); border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent); border-radius: 14px 14px 0 0; }
+  .scwin-bar .dots { display: flex; gap: 7px; }
+  .scwin-bar .dots i { width: 11px; height: 11px; border-radius: 50%; background: #E5E5E5; }
+  .scwin-bar .dots i:nth-child(1) { background: #f06058; }
+  .scwin-bar .dots i:nth-child(2) { background: #f9bd2e; }
+  .scwin-bar .dots i:nth-child(3) { background: #28c941; }
+  .scwin-bar .url { justify-self: center; max-width: 100%; display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-soft); background: color-mix(in oklab, var(--ink) 4%, #FFFFFF);
+    border: 1px solid color-mix(in oklab, var(--ink) 8%, transparent); border-radius: 999px; padding: 6px 16px; white-space: nowrap; overflow: hidden; }
+  .scwin-bar .url .lock { color: var(--accent-ink); font-size: 10px; }
+  .scwin-bar .url .path { color: var(--muted); }
+  .scwin > img { display: block; width: 100%; height: auto; border-radius: 0 0 14px 14px; }
+  .sc-detail { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 30px 36px; max-width: none; margin: 50px 0 0; }
+  .scd { position: relative; padding-top: 16px; border-top: 1px solid var(--line); }
+  .scd .num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+  .scd .num b { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 1px solid var(--accent); color: #fff; font-weight: 500; }
+  .scd h5 { margin: 0 0 6px; font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -0.006em; color: var(--ink); }
+  .scd p { margin: 0; font-size: 13px; line-height: 1.58; color: var(--ink-soft); }
+  .scd em { font-style: italic; color: var(--accent-ink); }
+  @media (max-width: 1040px) { .showcase { width: 100%; } .scwin { width: 100%; } .sc-detail { grid-template-columns: 1fr 1fr; gap: 22px 24px; margin-top: 30px; } }
+  @media (max-width: 600px) { .sc-detail { grid-template-columns: 1fr; } }
+</style>
+<script data-goatcounter="https://boopalakannan.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<nav class="nav" id="nav" data-screen-label="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>Boopalakannan&nbsp;K.</a>
+  <a class="back" href="../index.html"><span class="ar">&larr;</span> Back to index</a>
+  <div class="nav-actions">
+    <a class="cta" href="../index.html#contact">Hire &middot; 2026</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HEADER ============ -->
+<section class="cs-header" data-screen-label="01 header">
+  <div class="wrap">
+    <div class="cs-meta-row reveal">
+      <span class="num">Case 02 / 04</span>
+      <span class="dash">&middot;</span>
+      <span>KSP Datathon 2026</span>
+      <span class="dash">&middot;</span>
+      <span>AI crime analytics platform</span>
+      <span class="dash">&middot;</span>
+      <span>2026</span>
+    </div>
+    <h1 class="cs-title reveal" data-delay="1">
+      Crime intelligence,<br>
+      made <em>legible.</em>
+    </h1>
+    <p class="cs-lede reveal" data-delay="2">
+      An AI-driven crime-analytics platform for Karnataka State Police &mdash; <em>district drill-down, hotspot clustering, trend anomalies, criminal network analysis and predictive risk scoring</em> &mdash; designed and built end-to-end for the KSP Datathon 2026. Deployed on Zoho Catalyst with no external LLMs, and <em>prompted into a live, data-wired product in Cursor</em>, not mocked.
+    </p>
+
+    <div class="cs-facts reveal" data-delay="3">
+      <div class="item"><span class="l">Event</span><span class="v serif">KSP Datathon 2026</span></div>
+      <div class="item"><span class="l">Role</span><span class="v">UX/Product Designer &middot; solo build</span></div>
+      <div class="item"><span class="l">Built with</span><span class="v">Cursor AI &middot; Zoho Catalyst</span></div>
+      <div class="item"><span class="l">Constraint</span><span class="v">Catalyst QuickML &middot; no external LLMs</span></div>
+      <div class="item"><span class="l">Status</span><span class="v">Datathon submission</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO IMAGE ============ -->
+<section class="cs-hero-image" data-screen-label="02 hero image">
+  <div class="wrap">
+    <div class="stage cool reveal">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <img class="hero-app" src="../assets/safelens-placeholder-01.svg" alt="SafeLens crime intelligence dashboard — placeholder graphic, screenshot to follow">
+
+      <div class="chip chip-map">
+        <span class="chip-dot"></span>
+        <div>
+          <div class="chip-l">Crime map</div>
+          <div class="chip-v">Real district polygons</div>
+        </div>
+      </div>
+
+      <div class="chip chip-risk">
+        <span class="chip-dot"></span>
+        <div>
+          <div class="chip-l">Risk scoring</div>
+          <div class="chip-v">Predictive, per district</div>
+        </div>
+      </div>
+
+      <div class="chip chip-net">
+        <span class="chip-num"><em>2</em></span>
+        <div>
+          <div class="chip-l">Clicks to case history</div>
+          <div class="chip-v">Incident &rarr; suspect network</div>
+        </div>
+      </div>
+
+      <div class="note note-ask">
+        <div class="note-l">Ask SafeLens</div>
+        <div class="note-t">Query in plain English<span class="sub">RAG over live incident data</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 CONTEXT ============ -->
+<section class="cs-block" data-screen-label="03 context">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">01</span>Context</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Reports that<br>couldn't <em>talk</em> to each other.</h3>
+        <p>Karnataka State Police's crime reporting was static and siloed &mdash; investigators had no way to see hotspots, trends, or suspect networks without manually cross-referencing reports across districts and timeframes.</p>
+        <p>For the KSP Datathon 2026, the challenge was to design and build an AI-driven crime-analytics platform: district-level drill-down, spatiotemporal hotspot clustering, trend anomaly alerts, criminal network / link analysis, and predictive risk scoring &mdash; <em>production-grade in approach, not just a hackathon prototype</em>.</p>
+        <div class="pull">&ldquo;An investigator should go from a map to a suspect's full case history without leaving the screen.&rdquo;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 THE CHALLENGE ============ -->
+<section class="cs-block" data-screen-label="04 the challenge">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">02</span>The challenge</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Five questions a<br>dashboard had to <em>answer</em>.</h3>
+        <p>Before building, I mapped what an investigator actually needs to ask of crime data &mdash; and each question became one of the five core surfaces.</p>
+      </div>
+    </div>
+
+    <div class="comp-wall reveal" data-delay="2">
+      <div class="comp-wall-cap">
+        <span class="l">Fig. 01 &middot; <span>What the platform had to surface</span></span>
+        <span class="meta">KSP Datathon &middot; 2026</span>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-tile">
+          <div class="comp-tile-head"><span class="step">Need 01</span><span>Where</span></div>
+          <h4>Where is crime concentrating?</h4>
+          <div class="comp-tile-issues">
+            <div class="issue"><span><strong>No spatial view.</strong> Hotspots were invisible without manually plotting reports by hand.</span></div>
+            <div class="issue"><span><strong>No drill-down.</strong> District-level patterns couldn't be opened to the incidents behind them.</span></div>
+          </div>
+        </div>
+        <div class="comp-tile">
+          <div class="comp-tile-head"><span class="step">Need 02</span><span>When</span></div>
+          <h4>What's trending &mdash; and abnormal?</h4>
+          <div class="comp-tile-issues">
+            <div class="issue"><span><strong>No temporal lens.</strong> Spikes and seasonal patterns went unnoticed until after the fact.</span></div>
+            <div class="issue"><span><strong>No alerts.</strong> Anomalies weren't flagged, so nothing prompted a closer look.</span></div>
+          </div>
+        </div>
+        <div class="comp-tile">
+          <div class="comp-tile-head"><span class="step">Need 03</span><span>Who</span></div>
+          <h4>How are suspects connected?</h4>
+          <div class="comp-tile-issues">
+            <div class="issue"><span><strong>No link analysis.</strong> Relationships between suspects, cases and locations lived in separate files.</span></div>
+            <div class="issue"><span><strong>Manual cross-referencing.</strong> Building a network meant reading reports side by side.</span></div>
+          </div>
+        </div>
+        <div class="comp-tile">
+          <div class="comp-tile-head"><span class="step">Need 04</span><span>What next</span></div>
+          <h4>Where is risk rising?</h4>
+          <div class="comp-tile-issues">
+            <div class="issue"><span><strong>No forward view.</strong> Resourcing was reactive &mdash; there was no predictive risk signal per district.</span></div>
+            <div class="issue"><span><strong>No single number.</strong> Nothing summarised &ldquo;how hot is this area right now?&rdquo;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comp-takeaway">
+        <span class="lbl">Approach</span>
+        <p class="body">Each question maps to a surface: <em>Crime Map</em> for where, <em>Trends</em> for when, <em>Network Analysis</em> for who, and <em>Risk Scoring</em> for what's next &mdash; tied together by a <em>Dashboard</em> and a natural-language Ask layer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 THE BUILD ============ -->
+<section class="cs-block" data-screen-label="05 the build">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">03</span>The build</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Five surfaces,<br>one <em>solo</em> timeline.</h3>
+        <p>I designed and built SafeLens end-to-end across five core surfaces, deployed on Zoho Catalyst per competition constraints &mdash; no external LLMs, Catalyst QuickML only.</p>
+
+        <div class="bet-pillars">
+          <div class="bet-pillar reveal">
+            <span class="num">01</span>
+            <h4>Map as the <em>centre</em>.</h4>
+            <p>Real Karnataka district boundary polygons, category-specific incident icons, and a collapsible incident sidebar &mdash; the Crime Map is where investigation starts.</p>
+            <div class="from-to"><span class="k">From</span><span class="v was">Reports in a list</span><span class="k">To</span><span class="v">A live, drillable map</span></div>
+          </div>
+          <div class="bet-pillar reveal" data-delay="1">
+            <span class="num">02</span>
+            <h4>Two clicks to <em>context</em>.</h4>
+            <p>Bidirectional drill-through into Network Analysis lets an investigator go from a single incident to a suspect's full case history in two clicks.</p>
+            <div class="from-to"><span class="k">From</span><span class="v was">Manual cross-referencing</span><span class="k">To</span><span class="v">Incident &rarr; network &rarr; history</span></div>
+          </div>
+          <div class="bet-pillar reveal" data-delay="2">
+            <span class="num">03</span>
+            <h4>Ask, don't <em>navigate</em>.</h4>
+            <p><em>Ask SafeLens</em> lets investigators query the crime database in plain language &mdash; retrieval-augmented against the live incident dataset, not a generic chatbot.</p>
+            <div class="from-to"><span class="k">From</span><span class="v was">Click through dashboards</span><span class="k">To</span><span class="v">Ask the data directly</span></div>
+          </div>
+        </div>
+
+        <p>Paired with Cursor AI, the build went from design decisions to a live, data-wired platform on a solo timeline &mdash; <em>313 mock incidents</em> wired across <em>30/31</em> Karnataka districts, with the design and the implementation moving together.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 WALKTHROUGH ============ -->
+<section class="cs-block" data-screen-label="06 walkthrough">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">04</span>The surfaces</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Dashboard, map, trends,<br>risk, and <em>network</em>.</h3>
+        <p>Each surface answers one investigative question, and they hand off to one another &mdash; a number on the dashboard opens the map; an incident on the map opens a suspect's network. <em>Screens below are placeholders</em> while final captures are prepared.</p>
+      </div>
+    </div>
+
+    <div class="walk">
+
+      <!-- Screen 01: Dashboard -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 01</span><span class="step">&middot; Dashboard</span></div>
+          <h3 class="wt">The state of crime,<br>at a <em>glance</em>.</h3>
+          <p class="lead">A command view: headline counts, district leaderboard, recent incidents and the live risk signal &mdash; every tile a doorway into a deeper surface.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>safelens-ksp.onslate.in<span class="path">/dashboard</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-02.svg" alt="SafeLens dashboard — placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Overview</div>
+            <h5>Headline metrics</h5>
+            <p>Total incidents, active cases and risk-flagged districts summarised across the state, with a period selector.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Leaderboard</div>
+            <h5>Districts by activity</h5>
+            <p>A ranked district list that opens straight into the Crime Map filtered to that district.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Recent</div>
+            <h5>Latest incidents</h5>
+            <p>A live feed of newly reported incidents, each linking to its detail and suspect network.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 02: Crime Map -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 02</span><span class="step">&middot; Crime map</span></div>
+          <h3 class="wt">Real boundaries,<br>real <em>incidents</em>.</h3>
+          <p class="lead">The centerpiece: actual Karnataka district polygons, category-specific icons, a collapsible incident sidebar, and drill-through into a suspect's case history.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>safelens-ksp.onslate.in<span class="path">/map</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-03.svg" alt="SafeLens crime map — placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Polygons</div>
+            <h5>District boundary polygons</h5>
+            <p>Real Karnataka district geometry, shaded by incident density for instant hotspot reading.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Icons</div>
+            <h5>Category-specific markers</h5>
+            <p>Each incident type carries its own marker, so the mix of crime in an area is legible at a glance.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Sidebar</div>
+            <h5>Collapsible incident list</h5>
+            <p>A sidebar lists incidents in view; selecting one focuses the map and reveals its details.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>4</b>Drill-through</div>
+            <h5>Two clicks to case history</h5>
+            <p>From a single incident, jump bidirectionally into Network Analysis to see a suspect's full case history.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 03: Trends -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 03</span><span class="step">&middot; Trends &amp; anomalies</span></div>
+          <h3 class="wt">When the pattern<br><em>breaks</em>.</h3>
+          <p class="lead">Spatiotemporal trends over time with anomaly alerts that flag abnormal spikes, so a closer look is prompted, not stumbled upon.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>safelens-ksp.onslate.in<span class="path">/trends</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-04.svg" alt="SafeLens trends and anomalies — placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd">
+            <div class="num"><b>1</b>Trends</div>
+            <h5>Incidents over time</h5>
+            <p>Time-series by category and district reveal seasonal and emerging patterns.</p>
+          </div>
+          <div class="scd key">
+            <div class="num"><b>2</b>Anomalies</div>
+            <h5>Abnormal-spike alerts</h5>
+            <p>Statistical anomalies are flagged against the baseline, surfacing where attention is needed.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Filters</div>
+            <h5>Slice by district &amp; type</h5>
+            <p>Narrow to a district or crime category and the whole view recomputes around it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 04: Risk Scoring -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 04</span><span class="step">&middot; Risk scoring</span></div>
+          <h3 class="wt">One number,<br>per <em>district</em>.</h3>
+          <p class="lead">Predictive risk scoring distils activity, trend and anomaly signals into a single, comparable score &mdash; built on Catalyst QuickML.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>safelens-ksp.onslate.in<span class="path">/risk</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-05.svg" alt="SafeLens predictive risk scoring — placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Score</div>
+            <h5>Predictive risk score</h5>
+            <p>A per-district score from a QuickML model, ranking where risk is rising next.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>Signals</div>
+            <h5>Built from real signals</h5>
+            <p>The score combines activity, trend and anomaly signals per district, so it reflects the data rather than a single static count.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Compare</div>
+            <h5>District comparison</h5>
+            <p>Districts rank side by side to guide where resourcing and attention should go.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 05: Network Analysis -->
+      <div class="showcase reveal" data-delay="1">
+        <div class="sc-head">
+          <div class="eyebrow"><span>Screen 05</span><span class="step">&middot; Network analysis</span></div>
+          <h3 class="wt">Suspects, cases,<br><em>connected</em>.</h3>
+          <p class="lead">A link-analysis graph of suspects, incidents and locations &mdash; reachable in two clicks from any incident on the map.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>safelens-ksp.onslate.in<span class="path">/network</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-06.svg" alt="SafeLens criminal network analysis — placeholder graphic, screenshot to follow">
+        </div>
+        <div class="sc-detail">
+          <div class="scd key">
+            <div class="num"><b>1</b>Graph</div>
+            <h5>Link-analysis network</h5>
+            <p>Nodes for suspects, incidents and places; edges for the relationships between them.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>2</b>History</div>
+            <h5>Full case history</h5>
+            <p>Open a suspect to see every linked case &mdash; the payoff of the map's two-click drill-through.</p>
+          </div>
+          <div class="scd">
+            <div class="num"><b>3</b>Back to map</div>
+            <h5>Bidirectional</h5>
+            <p>Jump from a node back to its location on the Crime Map, keeping the investigation in one loop.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ask SafeLens duo -->
+      <div class="duo reveal" data-delay="1">
+        <div class="duo-desc">
+          <div class="eyebrow">Ask SafeLens</div>
+          <h4>Ask the data,<br>in plain <em>English</em>.</h4>
+          <p>The natural-language query layer lets investigators ask questions of the crime database directly rather than navigating dashboards &mdash; backed by retrieval-augmented generation against the live incident dataset, within the Catalyst no-external-LLM constraint.</p>
+        </div>
+        <div class="scwin">
+          <div class="scwin-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">&#9673;</span><span>safelens-ksp.onslate.in<span class="path">/ask</span></span></div>
+            <span></span>
+          </div>
+          <img loading="lazy" src="../assets/safelens-placeholder-07.svg" alt="Ask SafeLens natural-language query — placeholder graphic, screenshot to follow">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 HOW IT WAS BUILT ============ -->
+<section class="cs-block" data-screen-label="07 how it was built">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">05</span>How it was built</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Prompts in,<br>a <em>deployed</em> platform out.</h3>
+        <p>SafeLens was designed and built solo against a datathon clock. There was no separate design file driving a separate build &mdash; I worked decisions straight into a live, data-wired product in Cursor, deployed on Zoho Catalyst under the competition's constraints: no external LLMs, Catalyst QuickML only.</p>
+
+        <div class="status-card reveal" data-delay="2">
+          <div class="item">
+            <span class="l">Design</span>
+            <span class="v">Five surfaces, <em>mapped first</em></span>
+            <p>Each investigative question &mdash; where, when, who, what next &mdash; defined a surface before anything was built.</p>
+          </div>
+          <div class="item">
+            <span class="l">Build</span>
+            <span class="v">Prompted in <em>Cursor</em></span>
+            <p>Dashboard, map, trends, risk and network &mdash; assembled as a live platform wired to 313 mock incidents across 30/31 districts.</p>
+          </div>
+          <div class="item">
+            <span class="l">Constraint</span>
+            <span class="v">Catalyst <em>QuickML</em></span>
+            <p>Risk scoring and the Ask layer were built within Zoho Catalyst &mdash; no external LLMs, per competition rules.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 REFLECTIONS ============ -->
+<section class="cs-block" data-screen-label="08 reflections">
+  <div class="wrap">
+    <div class="cs-two">
+      <div class="label reveal"><span class="num">06</span>Reflections</div>
+      <div class="prose reveal" data-delay="1">
+        <h3>Make the data<br><em>answerable</em>.</h3>
+        <p>The hard part wasn't drawing five dashboards &mdash; it was making them hand off cleanly, so an investigator never hits a dead end. The map-to-network drill-through and the Ask layer come from the same instinct: the platform earns trust by getting you from a question to an answer in as few moves as possible.</p>
+        <p>Building in Cursor under a datathon clock proved the point of an AI-native workflow &mdash; I could wire real data shapes the same day a surface was designed, and feel whether a flow held up instead of arguing over a static mock.</p>
+        <div class="tag-list">
+          <span class="tag">Crime analytics</span>
+          <span class="tag">Geospatial UX</span>
+          <span class="tag">Network analysis</span>
+          <span class="tag">Predictive risk</span>
+          <span class="tag">Zoho Catalyst</span>
+          <span class="tag">Cursor AI</span>
+          <span class="tag">Solo build</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEXT ============ -->
+<section class="cs-next" data-screen-label="09 next">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="label">Back to &middot; index</div>
+        <a class="next-link" href="../index.html">
+          <div class="ttl">All&nbsp;<em>work</em> <span class="arr">&#8599;</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>&copy; 2026 Boopalakannan Kamaraj</div>
+  <div><a href="../index.html">&larr; Index</a></div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+  requestAnimationFrame(() => {
+    const vh = window.innerHeight;
+    reveals.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) { el.classList.add('in'); io.unobserve(el); }
+    });
+  });
+  setTimeout(() => { document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')); }, 1200);
+  const nav = document.getElementById('nav');
+  const onScroll = () => { if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+</script>
+</body>
+</html>
