@@ -203,6 +203,7 @@
   .case-title .it { font-style: italic; }
   /* Differentiator for the two AI-built case studies */
   .case-titlewrap { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .badge-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
   .built-badge {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
@@ -215,6 +216,16 @@
   }
   .built-badge .spark { font-size: 13px; line-height: 1; color: var(--paper); transform: translateY(0.5px); }
   .case:hover .built-badge { transform: translateY(-1px); box-shadow: 0 6px 20px -2px color-mix(in oklab, var(--accent) 65%, transparent); }
+  /* "Coming soon" treatment — case study page not yet linked */
+  .soon-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); background: var(--surface);
+    border: 1px dashed var(--line); padding: 7px 13px; border-radius: 999px;
+  }
+  .soon-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--muted-2); }
+  .case-cta .soon-link { color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+  .case.is-soon:hover .case-title { color: var(--ink); }
   .case-meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .case-meta div + div { margin-top: 8px; }
   .case-meta span { color: var(--ink); }
@@ -320,6 +331,7 @@
     transition: opacity 220ms ease, transform 320ms cubic-bezier(.2,.8,.2,1);
   }
   .cursor-bubble.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .cursor-bubble.soon { background: color-mix(in oklab, var(--ink) 82%, transparent); color: var(--paper); }
   .cursor-bubble .arr { font-family: var(--serif); font-style: italic; font-size: 13px; }
   @media (hover: none), (pointer: coarse) {
     .case, .case-link, .case-cover, .case-cover image-slot { cursor: pointer; }
@@ -601,60 +613,11 @@
       </div>
     </article>
 
-    <!-- CASE 02: SAFELENS -->
-    <article class="case" id="case-safelens">
-      <a class="case-link" href="work/safelens-ksp.html" aria-label="Open SafeLens case study"></a>
-      <header class="case-header reveal">
-        <div class="case-num">02 / 04</div>
-        <div class="case-titlewrap">
-          <h3 class="case-title">Safe<span class="it">Lens</span></h3>
-          <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
-        </div>
-        <div class="case-meta">
-          <div>Role · <span>UX/Product Designer · Solo Build</span></div>
-          <div>Year · <span>2026</span></div>
-        </div>
-        <div class="case-meta case-cta" style="text-align:right">
-          <div>KSP Datathon 2026 · AI crime analytics</div>
-          <div><span class="open-link">Read case study <span class="arr">↗</span></span></div>
-        </div>
-      </header>
-
-      <figure class="case-cover reveal" data-delay="1" data-cover>
-        <div class="win">
-          <div class="win-bar">
-            <span class="dots"><i></i><i></i><i></i></span>
-            <div class="url"><span class="lock">◉</span><span>safelens-ksp.onslate.in<span class="path">/dashboard</span></span></div>
-            <span></span>
-          </div>
-          <img class="shot" src="assets/safelens-placeholder-01.svg" alt="SafeLens — crime intelligence dashboard with district drill-down, hotspot clustering and risk scoring (placeholder)">
-        </div>
-        <figcaption class="corner">Fig. 02 · Crime intelligence dashboard</figcaption>
-      </figure>
-
-      <div class="case-body">
-        <div class="narrative reveal">
-          <span class="kicker">The brief</span>
-          <p>Karnataka State Police's crime reporting was static and siloed — investigators had no way to see hotspots, trends, or suspect networks without manually cross-referencing reports across districts and timeframes. The KSP Datathon 2026 challenge: design and build a production-grade AI crime-analytics platform.</p>
-          <p>I designed and built SafeLens end-to-end across five surfaces — Dashboard, Crime Map, Trends, Risk Scoring and Network Analysis — on Zoho Catalyst. <strong>Paired with Cursor AI to take it from design decisions to a live, data-wired platform on a solo timeline.</strong></p>
-          <p>The Crime Map is the centerpiece: real Karnataka district polygons, drill-through to a suspect's full case history in two clicks, and <em>Ask SafeLens</em>, a natural-language query layer over the live incident data.</p>
-        </div>
-        <div class="reveal" data-delay="2">
-          <div class="case-metrics">
-            <div><span class="n"><em>5</em></span><span class="l">Core surfaces shipped</span></div>
-            <div><span class="n">313</span><span class="l">Mock incidents wired live</span></div>
-            <div><span class="n">30<em>/31</em></span><span class="l">Karnataka districts mapped</span></div>
-            <div><span class="n">100<em>%</em></span><span class="l">Built with Cursor AI</span></div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- CASE 03: NOTETAKER -->
+    <!-- CASE 02: NOTETAKER -->
     <article class="case" id="case-notetaker">
       <a class="case-link" href="work/notetaker.html" aria-label="Open Notetaker case study"></a>
       <header class="case-header reveal">
-        <div class="case-num">03 / 04</div>
+        <div class="case-num">02 / 04</div>
         <div class="case-titlewrap">
           <h3 class="case-title">Proshort&nbsp;<span class="it">Notetaker</span></h3>
           <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
@@ -679,7 +642,7 @@
           <img class="shot" src="assets/note-replay.png" alt="Proshort Notetaker — recorded-meeting replay with AI summary, transcript and highlights">
 
         </div>
-        <figcaption class="corner">Fig. 03 · Desktop companion</figcaption>
+        <figcaption class="corner">Fig. 02 · Desktop companion</figcaption>
       </figure>
 
       <div class="case-body">
@@ -700,11 +663,11 @@
       </div>
     </article>
 
-    <!-- CASE 04: CLADDING ESTIMATOR -->
+    <!-- CASE 03: CLADDING ESTIMATOR -->
     <article class="case" id="case-cemintel">
       <a class="case-link" href="work/cemintel-estimator.html" aria-label="Open Cladding Estimator case study"></a>
       <header class="case-header reveal">
-        <div class="case-num">04 / 04</div>
+        <div class="case-num">03 / 04</div>
         <div class="case-titlewrap">
           <h3 class="case-title">Cladding Sheet&nbsp;<span class="it">Estimator</span></h3>
           <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
@@ -728,7 +691,7 @@
           </div>
           <img class="shot" src="assets/cem-build-step1.png" alt="Cladding Sheet Estimator — project setup step with product carousel, panel configuration and environmental conditions">
         </div>
-        <figcaption class="corner">Fig. 04 · Estimator project setup</figcaption>
+        <figcaption class="corner">Fig. 03 · Estimator project setup</figcaption>
       </figure>
 
       <div class="case-body">
@@ -744,6 +707,57 @@
             <div><span class="n">&lt;5<em>m</em></span><span class="l">To a full estimate</span></div>
             <div><span class="n">100<em>%</em></span><span class="l">Built with Cursor AI</span></div>
             <div><span class="n">1</span><span class="l">Living bill of quantities</span></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- CASE 04: SAFELENS — case study page coming soon (detail link disabled) -->
+    <article class="case is-soon" id="case-safelens">
+      <header class="case-header reveal">
+        <div class="case-num">04 / 04</div>
+        <div class="case-titlewrap">
+          <h3 class="case-title">Safe<span class="it">Lens</span></h3>
+          <div class="badge-row">
+            <span class="built-badge"><span class="spark">✦</span>Designed &amp; Built with Cursor AI</span>
+            <span class="soon-badge">Coming soon</span>
+          </div>
+        </div>
+        <div class="case-meta">
+          <div>Role · <span>UX/Product Designer · Solo Build</span></div>
+          <div>Year · <span>2026</span></div>
+        </div>
+        <div class="case-meta case-cta" style="text-align:right">
+          <div>KSP Datathon 2026 · AI crime analytics</div>
+          <div><span class="soon-link">Case study coming soon</span></div>
+        </div>
+      </header>
+
+      <figure class="case-cover reveal" data-delay="1" data-cover>
+        <div class="win">
+          <div class="win-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="url"><span class="lock">◉</span><span>safelens-ksp.onslate.in<span class="path">/dashboard</span></span></div>
+            <span></span>
+          </div>
+          <img class="shot" src="assets/safelens-placeholder-01.svg" alt="SafeLens — crime intelligence dashboard with district drill-down, hotspot clustering and risk scoring (placeholder)">
+        </div>
+        <figcaption class="corner">Fig. 04 · Crime intelligence dashboard</figcaption>
+      </figure>
+
+      <div class="case-body">
+        <div class="narrative reveal">
+          <span class="kicker">The brief</span>
+          <p>Karnataka State Police's crime reporting was static and siloed — investigators had no way to see hotspots, trends, or suspect networks without manually cross-referencing reports across districts and timeframes. The KSP Datathon 2026 challenge: design and build a production-grade AI crime-analytics platform.</p>
+          <p>I designed and built SafeLens end-to-end across five surfaces — Dashboard, Crime Map, Trends, Risk Scoring and Network Analysis — on Zoho Catalyst. <strong>Paired with Cursor AI to take it from design decisions to a live, data-wired platform on a solo timeline.</strong></p>
+          <p>The Crime Map is the centerpiece: real Karnataka district polygons, drill-through to a suspect's full case history in two clicks, and <em>Ask SafeLens</em>, a natural-language query layer over the live incident data.</p>
+        </div>
+        <div class="reveal" data-delay="2">
+          <div class="case-metrics">
+            <div><span class="n"><em>5</em></span><span class="l">Core surfaces shipped</span></div>
+            <div><span class="n">313</span><span class="l">Mock incidents wired live</span></div>
+            <div><span class="n">30<em>/31</em></span><span class="l">Karnataka districts mapped</span></div>
+            <div><span class="n">100<em>%</em></span><span class="l">Built with Cursor AI</span></div>
           </div>
         </div>
       </div>
@@ -947,7 +961,12 @@
       if (!raf) raf = requestAnimationFrame(render);
     };
     covers.forEach(c => {
-      c.addEventListener('mouseenter', (e) => { tx = e.clientX; ty = e.clientY; render(); bubble.classList.add('on'); });
+      const soon = c.classList.contains('is-soon');
+      c.addEventListener('mouseenter', (e) => {
+        bubble.innerHTML = soon ? 'Coming soon' : 'View case study <span class="arr">↗</span>';
+        bubble.classList.toggle('soon', soon);
+        tx = e.clientX; ty = e.clientY; render(); bubble.classList.add('on');
+      });
       c.addEventListener('mousemove', move);
       c.addEventListener('mouseleave', () => { bubble.classList.remove('on'); });
     });
